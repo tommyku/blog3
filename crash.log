@@ -1,0 +1,177 @@
+Crashlog created at 2016-05-24 00:12:44 +0800
+
+===== MESSAGE:
+
+LoadError: cannot load such file -- coffee-script
+
+===== COMPILATION STACK:
+
+  - [item]   /script.coffee (rep default)
+
+===== STACK TRACE:
+
+  0. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/filter.rb:105:in `require'
+  1. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/filter.rb:105:in `block in setup'
+  2. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/filter.rb:105:in `each'
+  3. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/filter.rb:105:in `setup'
+  4. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/filter.rb:129:in `setup_and_run'
+  5. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/services/executor.rb:36:in `filter'
+  6. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/compiler.rb:255:in `block in recalculate_content_for_rep'
+  7. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/entities/rule_memory.rb:44:in `block in each'
+  8. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/entities/rule_memory.rb:44:in `each'
+  9. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/entities/rule_memory.rb:44:in `each'
+  10. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/compiler.rb:252:in `recalculate_content_for_rep'
+  11. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/compiler.rb:227:in `compile_rep'
+  12. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/compiler.rb:202:in `block in compile_reps'
+  13. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/services/item_rep_selector.rb:18:in `block in each'
+  14. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/services/item_rep_selector.rb:13:in `loop'
+  15. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/services/item_rep_selector.rb:13:in `each'
+  16. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/compiler.rb:200:in `compile_reps'
+  17. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/compiler.rb:103:in `block in run'
+  18. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/dependency_tracker.rb:18:in `run'
+  19. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/compiler.rb:102:in `run'
+  20. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/compilation/compiler.rb:89:in `run_all'
+  21. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/base/entities/site.rb:24:in `compile'
+  22. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/cli/commands/compile.rb:375:in `block in run'
+  23. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/cli/commands/compile.rb:417:in `run_listeners_while'
+  24. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/cli/commands/compile.rb:374:in `run'
+  25. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/cli/command_runner.rb:12:in `block in call'
+  26. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/cli/error_handler.rb:64:in `handle_while'
+  27. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/cli/error_handler.rb:22:in `handle_while'
+  28. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/cli/command_runner.rb:11:in `call'
+  29. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/cri-2.7.0/lib/cri/command_dsl.rb:233:in `block in runner'
+  30. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/cri-2.7.0/lib/cri/command.rb:294:in `call'
+  31. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/cri-2.7.0/lib/cri/command.rb:294:in `run_this'
+  32. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/cri-2.7.0/lib/cri/command.rb:247:in `run'
+  33. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/cli/commands/nanoc.rb:37:in `block in define'
+  34. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/cri-2.7.0/lib/cri/command.rb:294:in `call'
+  35. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/cri-2.7.0/lib/cri/command.rb:294:in `run_this'
+  36. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/cri-2.7.0/lib/cri/command.rb:247:in `run'
+  37. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/cli.rb:53:in `block in run'
+  38. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/cli/error_handler.rb:64:in `handle_while'
+  39. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/cli/error_handler.rb:22:in `handle_while'
+  40. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib/nanoc/cli.rb:51:in `run'
+  41. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/bin/nanoc:9:in `<top (required)>'
+  42. /home/kuchunkit/.rbenv/versions/2.2.4/bin/nanoc:23:in `load'
+
+===== VERSION INFORMATION:
+
+Nanoc 4.1.6 © 2007-2016 Denis Defreyne.
+Running ruby 2.2.4 (2015-12-16) on x86_64-linux with RubyGems 2.4.5.1.
+
+===== SYSTEM INFORMATION:
+
+Linux kuchunkit-x230 3.13.0-86-generic #131-Ubuntu SMP Thu May 12 23:33:13 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
+
+===== INSTALLED GEMS:
+
+  adsf 1.2.1
+  bundler 1.11.2
+  coffee 0.0.5
+  colored 1.2
+  cri 2.7.0
+  httparty 0.13.7
+  json 1.8.3
+  json_pure 1.8.3
+  kramdown 1.11.1
+  mini_portile2 2.0.0
+  multi_xml 0.5.5
+  nanoc 4.1.6
+  nokogiri 1.6.7.1
+  rack 1.6.4
+  rubypants 0.2.0
+  sass 3.4.20
+  slim 3.0.6
+  temple 0.7.6
+  thor 0.19.1
+  tilt 2.0.1
+  yuicompressor 1.3.3
+
+===== GEMFILE.LOCK:
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    adsf (1.2.1)
+      rack (>= 1.0.0)
+    coffee (0.0.5)
+      httparty
+      json_pure
+      thor
+    colored (1.2)
+    cri (2.7.0)
+      colored (~> 1.2)
+    httparty (0.13.7)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
+    json (1.8.3)
+    json_pure (1.8.3)
+    kramdown (1.11.1)
+    mini_portile2 (2.0.0)
+    multi_xml (0.5.5)
+    nanoc (4.1.6)
+      cri (~> 2.3)
+    nokogiri (1.6.7.1)
+      mini_portile2 (~> 2.0.0.rc2)
+    rack (1.6.4)
+    rubypants (0.2.0)
+    sass (3.4.20)
+    slim (3.0.6)
+      temple (~> 0.7.3)
+      tilt (>= 1.3.3, < 2.1)
+    temple (0.7.6)
+    thor (0.19.1)
+    tilt (2.0.1)
+    yuicompressor (1.3.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  adsf!
+  coffee!
+  kramdown!
+  nanoc!
+  nokogiri!
+  rubypants!
+  sass!
+  slim!
+  yuicompressor!
+
+BUNDLED WITH
+   1.11.2
+
+===== LOAD PATHS:
+
+  0. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/yuicompressor-1.3.3/lib
+  1. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/slim-3.0.6/lib
+  2. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/tilt-2.0.1/lib
+  3. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/temple-0.7.6/lib
+  4. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/sass-3.4.20/lib
+  5. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/rubypants-0.2.0/.
+  6. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/extensions/x86_64-linux/2.2.0-static/nokogiri-1.6.7.1
+  7. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.1/lib
+  8. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/nanoc-4.1.6/lib
+  9. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/mini_portile2-2.0.0/lib
+  10. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/kramdown-1.11.1/lib
+  11. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/cri-2.7.0/lib
+  12. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/colored-1.2/lib
+  13. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/coffee-0.0.5/lib
+  14. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/thor-0.19.1/lib
+  15. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/json_pure-1.8.3/lib
+  16. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/httparty-0.13.7/lib
+  17. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/multi_xml-0.5.5/lib
+  18. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/extensions/x86_64-linux/2.2.0-static/json-1.8.3
+  19. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/json-1.8.3/lib
+  20. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/adsf-1.2.1/lib
+  21. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/rack-1.6.4/lib
+  22. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/gems/2.2.0/gems/bundler-1.11.2/lib
+  23. /home/kuchunkit/.rbenv/rbenv.d/exec/gem-rehash
+  24. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/site_ruby/2.2.0
+  25. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/site_ruby/2.2.0/x86_64-linux
+  26. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/site_ruby
+  27. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/vendor_ruby/2.2.0
+  28. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/vendor_ruby/2.2.0/x86_64-linux
+  29. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/vendor_ruby
+  30. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/2.2.0
+  31. /home/kuchunkit/.rbenv/versions/2.2.4/lib/ruby/2.2.0/x86_64-linux

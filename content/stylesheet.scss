@@ -1,3 +1,5 @@
+$white: #fff;
+
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +8,7 @@
 }
 
 body {
-  background: #fff;
+  background: $white;
 }
 
 a {
@@ -23,10 +25,7 @@ a:hover {
 }
 
 #main {
-  position: absolute;
-
-  top: 40px;
-  left: 280px;
+  margin: auto;
 
   width: 500px;
 }

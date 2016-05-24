@@ -5,10 +5,12 @@ html lang='en'
     title
       | A Brand New Nanoc Site - 
       = @item[:title]
-    link rel="stylesheet" href="/stylesheet.css"
+    link rel="stylesheet" href="/style/gutenberg.css"
 
     <!-- you don't need to keep this, but it's cool for stats! -->
     meta name="generator" content="Nanoc #{Nanoc::VERSION}"
   body
     #main
       == yield
+
+    script type='text/javascript' src='/js/main.js'

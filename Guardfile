@@ -16,8 +16,8 @@
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"a
 
 guard :shell do
-  watch(/content\/(.*).(.*)/) do |modified|
-    puts "modified: #{modified.to_s}"
+  watch(/content\/(.*).(.*)|layouts\/(.*)/) do |modified|
+    puts "modified: #{modified[0]}"
     `nanoc`
   end
 end

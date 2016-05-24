@@ -2,6 +2,7 @@
 
 compile '/**/*.html' do
   filter :rubypants
+  filter :relativize_paths, type: :html
   layout '/default.*'
 end
 
@@ -10,6 +11,10 @@ compile '/**/*.md' do
   filter :rubypants
   filter :relativize_paths, type: :html
   layout '/default.*'
+end
+
+compile '/**/_*.scss' do
+  # ignore scss partials
 end
 
 compile '/**/*.scss' do
@@ -21,7 +26,18 @@ end
 
 compile '/**/*.coffee' do
   filter :coffeescript
+  filter :yui_compressor, type: :js
+  write item.identifier.without_ext + '.js'
+end
+
+compile '/**/*.css' do
+  filter :relativize_paths, type: :css
   filter :yui_compressor, type: :css
+  write item.identifier.without_ext + '.css'
+end
+
+compile '/**/*.js' do
+  filter :yui_compressor, type: :js
   write item.identifier.without_ext + '.js'
 end
 

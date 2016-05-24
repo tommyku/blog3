@@ -6,6 +6,7 @@ html lang='en'
       | A Brand New Nanoc Site - 
       = @item[:title]
     link rel="stylesheet" href="/style/gutenberg.css"
+    link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/tomorrow-night-eighties.min.css'
 
     <!-- you don't need to keep this, but it's cool for stats! -->
     meta name="generator" content="Nanoc #{Nanoc::VERSION}"
@@ -13,4 +14,7 @@ html lang='en'
     #main
       == yield
 
+    script src='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js'
     script type='text/javascript' src='/js/main.js'
+    coffee:
+      hljs.initHighlightingOnLoad()

@@ -7,7 +7,7 @@ compile '/**/*.html' do
 end
 
 compile '/**/*.md' do
-  filter :kramdown
+  filter :kramdown, syntax_highlighter: nil
   filter :rubypants
   filter :relativize_paths, type: :html
   layout '/default.*'

@@ -8,13 +8,18 @@ body > footer {
   margin: 0 auto;
 }
 
-code {
-  display: inline;
-  padding: 0;
+body {
+  @include padding(0, 1);
+}
+
+p, h1, h2, h3, h4, h5 {
+  code {
+    display: inline;
+    padding: 0;
+  }
 }
 
 pre {
-  font-size: 0.8em;
   code {
     display: block;
   }

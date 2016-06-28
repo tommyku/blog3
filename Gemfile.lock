@@ -35,7 +35,7 @@ GEM
     lumberjack (1.0.10)
     method_source (0.8.2)
     mini_portile2 (2.0.0)
-    nanoc (4.1.6)
+    nanoc (4.2.1)
       cri (~> 2.3)
     nenv (0.3.0)
     nokogiri (1.6.7.1)
@@ -81,4 +81,4 @@ DEPENDENCIES
   yuicompressor!
 
 BUNDLED WITH
-   1.12.3
+   1.12.4

@@ -6,6 +6,13 @@ compile '/**/*.html' do
   layout '/default.*'
 end
 
+compile '/**/*.slim' do
+  filter :slim
+  filter :rubypants
+  filter :relativize_paths, type: :html
+  layout '/default.*'
+end
+
 compile '/**/*.md' do
   filter :kramdown, syntax_highlighter: nil
   filter :rubypants
@@ -41,7 +48,7 @@ compile '/**/*.js' do
   write item.identifier.without_ext + '.js'
 end
 
-route '/**/*.{html,md}' do
+route '/**/*.{html,md,slim}' do
   if item.identifier =~ '/index.*'
     '/index.html'
   else

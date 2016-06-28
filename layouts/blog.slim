@@ -9,9 +9,17 @@ html lang='en'
     title
       = @item[:title]
     link rel="stylesheet" href="/style/gutenberg.css"
+    link rel='stylesheet' href='/style/tomorrow-night-eighties.css'
     meta name="generator" content="Nanoc #{Nanoc::VERSION}"
   body
     == render '/header.slim'
     main#main
+      section#meta
+        h1 = @item[:title]
+        i = "Written on #{attribute_to_time(@item[:created_at]).strftime '%b %d, %Y'}"
       section#content
         == yield
+
+    script type='text/javascript' src='/js/highlight.pack.js'
+    coffee:
+      hljs.initHighlightingOnLoad()

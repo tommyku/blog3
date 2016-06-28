@@ -10,7 +10,7 @@ compile '/**/*.md' do
   filter :kramdown, syntax_highlighter: nil
   filter :rubypants
   filter :relativize_paths, type: :html
-  layout '/default.*'
+  layout '/blog.*'
 end
 
 compile '/**/_*.scss' do

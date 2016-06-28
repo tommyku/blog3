@@ -10,15 +10,17 @@ html lang='en'
       | A Brand New Nanoc Site - 
       = @item[:title]
     link rel="stylesheet" href="/style/gutenberg.css"
-    link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/tomorrow-night-eighties.min.css'
-
-    <!-- you don't need to keep this, but it's cool for stats! -->
+    link rel='stylesheet' href='/style/tomorrow-night-eighties.css'
     meta name="generator" content="Nanoc #{Nanoc::VERSION}"
   body
-    #main
-      == yield
+    == render '/header.slim'
+    main#main
+      section#meta
+        h1 = @item[:title]
+        i = "Written on #{attribute_to_time(@item[:created_at]).strftime '%b %d, %Y'}"
+      section#content
+        == yield
 
-    script src='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js'
-    script type='text/javascript' src='/js/main.js'
+    script type='text/javascript' src='/js/highlight.pack.js'
     coffee:
       hljs.initHighlightingOnLoad()

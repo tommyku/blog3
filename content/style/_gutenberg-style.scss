@@ -19,6 +19,26 @@ p, h1, h2, h3, h4, h5 {
   }
 }
 
+nav {
+  a {
+    display: inline-block;
+    margin-right: 1.5rem;
+  }
+}
+
+main {
+  h1 {
+    &:before {
+      content: 'You are now reading:';
+      display: block;
+      color: gray;
+      font-weight: 200;
+      font-size: 0.5em;
+    }
+    margin-top: 2.75rem;
+  }
+}
+
 pre {
   font-size: 0.85rem;
   code {

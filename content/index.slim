@@ -2,7 +2,13 @@
 title: Tommy Ku's Method Stub
 ---
 
-ul
+- current_date = ''
+ul#article-list
   - sorted_articles.each do |article|
+    - if current_date != attribute_to_time(article[:created_at]).strftime('%Y.%m')
+      li.header
+        h4
+          time
+            = current_date = attribute_to_time(article[:created_at]).strftime('%Y.%m')
     li
       == link_to article[:title], url_for(article)

@@ -1,20 +1,17 @@
 #disqus_thread
 javascript:
-  var disqus_shortname = 'methodstub';
-  var disqus_identifier = "#{@item.identifier.without_ext}";
-  var disqus_title = "#{@item[:title]}";
-  var disqus_url = "#{url_for(@item)}";
+  var disqus_config = function () {
+    this.page.url = "";
+    this.page.identifier = "";
+  };
+  (function() {  // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
 
-  /* * * DON'T EDIT BELOW THIS LINE * * */
-  (function() {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    s.src = '//tkmethodstub.disqus.com/embed.js';
+
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
   })();
 noscript
- | Please enable JavaScript to view the&nbsp;
- a href="http://disqus.com/?ref_noscript" comments powered by Disqus.
-
-a href="http://disqus.com" class="dsq-brlink"
-  | comments powered by&nbsp;
-  span class="logo-disqus" Disqus
+  | Please enable JavaScript to view the 
+  a(href='https://disqus.com/?ref_noscript', rel='nofollow') comments powered by Disqus.

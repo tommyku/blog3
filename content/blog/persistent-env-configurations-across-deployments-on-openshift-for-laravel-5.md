@@ -9,7 +9,7 @@ People get hacked easily [when they include the environmental files or passwords
 You can set up an action hook to create a symbolic link inside the deployment directory to `$OPENSHIFT_DATE_DIR` which keeps the `.env` persistently. I know this has been covered in [a previous tutorial](http://blog.tommyku.com/blog/using-laravel-5-0-with-angularjs-part-2-of-5-migrations-controllers-validations-in-laravel-5-0#deploying-the-back-end) but it doesn't hurt repeating myself as a reminder of this security trick.
 
 <div style="text-align: center;">
-<img src="https://drive.google.com/uc?export=download&id=0B_6N7pbdkx-lZnc4ZDZ5MWdXekk" title="Screenshot of .env file with passwords" />
+<img src="./Screenshot from 2015-09-28 17_34_43.png" title="Screenshot of .env file with passwords" />
 <br />
 <small><em>Img.</em> <strong>Tried my luck with some keywords, obviously people still do that nowadays</strong></small>
 </div>
@@ -17,7 +17,7 @@ You can set up an action hook to create a symbolic link inside the deployment di
 Moreover, a team of students from a class I am mentoring got themselves a $10,000 AWS bill because they published the `.pem` files on GitHub and somehow got hacked.
 
 <div style="text-align: center;">
-<img src="https://drive.google.com/uc?export=download&id=0B_6N7pbdkx-leXoyU0k3WUtxM2M" title="Screenshot of $10,503.75 AWS bill" />
+<img src="./12006125_10153687770762112_5465783357743922822_n.jpg" title="Screenshot of $10,503.75 AWS bill" />
 <br />
 <small><em>Img.</em> <strong>I told them to use OpenShift instead of AWS for educational purpose</strong></small>
 </div>

@@ -13,10 +13,13 @@ html lang='en'
     meta name="generator" content="Nanoc #{Nanoc::VERSION}"
   body
     == render '/header.slim'
+    - unless @item[:banner].nil?
+      figure
+        img src="./#{@item[:banner]}"
     main#main
       section#meta
         h1 = @item[:title]
-        i = "Written on #{attribute_to_time(@item[:created_at]).strftime '%b %d, %Y'}"
+        i = "Written on #{attribute_to_time(@item[:created_at]).strftime '%Y.%m.%d'}"
       section#content
         == yield
 

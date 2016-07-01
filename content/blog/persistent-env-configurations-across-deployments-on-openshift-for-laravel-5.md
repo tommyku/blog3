@@ -2,6 +2,7 @@
 title: Persistent .env configurations across deployments on OpenShift for Laravel 5
 kind: article
 created_at: '2015-09-28 00:00:00 +0800'
+slug: persistent-env-configurations-across-deployments-on-openshift-for-laravel-5
 ---
 
 People get hacked easily [when they include the environmental files or passwords](http://blog.nortal.com/mining-passwords-github-repositories/) in version control. Yet keeping it all local makes each and every deployment to OpenShift troublesome as you will need to `scp` the environmental file `.env` onto server every time you deploy.

@@ -2,6 +2,7 @@
 title: Prototyping with gulp-web-starter
 kind: article
 created_at: '2015-08-08 00:00:00 +0800'
+slug: prototyping-with-gulp-web-starter
 ---
 
 Let's pretend that in one random evening when you leave office early and formed a brilliant idea on your way home. Your blood is boiling and you want it dive into a coding sprint as soon as possible. Roll out a barely functional or even completely hard-coded version, then send it to friends and coworkers to make sure the idea holds up to the expectations.

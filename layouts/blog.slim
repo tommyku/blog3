@@ -18,6 +18,9 @@ html lang='en'
         img src="./#{@item[:banner]}"
     main#main
       section#meta
+        - if preview?(@item)
+          strong style='color: brown'
+            | This post is preview only (╯°□°）╯︵ ┻━┻
         h1 = @item[:title]
         i = "Written on #{attribute_to_time(@item[:created_at]).strftime '%Y.%m.%d'}"
       section#content

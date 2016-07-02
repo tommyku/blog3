@@ -5,6 +5,7 @@ title: Tommy Ku's Method Stub
 - current_date = ''
 ul#article-list
   - sorted_articles.each do |article|
+    - next if preview?(article)
     - if current_date != attribute_to_time(article[:created_at]).strftime('%Y.%m')
       li.header
         h4

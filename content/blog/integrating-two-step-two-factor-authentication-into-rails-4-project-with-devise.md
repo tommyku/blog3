@@ -16,7 +16,7 @@ About a month back at where I worked I was asked to implement a two-step two-fac
 
 ### <a name='why-is-this-hard'></a> Why is this hard?
 
-Being _two-factor_ isn't a problem because there are many libraries (aka `gems`) implementing that and are handy enought to be working with [Devise](https://github.com/plataformatec/devise), the authentication solution we
+Being _two-factor_ isn't a problem because there are many libraries (aka `gems`) implementing that and are handy enought to be working with [Devise](https://github.com/plataformatec/devise) --- the authentication solution we
 were then using.
 
 For example:
@@ -28,13 +28,13 @@ For example:
 
 But the _two-step_ part made the two-week sprint rather painful. Fact: none of the aforementioned gems implement two-step two-factor auth; they only handle the two-factor part.
 
-[Issue]() from `tinfoil/devise-two-factor` shows that many others had the same problem.
+[Issue](https://github.com/tinfoil/devise-two-factor/issues/61) from `tinfoil/devise-two-factor` shows that many others had the same problem.
 
-Devise isn't being helpful either --- it's section controller was designed to login in one step only.
+Devise isn't being helpful either --- it's session controller was designed to login in one step only.
 
 And before you ask, no there isn't an easy way to hack Devise's `SessionsController` into neatly adding another action to make it two-step while keeping all the security goodies and still look legible to my coworkers.
 
-Lockable fails to work if you modify `SessionController` just so you can first: verify login username and password; second: verify the two-step auth token because you are supposed to login with username, password and two-factor auth token all at once with the gems above.
+`Lockable` fails to work if you modify `SessionController` just so you can first: verify login username and password; second: verify the two-step auth token because you are supposed to login with username, password and two-factor auth token all at once with the gems above.
 
 You could end up first verifying the username and password but it then fails to lock the account with multiple attempts to get pass the first step, because the second step is the _real_ Devise login. See my point?
 

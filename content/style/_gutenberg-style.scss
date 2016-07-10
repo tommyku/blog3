@@ -88,6 +88,13 @@ p, h1, h2, h3, h4, h5 {
 /* Put your styles below this line
    ========================================================================== */
 
+@media screen and (max-width: #{$max-width / 2 + 'em'}) {
+  h1 {
+    font-size: 1.6875rem;
+    line-height: 2.5rem;
+  }
+}
+
 nav {
   a {
     display: inline-block;

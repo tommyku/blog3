@@ -3,7 +3,7 @@ title: Think about the Physical Web
 kind: article
 created_at: '2016-07-21 00:00:00 +0800'
 slug: think-about-the-physical-web
-preview: true
+preview: false
 ---
 
 On the Internet different resources are referenced by URL, or *Unversal Resource Locator*. A webpage, a picture, a
@@ -29,7 +29,7 @@ of them, I will mention it later).
 
 ### Physical Web is about the web
 
-> Physical web is QR code without scanning, and you can control a trash can on a phone.
+> Physical web is QR code without scanning.
 
 After a lengthy discussion with friend this is what we came up with if we had to describe the Physical Web in one
 sentence.
@@ -38,7 +38,7 @@ The core technology behind Physical Web is becons working with [Eddystone beacon
 
 A Beacon, a little device to place just anywhere, continuously broardcasts a URL via Bluetooth to the surrounding area.
 Any device nearby can see an URL broadcasted by the beacon and those who open the URL from a browser can interact with
-either an online service or the device connected to the beacon itself.
+either an online service or the device connected to the beacon itself (via [Web Bluetooth](https://developers.google.com/web/updates/2015/07/interact-with-ble-devices-on-the-web)).
 
 So yes, technically you can use the Physical Web to connect to your trash can and turn it into an R2-D2 from *any* device that has
 Bluetooth, browser, and can recognize the Eddystone format.
@@ -69,6 +69,12 @@ Show the staff your ticket number and get the food from one of the collection po
 
 Hey the best part of it? No app installed, just walk in and use.
 
+<figure>
+<img src='https://addyosmani.com/assets/getting-started-pwa/pwa-general-0-@1x.jpg'/>
+<figcaption>With <a href='https://developers.google.com/web/progressive-web-apps/'>Progressive Web app</a>, a web app can behave very much like native app without lengthy installation.
+(<a href='https://addyosmani.com/blog/getting-started-with-progressive-web-apps/'>image credit</a>)</figcaption>
+</figure>
+
 Take a note that Android/Apple pay, push notification and web app are not part of the Physical Web, but without them
 Physical Web might as well be another QR code alternative. They provide in-context native app-like support to many
 things people do with apps on a web browser. It feels like having another native app on users' phone that shows up only when
@@ -98,3 +104,5 @@ for Physical Web URLs whenever you pull down the notification bar.
 Until there comes a day when the ability to scan for URLs nearby is built into major mobile OSes, it's hard to tell
 whether the Physical Web will gain popularity outside hobbists and half-hearted attempts by the industry to employ the
 technology.
+
+Let us know what interesting project you or your company make with the Physical Web, or any idea you have in mind by dropping us a comment down below 😄

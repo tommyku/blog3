@@ -40,12 +40,21 @@ A Beacon, a little device to place just anywhere, continuously broardcasts a URL
 Any device nearby can see an URL broadcasted by the beacon and those who open the URL from a browser can interact with
 either an online service or the device connected to the beacon itself.
 
-So yes, technically you can use the Physical Web to connect to your trash can and control it from *any* device that has
+So yes, technically you can use the Physical Web to connect to your trash can and turn it into an R2-D2 from *any* device that has
 Bluetooth, browser, and can recognize the Eddystone format.
+
+The biggest difference between the Physical Web and QR code lies in it's seamlessness -- there is no need to walk up to
+an QR code in order to scan it, which sometimes is discouraged in public places. It looks weird taking taking taking
+taking taking taking taking taking a picture of QR code with the faces of everybody between you and the QR code.
 
 ### A case study
 
 Earlier on a technical demo was presented to the product manager and the management where I worked. I can't share too much details about it, at least I can tell you it was well received.
+
+<figure>
+<img src='./beacon.jpg'/>
+<figcaption>A beacon originally used for an iBeacon project received firmware upgrade to support Eddystone protocol</figcaption>
+</figure>
 
 Have you ever thought that waiting in queue only to wait for a ticket is a stupid idea? We the university students stupidly
 wait in queue just to order something, wasting precious time that we could otherwise use to deal with midterms and assignments.
@@ -65,7 +74,7 @@ Physical Web might as well be another QR code alternative. They provide in-conte
 things people do with apps on a web browser. It feels like having another native app on users' phone that shows up only when
 users need it.
 
-### Why is it *not yet* there
+### Why isn't it there *yet*
 
 Sounds good? Then why nobody's using it? I don't see it in any of the local restaurants either.
 
@@ -74,8 +83,18 @@ on Google Chrome browser for iOS and Android.
 
 [This guide](https://support.google.com/chrome/answer/6239299) teaches you how to enable it on your phone. Think about
 it, who bothers turning the Physical Web scanner on unless it's extremly relevant to them. Not everybody knows how to scan a QR code even
-these days!
+to date!
 
 The demo I showed to my colleagues was done using solely iPhone because it is pretty unstable on Android device.
-On Android device the Physical Web notification is set to low priority. Android OS decides when to show you the Physical Web URLs it got and in many cases they don't show up at all. On iPhone they are better because it scans for Physical Web URLs whenever you pull down the notification
-bar.
+On Android device the Physical Web notification is set to low priority. Android OS decides when to show you the
+Physical Web URLs it got and in many cases they don't show up at all. On iPhone they are better because it scans
+for Physical Web URLs whenever you pull down the notification bar.
+
+<figure>
+<img src='./ios_chrome.jpg'/>
+<figcaption>Scanning for Physical Web URLs from an iOS device</figcaption>
+</figure>
+
+Until there comes a day when the ability to scan for URLs nearby is built into major mobile OSes, it's hard to tell
+whether the Physical Web will gain popularity outside hobbists and half-hearted attempts by the industry to employ the
+technology.

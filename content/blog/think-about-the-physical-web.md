@@ -17,7 +17,7 @@ game.
 Yes, hacking real world object right at your fingertips.
 
 <figure>
-<img src='http://elseheartbreak.com/Hack2.jpg'/>
+<img src='./Hack2.jpg'/>
 <figcaption>Screenshot from video game `Else Heart.Break()` where player hacks an object (<a href='http://elseheartbreak.com/'>image credit</a>)</figcaption>
 </figure>
 

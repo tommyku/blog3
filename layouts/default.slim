@@ -1,12 +1,7 @@
 doctype html
 html lang='en'
   head
-    meta http-equiv="Content-Type" content="text/html; charset=utf-8"
-    meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"
-    meta charset="utf-8"
-    meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"
-    meta name="author" content="Tommy Ku"
-    meta name="title" content="#{@item[:title]} - Tommy Ku's Method Stub - Random thoughts, stories and tutorials of a web dev"
+    == render '/meta.slim'
     title
       = @item[:title]
     link rel="stylesheet" href="/style/gutenberg.css"

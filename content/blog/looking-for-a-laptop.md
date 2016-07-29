@@ -14,7 +14,7 @@ far. Whoa they run 3GHz quad-core on a 2.5-pound laptop for 9 hours? And the pri
 it and get back to work.
 
 Really there's nothing wrong with the 4-year old laptop. It might be bulky, dirty, slow and laggy in today's standard,
-yet who'd sacrifice the setup one's been fine-tuned for years? Who knows what'd happen to the new machines after
+yet who'd sacrifice the setup one's been fine-tuning for years? Who knows what'd happen to the new machines after
 loading the [Dotfiles](https://dotfiles.github.io/) one's been putting together all these years.
 
 Maybe the latest hardware is too new for that distro/kernel, or video driver is not keeping up, or things failed to work

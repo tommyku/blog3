@@ -6,7 +6,7 @@ slug: create-simple-contact-list-application-with-laravel-and-openshift-integrat
 preview: false
 ---
 
-**This is the part 2 of a 2-part tutorial about jump-starting a Laravel project on Openshift. [go to part1](http://blog.tommyku.com/blog/create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1)**
+**This is the part 2 of a 2-part tutorial about jump-starting a Laravel project on Openshift. [go to part1](/blog/create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1)**
 
 <figure>
 <img src='./screenshot2.jpg'/>

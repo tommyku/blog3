@@ -95,6 +95,14 @@ p, h1, h2, h3, h4, h5 {
   }
 }
 
+header {
+  cursor: default;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
 nav {
   a {
     display: inline-block;
@@ -136,4 +144,13 @@ pre {
 
 table td {
   padding: 0.25em;
+}
+
+.author {
+  display: inline-block;
+  border-radius: 50%;
+  height: 2rem;
+  vertical-align: text-top;
+  margin-bottom: 0;
+  margin-right: 0.5rem;
 }

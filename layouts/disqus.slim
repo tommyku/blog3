@@ -4,11 +4,10 @@ javascript:
     this.page.url = "#{url_for(@item)}";
     this.page.identifier = "#{@item[:slug]}";
   };
-  (function() {  // DON'T EDIT BELOW THIS LINE
+
+  (function() { // DON'T EDIT BELOW THIS LINE
     var d = document, s = d.createElement('script');
-
-    s.src = '//tkmethodstub.disqus.com/embed.js';
-
+    s.src = '//methodstub.disqus.com/embed.js';
     s.setAttribute('data-timestamp', +new Date());
     (d.head || d.body).appendChild(s);
   })();

@@ -1,0 +1,246 @@
+<!DOCTYPE html><html lang="en"><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport" /><meta content="Create simple contact list application with Laravel and Openshift integration: Part 2 - Tommy Ku&#39;s Method Stub - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Create simple contact list application with Laravel and Openshift integration: Part 2 - Tommy Ku&#39;s Method Stub - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><title>Create simple contact list application with Laravel and Openshift integration: Part 2 - Tommy Ku&#39;s Method Stub</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/tomorrow-night-eighties.css" rel="stylesheet" /><meta content="Nanoc 4.2.3" name="generator" /></head><body><header><h2><img class="author" src="/assets/images/author.jpg" />Tommy Ku's Method Stub</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://gh.tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://hk.linkedin.com/in/tommy-ku-65aba999">LinkedIn</a></nav><main id="main"><section id="meta"><h1>Create simple contact list application with Laravel and Openshift integration: Part 2</h1><i>Written on 2014.10.18</i></section><section id="content">
+<p><strong>This is the part 2 of a 2-part tutorial about jump-starting a Laravel project on Openshift. <a href="../create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1">go to part1</a></strong></p>
+
+<figure>
+<img src="./screenshot2.jpg">
+<figcaption>The cake</figcaption>
+</figure>
+
+<p><strong><a href="http://contact-ckstudio1.rhcloud.com">See the demo</a></strong></p>
+
+<p><strong><a href="https://github.com/tommyku/laravel-tutorial-contact">Get the source on Github</a></strong></p>
+
+<h4 id="the-frontend">The frontend</h4>
+
+<p>This tutorial focuses on the backend using Laravel, so I will save the trouble going through the source code of the frontend. It is built on AngularJS with a little CSS to improve the aesthetics. Just grab the source from <a href="https://github.com/tommyku/laravel-tutorial-contact">Github</a>.</p>
+
+<h4 id="the-api">The API</h4>
+
+<p>Security aside, the application consists of 4 available API calls for it to communicate with the frontend.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>METHOD</th>
+      <th>URI</th>
+      <th>PARAM</th>
+      <th>DESC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GET</td>
+      <td>/</td>
+      <td>none</td>
+      <td>Request the frontend app</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/contacts</td>
+      <td>none</td>
+      <td>Request a list of contacts</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/contact/{id}</td>
+      <td>none</td>
+      <td>Request a particular contact record</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/contact</td>
+      <td>name, email, tel, address, photo</td>
+      <td>Create a new contact record</td>
+    </tr>
+    <tr>
+      <td>DELETE</td>
+      <td>/contact/{id}</td>
+      <td>none</td>
+      <td>Delete a particular contact record</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>These routes will be defined in <code>/Laravel/app/routes.php</code> and their respective controller in <code>/Laravel/app/controllers/ContactController.php</code>.</p>
+
+<p><code>routes.php</code> looks something like this:</p>
+
+<pre><code>Route::get('/', "HomeController@index");
+
+Route::get('contacts', "ContactController@contactList");
+
+Route::get('contact/{id}', "ContactController@getContact");
+
+Route::post('contact', "ContactController@newContact");
+
+Route::delete('contact/{id}', "ContactController@delContact");
+</code></pre>
+
+<p>In <code>ContactController@contactList</code>, <code>ContactController</code> is the controller class name and <code>contactList</code> is the method to be called.</p>
+
+<p><code>artisan</code> provides a nice function to overview all routes defined in <code>route.php</code>. Try to run <code>php artisan routes</code> in your Laravel folder.</p>
+
+<figure>
+<img src="./screenshot3.jpg">
+<figcaption>Convenient Overview</figcaption>
+</figure>
+
+<h4 id="the-database">The database</h4>
+
+<p>Later I may introduce <code>migration</code> and <code>seeder</code>, which are convenient functions for creating and initializing database in Laravel, but for the time being just run this SQL command to create the table for our simple app.</p>
+
+<pre><code>CREATE TABLE contact (
+  `name` VARCHAR(256),
+  `email` VARCHAR(256),
+  `tel` VARCHAR(256),
+  `address` VARCHAR(256),
+  `photo` VARCHAR(256)
+);
+</code></pre>
+
+<h4 id="the-controller">The controller</h4>
+
+<p>In <code>route.php</code>, we have defined a set of routes and their respective controllers (<code>HomeController</code> and <code>ContactController</code>). Let’s start from the simplier one.</p>
+
+<p>When a user access the document root, <code>HomeController@index</code> is triggered and <code>index()</code> in the following controller executes. It does nothing more than rendering a <code>View</code>, which is a HTML template called <code>contact.php</code> stored in <code>app/views</code>.</p>
+
+<pre><code>&lt;?php
+
+/* app/controller/HomeController.php */
+
+class HomeController extends BaseController {
+
+	public function index()
+	{
+		return View::make('contact');
+	}
+}
+</code></pre>
+
+<p>Our contact list application is very simple, so all API calls are initiated by the client that we treat as a black box for this tutorial. Like any other good programmer, encapsulation guarantees that we only need to care about the implementation of the APIs but not how they are called.</p>
+
+<p>So here are them, the framework makes of database query stupidly simple. I am inclined to not explain them line by line because the class and method names should well represent their purposes.</p>
+
+<pre><code>&lt;?php
+
+/* app/controller/ContactController.php */
+
+class ContactController extends BaseController {
+
+    public function contactList()
+    {
+        $select = DB::table('contact')
+            -&gt;get();
+        return Response::json($select, 200);
+    }
+    
+    public function getContact($id)
+    {
+        $select = DB::table('contact')
+            -&gt;where('id', '=', $id)
+            -&gt;take(1)
+            -&gt;get();
+        return Response::json($select[0], 200);
+    }
+    
+    public function newContact()
+    {
+        $id = DB::table('contact')-&gt;insertGetId(
+            [
+                'name' =&gt; Input::get("name"),
+                'email' =&gt; Input::get("email"),
+                'tel' =&gt; Input::get("tel"),
+                'address' =&gt; Input::get("address"),
+                'photo' =&gt; Input::get("photo")
+            ]
+        );
+        
+        return Response::json(['id'=&gt;$id], 200);
+    }
+    
+    public function delContact($id)
+    {
+        $delete = DB::table('contact')
+            -&gt;where('id', '=', $id)
+            -&gt;delete();
+        return Response::make("", 200);
+    }
+
+}
+</code></pre>
+
+<p>Although <code>Model</code> is out of the scope of this tutorial, you can achieve a pretty good abstraction by binding the entries of a database table to an object.</p>
+
+<p>If you dig deeper into Laravel and have learned about <code>Model</code>, you would find that <code>ContactController</code> can get as simple as this:</p>
+
+<pre><code>&lt;?php
+
+/* a nicer version of app/controller/ContactController.php */
+
+class ContactController extends BaseController {
+
+    public function contactList()
+    {
+        $select = Contact::all();
+        return Response::json($select, 200);
+    }
+    
+    public function getContact($id)
+    {
+        $select = Contact::find($id);
+        return Response::json($select, 200);
+    }
+    
+    public function newContact()
+    {
+        $contact = Contact::create(
+            [
+                'name' =&gt; Input::get("name"),
+                'email' =&gt; Input::get("email"),
+                'tel' =&gt; Input::get("tel"),
+                'address' =&gt; Input::get("address"),
+                'photo' =&gt; Input::get("photo")
+            ]
+        );
+        
+        return Response::json($contact-&gt;id, 200);
+    }
+    
+    public function delContact($id)
+    {
+        Contact::find($id)-&gt;delete();
+        return Response::make("", 200);
+    }
+
+}
+</code></pre>
+
+<h4 id="the-view">The view</h4>
+
+<p>This application has only 1 view, <code>contact.php</code> under <code>app/views</code>. It is the HTML template for the app yet this time it does not use any of the Laravel’s templating functionalities.</p>
+
+<h4 id="conclusion">Conclusion</h4>
+
+<p>Even though I missed a couple of key features that make Laravel an enjoyment to use instead of a developer nightmare, but the aim of this tutorial is to get you started with Laravel. If you have tried other PHP frameworks before, congraduation, you will enjoy Laravel beacuse Laravel is highly automated and refined to make normal tasks such as database operations, input and output simple and easy.</p>
+
+<p>Stay tuned to <a href="http://blog.tommyku.com">Method Stub</a> as I may upload some more Laravel-related articles in the future!</p>
+</section></main><script src="/js/highlight.pack.js" type="text/javascript"></script><script>(function() {
+  hljs.initHighlightingOnLoad();
+
+}).call(this);
+</script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/create-simple-contact-list-application-with-laravel-and-openshift-integration-part-2/";
+  this.page.identifier = "create-simple-contact-list-application-with-laravel-and-openshift-integration-part-2";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-47055557-3', 'auto');
+ga('send', 'pageview');</script></body></html>

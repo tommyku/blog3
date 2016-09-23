@@ -12,6 +12,6 @@ ul#article-list
           time
             = current_date = attribute_to_time(article[:created_at]).strftime('%Y.%m')
     li
-      p == link_to article[:title], url_for(article)
+      == link_to article[:title], url_for(article)
       - if abstract?(article)
-        == abstract(article)
+        p == abstract(article)

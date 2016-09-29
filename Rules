@@ -56,7 +56,7 @@ route '/**/*.{html,md,slim}' do
   end
 end
 
-compile '/assets/blog_images/*/*.{jpg,png}' do
+compile '/assets/blog_images/*/*.{jpg,png,gif}' do
   new_location = item.identifier.to_s.gsub(/\/assets\/blog_images\//, '/blog/')
   write new_location
 end

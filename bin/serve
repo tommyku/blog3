@@ -1,5 +1,5 @@
 #!/bin/sh
 
 nanoc
-nanoc view &
+npm run-script serve &
 guard

@@ -6,21 +6,18 @@ slug: working-in-taipei-for-a-month
 preview: false
 ---
 
-We worked remotely from Taipei for a month, and here are what I thought. For many in the software engineering field,
-remote working have became a no-brainer.
-
-And don't let the word 'remote' fool you. The ultra-connectedness enabled by broadband Internet connection and
-enriched multimedia communication makes everybody who're remote working feel like they all work in the same place.
-
-Just that you can't walk up to somebody to start another time-wasting random chit-chat doesn't mean you can't
-communicate and work properly with everybody else in the office.
-
-Or does it?
+Backed by AppWorks Accelerator, 2 enginners and the CEO stayed in Taiwan for around a month to develop
+a new product in August. I was one of the engineers going there with my Thinkpad X230, recently
+upgraded to 8GB of RAM.
 
 ### Hong Kong software engineers in Taiwan
 
-Backed by AppWorks Accelerator, 2 enginners and the CEO stayed in Taiwan for around a month to develop a new product in
-August. I was one of the engineers going there with my Thinkpad X230, recently upgraded to 8GB of RAM.
+For many in the software engineering field, remote working have became a no-brainer. But don't let the
+word 'remote' fool you. The ultra-connectedness enabled by broadband Internet connection and enriched
+multimedia communication makes everybody who're remote working feel like they all work in the same place.
+
+Just that you can't walk up to somebody to start another time-wasting random chit-chat doesn't mean you can
+communicate and work properly with everybody else in the office.
 
 #### The routine
 
@@ -53,22 +50,21 @@ we thought would solve the problems while ending up causing more UX issues or no
 We once belived that with all the majority of AppWorks being our target audience, we'd have a perfect environment to put
 together prototypes and validate our solutions, lightning fast.
 
-Instead time were wasted and not much were validated. UX is one Google Hangout call away and it's too expensive to discuss over
-that channel.
+Instead time were wasted and not much were validated. UX is one Google Hangout call away and it's already too expensive to discuss over that channel.
 
 #### Communication
 
 We use Google Hangout and Telegram to communicate with the Hong Kong team yet that was never enough for 3 reasons.
 
 1. Internet is slow and unreliable, the 700km distance probably does matter
-2. The overhead in time of arranging a call makes it prohibitive
+2. The time spent on arranging a call makes it prohibitive
 3. One does not check Telegram for new message all the time
 
 As such, we were on our own with the CEO. When you're stuck in a room with someone who has a million ideas in his head,
 impromptu discussion could start and end at any time. By anytime I mean like, starting at 12am and ending at 4am on any
 regular work day. That is not as productive as you may think.
 
-For one thing the discussion began totally unprepared. There were no agenda, no data, no design, not even objective
+The discussion began totally unprepared. There were no agenda, no data, no design, not even objective
 beforehand. We talked about things on and on without anybody taking a minute. So much of which were bullshitting, and
 half of them prospects without action items.
 
@@ -98,9 +94,14 @@ work, only did it take extra time and lacked coordination.
 
 ### Remote work in conclusion
 
-Before we notice it, remote work has rose to becoming a criteria for many seeking job.
+With all that I am not against the whole remote working thing despite the hurdles mostly related to communication and
+productivity.
+
+In fact, I strongly support remote working because life is much more than sitting 10 hours in office closely
+working with no more than 15 people everyday. One should meet new people and see the world in this golden age of
+connectivity before he gets too old and too tired to do so.
 
 <figure>
 <img src='./cat.jpg'/>
-<figcaption>Bonus cat pic for you</figcaption>
+<figcaption>Bonus for working at someone's place, cat!</figcaption>
 </figure>

@@ -48,6 +48,12 @@ rather. As an CEO that is fine, but as an PM, that is unacceptable.
 
 > Don't ask me to do it until you're absolutely sure.
 
+<figure>
+<img src='./just-do-it.jpg' style='max-width: 600px'/>
+<figcaption>Really, no</figcaption>
+</figure>
+
+
 We were demotivated. Task assignment became long discussion and took lots
 of persuasion. The unhealthy tension between the devs and the PM
 required much negotiations and trust building before the devs agreed to
@@ -76,10 +82,53 @@ brough nothing but demotivation.
 
 ### Feature ownership motivates people
 
-- feels good when John asked me about membership feature
-- git praise
-- if I contributed to the idea I am more happy to do it
+> Tommy, I have something to ask you.
+
+Sometime my colleague John would call me to his seat and showed me the
+code I wrote. He could be modifying the code or didn't understand it.
+Then he would made me feel shameful or feel proud of the piece of code I
+wrote.
+
+In EventXtra where I worked, every one of us is usually responsible for
+a chunk of feature. One would architech it, write up algorithms to *do
+something*. Later somebody else may manage that piece of code, by then
+the piece or code is either `git praise`-ed or `git blame`-ed.
+
+~~~
+# ~/.gitconfig
+[alias]
+    praise = blame
+~~~
+
+> This's my feature, and that is your feature. For that part of code,
+you'd better ask *Kenneth*.
+
+> Who the h\*ll wrote this? Let me git blame it.
+
+<figure>
+<img src='./git-blame.jpg'/>
+<figcaption>Go, <a href='https://github.com/jayphelps/git-blame-someone-else'>blame someone else</a></figcaption>
+</figure>
+
+When we evaluate a piece of work, we refer it by *somebody's* feature
+not because that person is the sole person responsible for developing
+it, but that it's consolidated a significant amount of effort from that
+person and thus that person feels a *psychological ownership* over it.
+
+The sense of psychological ownership also spawns from the fact that
+someone being a opinion leader over a feature, in which he possesses
+control over a major part of the design or implementation of the
+feature.
+
+[Research by Dyne and Pierce](http://cqtesting.com/papers/JOB%202004%20Van%20Dyne%20Pierce%20Psychological%20Ownership.pdf) demonstrates positively links between
+psychological ownership for the organization and employee attitudes, and
+work behavior.
+
+Of course, when a piece of code is `git praise`-ed the developer feels good
+about it due to a sense of ownership. Ownership positively influences
+the attitude and performance of a developer as a feature is being
+developed.
 
 ### Feedback and discussion are the keys
 
-- solution: give and take feedback between idea owner and tech ppl
+

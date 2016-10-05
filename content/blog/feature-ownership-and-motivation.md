@@ -3,7 +3,7 @@ title: Feature ownership and motivation
 kind: article
 created_at: '2016-10-05 00:00:00 +0800'
 slug: feature-ownership-and-motivation
-preview: true
+preview: false
 ---
 
 With 3 of my friends I used to join the department-held hackathon at
@@ -120,9 +120,9 @@ someone being a opinion leader over a feature, in which he possesses
 control over a major part of the design or implementation of the
 feature.
 
-[Research by Dyne and Pierce](http://cqtesting.com/papers/JOB%202004%20Van%20Dyne%20Pierce%20Psychological%20Ownership.pdf) demonstrates positively links between
-psychological ownership for the organization and employee attitudes, and
-work behavior.
+[Research by Dyne and Pierce](http://cqtesting.com/papers/JOB%202004%20Van%20Dyne%20Pierce%20Psychological%20Ownership.pdf) demonstrates
+positively links between psychological ownership for the organization and employee
+attitudes, and work behavior.
 
 Of course, when a piece of code is `git praise`-ed the developer feels good
 about it due to a sense of ownership. Ownership positively influences
@@ -131,4 +131,18 @@ developed.
 
 ### Feedback and discussion are the keys
 
+We have talked about what demotivates and what motivates. To those who
+are attempting to improve their own working motivation, these are what
+to fix and what to reinforce. For those who attempts to motivate, they
+should take note on and avoid the behaviors demotivating their colleagues.
 
+Open communication aiming at trust-building instead of blaming can help
+the managements to better understand the need of their colleagues.
+
+As a friend of mine always says: 'When your trust bank has bankrupted,
+you\'ve to work hard to build the trust back up.' Should you see your
+colleagues demotivated on their jobs, trust-building is the first step.
+
+Have you encountered motivation issues in workplace, either on yourself
+or your colleagues? How did you deal with it? Tell us in the comment
+section!

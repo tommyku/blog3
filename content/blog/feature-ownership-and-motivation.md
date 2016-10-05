@@ -30,7 +30,7 @@ The team were demotivated, and it was nobody's fault. Product feature
 idea and direction changes according to the circumtance. Everybody
 who builds product knows it, but not all can deal with it calmly.
 
-### Impromptu change demotivates people
+### Impromptu change and vague requirement demotivate people
 
 Recalling the experience with the product manager and another engineer in
 Taiwan, we have spent a big chunk of our time working on something and
@@ -42,6 +42,10 @@ time there developed a sentiment that if a feature is not well-designed
 and validated with the users, we shouldn't work on it. We played with
 cat instead.
 
+The situation were made worse because our 'PM' were less of detail-focused
+person but more of big-picture driven and gave nothing more than a sentence
+rather. As an CEO that is fine, but as an PM, that is unacceptable.
+
 > Don't ask me to do it until you're absolutely sure.
 
 We were demotivated. Task assignment became long discussion and took lots
@@ -51,14 +55,28 @@ work and the PM promised to not change the schedule until the end of the
 sprint.
 
 It was that moment that I realized what Ivan felt when I piped his
-night-worth of work into `/dev/null`<sup>*</sup>. And the prospect of the project
+night-worth of work into `/dev/null`*. And the prospect of the project
 were gloomy.
 
 <small>* nerdy way to say 'void', 'nothingness'</small>
 
+Vroom's Expectancy theory states that individuals motivation comes from
+the belief that efforts are positively correlated to performance, and
+that performance results in an outcome that brings reward that satisfies
+an individual's need.
+
+Now think about it, effort were paid yet there comes no performance nor
+outcome because the work were trashed. While rewards (paycheck) were
+given every month, developers seek more than monetary rewards. They
+value the sense of achievement when they deploy a feature with nice code
+and novel approaches.
+
+Therefore impromptu change in plan negates developers' paid efforts and
+brough nothing but demotivation.
+
 ### Feature ownership motivates people
 
-- feels good when John asked me abojt membership feature
+- feels good when John asked me about membership feature
 - git praise
 - if I contributed to the idea I am more happy to do it
 

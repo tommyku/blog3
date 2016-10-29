@@ -8,9 +8,6 @@ source 'https://rubygems.org' do
   gem 'yuicompressor'
   gem 'coffee-script'
   gem 'sass'
-
-  group :development do
-    gem 'guard'
-    gem 'guard-shell'
-  end
+  gem 'guard'
+  gem 'guard-shell'
 end

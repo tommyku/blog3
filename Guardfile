@@ -15,6 +15,8 @@
 #
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"a
 
+interactor :off
+
 guard :shell do
   watch(/content\/(.*).(.*)|layouts\/(.*)/) do |modified|
     puts "modified: #{modified[0]}"

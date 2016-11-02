@@ -1,7 +1,7 @@
 FROM ruby:2.3.1-alpine
 MAINTAINER tommyku
 
-RUN apk add --no-cache build-base nodejs
+RUN apk add --no-cache build-base nodejs openjdk8
 
 RUN gem install bundler
 
@@ -14,5 +14,7 @@ RUN bundle install
 RUN npm install
 
 EXPOSE 3000
+
+COPY . /app
 
 CMD "./bin/serve"

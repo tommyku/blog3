@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="en"><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport" /><meta content="Doing things the layman way - Tommy Ku&#39;s Method Stub - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Doing things the layman way - Tommy Ku&#39;s Method Stub - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><title>Doing things the layman way - Tommy Ku&#39;s Method Stub</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/tomorrow-night-eighties.css" rel="stylesheet" /><meta content="Nanoc 4.3.7" name="generator" /></head><body><header><h2><img class="author" src="/assets/images/author.jpg" />Tommy Ku's Method Stub</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://hp.tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://hk.linkedin.com/in/tommy-ku-65aba999">LinkedIn</a></nav><main id="main"><section id="meta"><strong style="color: brown">This post is preview only (╯°□°）╯︵ ┻━┻</strong><h1>Doing things the layman way</h1><i>Written on 2016.11.17</i></section><section id="content">
+<p>There was an old project I took as a freelancer before. It was about
+scraping the web pages of The Law Society of Hong Kong. They have
+put up a long comprehensive list of registered members.</p>
+
+<p>Literally listing out <a href="http://www.hklawsoc.org.hk/pub_e/memberlawlist/mem_withcert.asp">right</a>
+<a href="http://www.hklawsoc.org.hk/pub_e/memberlawlist/mem_withoutcert.asp">there</a> inviting just anyone to scrape,
+all 10,288 of them.</p>
+
+<p>The page structure were in simple table format in plain HTML, no
+Javascript to run before getting any useful value.</p>
+
+<h3 id="my-way">My way</h3>
+
+<p>For folks reading out there who’re probably also an engineer, at this
+momemnt you must’ve formulated various ways to scrape the page from
+HTML. You may have a preference towards a certain framework or language
+that you’ve used or heard about before.</p>
+
+<p>So did I, back then the Python web crawling / scraping framework Scrapy
+were perfect for the job. (by the way Scrapy is one brillient framework…
+I scraped my university’s timetable and built “<a href="http://re.ck2ustudio.com/">UST Break-in</a>”)</p>
+
+<p>It was done overnight and I earned some moeny for some better dinners
+for a week. Everybody was happy.</p>
+
+<h3 id="the-layman-way">The Layman way</h3>
+
+<p>Later I came to learn from a guy, the COO Angus in <a href="https://www.eventxtra.com/">EventXtra</a>.
+Briefly speaking he is the “brute-force it” sort of guy who simply broke the
+lock in a room escape game (which didn’t go down well).</p>
+
+<p>As Angus, he’d Google it and eventually land on a site called
+‘<a href="https://www.import.io">import.io</a>’.</p>
+
+<p>Angus simply plug the links in and TaDa! All data from the site is
+automatically scraped by import.io and instantly available to Angus in
+spreadsheet formats.</p>
+
+<p>Really this felt like cheating when I learned about import.io from Angus.</p>
+
+<p>Angus could have earned better dinners for the week in a much shorter time.</p>
+
+<h3 id="reflection">Reflection</h3>
+
+<p>Angus and me have different mindsets; he is an operation guy with a
+couple years of hard-earned experiece in founding EventXtra whilst I
+am strictly from several years of engineering background.</p>
+
+<p>As an engineer I my pride wasn’t hurt, instead I was intrigued to employ
+what Angus’d have employed in many engineering problems I am facing daily.</p>
+
+<p>Building a program to automate and perform a computationally expensive task
+is one thing that all software engineers are more than prepared for. But doing
+things the layman way and achieve virtually the same result in lower cost is much much better.</p>
+
+<p>Of course not everything has an easy way out, still I think it doesn’t
+hurt if we could just google it before jumping to the solution. This way
+we could potentially have saved lots of time and money.</p>
+
+<blockquote>
+  <p><em>Angus is a layman.</em>
+<br>
+<em>Angus googles stuff and get things done at lower cost.</em>
+<br>
+<em>Angus is smart.</em>
+<br>
+<em>Be like Angus.</em></p>
+</blockquote>
+</section></main><script src="/js/highlight.pack.js" type="text/javascript"></script><script>(function() {
+  hljs.initHighlightingOnLoad();
+
+}).call(this);
+</script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/doing-things-the-layman-way/";
+  this.page.identifier = "doing-things-the-layman-way";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-47055557-3', 'auto');
+ga('send', 'pageview');</script></body></html>

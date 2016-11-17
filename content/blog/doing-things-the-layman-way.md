@@ -3,7 +3,7 @@ title: Doing things the layman way
 kind: article
 created_at: '2016-11-17 00:00:00 +0800'
 slug: doing-things-the-layman-way
-preview: true
+preview: false
 ---
 
 There was an old project I took as a freelancer before. It was about
@@ -28,7 +28,7 @@ So did I, back then the Python web crawling / scraping framework Scrapy
 were perfect for the job. (by the way Scrapy is one brillient framework...
 I scraped my university's timetable and built "[UST Break-in](http://re.ck2ustudio.com/)")
 
-It was done overnight and I earned some moeny for some better dinners
+It was done overnight and I earned some money for some better dinners
 for a week. Everybody was happy.
 
 ### The Layman way

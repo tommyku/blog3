@@ -6,17 +6,19 @@ slug: im-bots-application-without-interface
 preview: true
 ---
 
-Cold hard fact: 50% of the time my design sucks, for the rest of the time
-they never look perfect.
+Fact check: I am no designer. I make webapp and websites from time to
+time but much of the design were either borrowed or took hours of minor
+adjustment. (now you know why my blog looks so [brutalist](https://theamericangenius.com/business-marketing/brutalist-web-design/))
 
 Now it's 2016, Twitter bots' been around for years; Slack, Telegram and
 Facebook Messager all have SDKs for building custom bots. One particular
 characteristics of chatbots is that they don't need a rich interface to
 function. Plain text + emoji will do.
 
-Albeit various bot API enables for customized experience from
-inline keyboard all the way to webview and HTML5 games. This article
-focuses on the textual experience because, again, my design sucks.
+Albeit various bot APIs enable for a customized experience from
+inline keyboard all the way to webview and even HTML5 games. This article
+focuses on the basic textual experience one could implement with
+Telegram bot easily.
 
 ## UST break-in bot
 

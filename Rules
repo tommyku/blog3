@@ -61,6 +61,11 @@ compile '/assets/blog_images/*/*.{jpg,png,gif}' do
   write new_location
 end
 
+compile '/assets/preview_images/*/*.{jpg,png,gif}' do
+  new_location = item.identifier.to_s.gsub(/\/assets\/preview_images\//, '/preview/')
+  write new_location
+end
+
 compile '/**/*' do
   write item.identifier.to_s
 end

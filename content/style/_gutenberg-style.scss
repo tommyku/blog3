@@ -164,6 +164,13 @@ p code {
   vertical-align: bottom;
 }
 
+.hljs {
+  line-height: 1.5em !important;
+  span {
+    line-height: 1.5em !important;
+  }
+}
+
 img {
   margin: auto
 }

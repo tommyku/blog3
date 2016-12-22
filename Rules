@@ -56,14 +56,11 @@ route '/**/*.{html,md,slim}' do
   end
 end
 
-compile '/assets/blog_images/*/*.{jpg,png,gif}' do
-  new_location = item.identifier.to_s.gsub(/\/assets\/blog_images\//, '/blog/')
-  write new_location
-end
-
-compile '/assets/preview_images/*/*.{jpg,png,gif}' do
-  new_location = item.identifier.to_s.gsub(/\/assets\/preview_images\//, '/preview/')
-  write new_location
+%w(blog preview special).each do |type|
+  compile "/assets/#{type}_images/*/*.{jpg,png,gif}" do
+    new_location = item.identifier.to_s.gsub("\/assets\/#{type}_images\/", "/#{type}/")
+    write new_location
+  end
 end
 
 compile '/**/*' do

@@ -7,7 +7,7 @@ preview: true
 ---
 
 <figure>
-<img src='./multiple-tiles.png'/>
+<img src='./multiple-tiles.jpg'/>
 <figcaption>My current setup</figcaption>
 </figure>
 
@@ -114,7 +114,7 @@ CSS grid is probably the reason for broken layout when you first build
 and open build from the demo repo.
 
 <figure>
-<img src='./broken.png'/>
+<img src='./broken.jpg'/>
 <figcaption>How broken it looks with CSS grid disabled</figcaption>
 </figure>
 
@@ -126,7 +126,7 @@ yet considering how troublesome flexbox is when implementing a 2D
 nested layout (mainly for the bloated meaningless HTML structure), I opted for CSS grid instead.
 
 <figure>
-<img src='./caniuse-css-grid.png'/>
+<img src='./caniuse-css-grid.jpg'/>
 <figcaption>Fact: CSS grid isn't widely supported (as of Jan 2017)</figcaption>
 </figure>
 

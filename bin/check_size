@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+def warning(text)
+  print "\e[33m#{text}\e[0m"
+end
+
+def info(text)
+  print "\e[34m#{text}\e[0m"
+end
+
+def success(text)
+  print "\e[32m#{text}\e[0m"
+end
+
+def check_folder(dir)
+  Dir.foreach(dir) do |d|
+    path = "#{dir}/#{d}"
+    next if !File.directory?(path) || !(d =~ /^\.{1,2}$/).nil?
+    size = `du -s #{path} | cut -f 1`
+    if size.to_i > 1536
+      size_humanized = `du -h #{path} | cut -f 1`.gsub("\n", '')
+      warning "Warning: "
+      print "blog post "
+      success d
+      print " is too big ("
+      success size_humanized
+      print"), consider optimizing or converting images\n"
+    end
+  end
+end
+
+info "Checking blog posts...\n"
+
+check_folder 'docs/blog'
+
+info "Checking preview posts...\n"
+
+check_folder 'docs/preview'

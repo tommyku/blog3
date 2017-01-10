@@ -8,3 +8,5 @@ rsync -avzh output/ docs/
 
 mv nanoc.yaml nanoc.gh-pages.yaml
 mv nanoc.local.yaml nanoc.yaml
+
+ruby bin/check_size

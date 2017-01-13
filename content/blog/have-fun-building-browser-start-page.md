@@ -12,11 +12,11 @@ preview: false
 </figure>
 
 Maybe it was my colleague, or maybe I feel the heat from [/r/startpages](https://www.reddit.com/r/startpages/)...
-Whichever the reason may be, I began building browser start page.
+Whichever the reason is, I began building browser start page.
 
 Default browser start pages are totally fine. Engineers' put in hard
 work to make it convenient and visually pleasing, but it is not *my*
-page. Just as people customize their desktop wallpaper, I wnat my browser
+page. Just as people customize their desktop wallpaper, I want my browser
 start page to do *this* and *that* while showing a refreshing background
 image.
 
@@ -37,7 +37,7 @@ The finished code is available at:
 
 In this start-page project, `bower` is substituted by `webpack`, a
 module bundler which compiles the source code along with modules used.
-In `bower`'s way, components are stored in `bower_components` folder and
+In `bower`'s way, components are first put inside `bower_components` folder and
 then included in the HTML page one by one, while with `webpack` modules
 are loaded as simple as calling `require('module-name')`.
 
@@ -72,20 +72,20 @@ module.exports = {
 }
 ~~~
 
-#### Using yarn alongside npm
+#### Using yarn along with npm
 
 `npm` is fine but there exists `yarn` that runs faster and output better
 information while running `npm|yarn install`.
 
 `yarn` generates a `yarn.lock` file that records packages with version
-numbers so the same packages will be installed across machines.
+numbers so the same packages are installed across machines.
 
 For more of *yarn vs npm* see this [post](https://www.sitepoint.com/yarn-vs-npm/).
 
 ### Brainstorm what to add
 
 Browser start page is personal. There is no pattern or best practices
-associated with the category.
+associated with the genre.
 
 Here is a list of stuff I might include:
 
@@ -104,9 +104,9 @@ Here is a list of stuff I might include:
 The [Startpage Emporium](https://startpages.github.io/) and [/r/startpages](https://www.reddit.com/r/startpages/)
 are good places for seeking inspiration.
 
-As frequently visited as a start page, it's better kept small
-and fast. Consider importing external assets only when they are
-needed and minimize the `.js` files in production build.
+As often visited as a start page, it's better kept small
+and fast. Consider importing external assets only when necessary
+and minimize the `.js` files in production build.
 
 ### CSS grid
 
@@ -130,7 +130,7 @@ nested layout (mainly for the bloated meaningless HTML structure), I opted for C
 <figcaption>Fact: CSS grid isn't widely supported (as of Jan 2017)</figcaption>
 </figure>
 
-In Google Chrome 29 through 56, CSS grid can be enabled through
+In Google Chrome 29 through 56, CSS grid is enabled through
 'experimental Web Platform features' flags in
 [chrome://flags](chrome://flags), so I did that.
 
@@ -148,10 +148,10 @@ lines defined using slightly abstract CSS syntax of
 }
 ~~~
 
-The above piece of CSS code defines a 4x4 grids with respective cell
-sizes (or separation between grid lines). Other than an additional grid
-container that contains all grid elements, there is no need to modify
-the existing HTML DOM structure to accommondate for the CSS grid layout.
+The above piece of CSS code defines a 4x4 grids with respective to cell
+sizes (or separation between grid lines). Other than an extra grid
+container that contains all grid elements, there is no need to change
+the existing HTML DOM structure to accommodate for the CSS grid layout.
 
 I look forward to CSS grid being a default feature in major browsers.
 Meanwhile, a comprehensive guide is available on [CSS tricks](https://css-tricks.com/snippets/css/complete-guide-grid/).
@@ -180,7 +180,7 @@ disable those extensions.
 }
 ~~~
 
-Unfinished extensions can be loaded into Chrome by clicking `Load
+Unfinished extensions are loaded into Chrome by clicking `Load
 unpacked extension...` in [chrome://extensions](chrome://extensions/)
 page.
 
@@ -211,8 +211,8 @@ at 1080 port which essentially wraps the Dark Sky API.
 Make sure your've set the API key at the line `ForecastIO.api_key =
 'YOUR_DARK_SKY_API_KEY'`.
 
-The proxy server is located in `web-proxy` folder of the demo. With
-Docker installed, it can be started by running:
+The proxy server code is in `web-proxy` folder of the demo. With
+Docker installed, starte the server by running:
 
 ~~~ bash
 $ ./bin/build
@@ -268,10 +268,12 @@ loaded.
 </html>
 ~~~
 
-The mask does only one thing: mask the whole page in white before (hopefully) some JavaScript set
-it's opacity to 0, revealing the fully-loaded page under it.
+The mask does only one thing: mask the page in white before (hopefully) some JavaScript set
+it's opacity to 0, revealing the fully loaded page under it.
 
-(exactly why you cannot click anything in the page...the mask element is still covering everything after unmasking)
+<s>(exactly why you cannot click anything in the page...the mask element is still covering everything after unmasking)</s>
+
+*edit: elements underneath the mask can be clicked by setting `pointer-events: none` on the mask*
 
 ~~~ coffeescript
 # main.coffee
@@ -281,7 +283,10 @@ DateTimePanel = require './date_time_panel.js.coffee'
 Wallpaper = require './wallpaper.js.coffee'
 
 unMask = ->
-  $('.mask').css 'opacity', 0
+  $('.mask').css {
+    opacity: 0,
+    'pointer-events': 'none'
+  }
 
   $ ->
     (new Wallpaper()).bootstrap()

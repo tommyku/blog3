@@ -4,6 +4,15 @@ title: Tommy Ku's Method Stub
 
 - current_date = ''
 ul#article-list
+  - specials = sorted_special_articles
+  - if specials.any?
+    li.header
+      h4 Featured
+    - specials.each do |article|
+      li.special
+        == link_to article[:title], url_for(article)
+        - if abstract?(article)
+          p == abstract(article)
   - sorted_articles.each do |article|
     - next if preview?(article)
     - if current_date != attribute_to_time(article[:created_at]).strftime('%Y.%m')

@@ -3,18 +3,17 @@ title: Tommy Ku's Method Stub
 ---
 
 - current_date = ''
+- specials = sorted_special_articles
+- if specials.any?
+  h3 Featured
+  - specials.each do |article|
+    a.special href=url_for(article)
+      figure.side-figure
+        img src="#{url_for(article)}#{article[:banner]}"
+      h4 = article[:title]
 ul#article-list
-  - specials = sorted_special_articles
-  - if specials.any?
-    li.header
-      h4 Featured
-    - specials.each do |article|
-      li.special
-        == link_to article[:title], url_for(article)
-        - if abstract?(article)
-          p == abstract(article)
   - sorted_articles.each do |article|
-    - next if preview?(article)
+    - next if preview?(article) || special?(article)
     - if current_date != attribute_to_time(article[:created_at]).strftime('%Y.%m')
       li.header
         h4

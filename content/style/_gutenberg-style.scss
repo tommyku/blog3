@@ -174,3 +174,28 @@ p code {
 img {
   margin: auto
 }
+
+.special {
+  width: 45%;
+  list-style: none;
+  box-shadow: 0 2px 4px gray;
+  display: inline-block;
+  margin-right: 2.5%;
+  margin-left: 2.5%;
+  text-decoration: none;
+  padding-bottom: 1.6875rem;
+
+  h4 {
+    margin: 0;
+    padding: 0 .84375rem;
+    margin-top: 0;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: #{$max-width / 1.5 + 'em'}) {
+  .special {
+    width: 100%;
+  }
+}
+

@@ -1,15 +1,15 @@
-<!DOCTYPE html><html lang="en"><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport" /><meta content="Have fun building browser start page - Tommy Ku&#39;s Method Stub - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Have fun building browser start page - Tommy Ku&#39;s Method Stub - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><title>Have fun building browser start page - Tommy Ku&#39;s Method Stub</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/tomorrow-night-eighties.css" rel="stylesheet" /><meta content="Nanoc 4.3.7" name="generator" /></head><body><header><h2><img class="author" src="/assets/images/author.jpg" />Tommy Ku's Method Stub</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://hp.tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://hk.linkedin.com/in/tommy-ku-65aba999">LinkedIn</a></nav><main id="main"><section id="meta"><h1>Have fun building browser start page</h1><i>Written on 2017.01.10</i></section><section id="content">
+<!DOCTYPE html><html lang="en"><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport" /><meta content="Have fun building browser start page - Tommy Ku&#39;s Method Stub - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Have fun building browser start page - Tommy Ku&#39;s Method Stub - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><title>Have fun building browser start page - Tommy Ku&#39;s Method Stub</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/tomorrow-night-eighties.css" rel="stylesheet" /><meta content="Nanoc 4.5.2" name="generator" /></head><body><header><h2><img class="author" src="/assets/images/author.jpg" />Tommy Ku's Method Stub</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://hp.tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://hk.linkedin.com/in/tommy-ku-65aba999">LinkedIn</a></nav><main id="main"><section id="meta"><h1>Have fun building browser start page</h1><i>Posted on 2017.01.10</i></section><section id="content">
 <figure>
 <img src="./multiple-tiles.jpg">
 <figcaption>My current setup</figcaption>
 </figure>
 
 <p>Maybe it was my colleague, or maybe I feel the heat from <a href="https://www.reddit.com/r/startpages/">/r/startpages</a>…
-Whichever the reason may be, I began building browser start page.</p>
+Whichever the reason is, I began building browser start page.</p>
 
 <p>Default browser start pages are totally fine. Engineers’ put in hard
 work to make it convenient and visually pleasing, but it is not <em>my</em>
-page. Just as people customize their desktop wallpaper, I wnat my browser
+page. Just as people customize their desktop wallpaper, I want my browser
 start page to do <em>this</em> and <em>that</em> while showing a refreshing background
 image.</p>
 
@@ -30,7 +30,7 @@ but essentially useless.</p>
 
 <p>In this start-page project, <code>bower</code> is substituted by <code>webpack</code>, a
 module bundler which compiles the source code along with modules used.
-In <code>bower</code>’s way, components are stored in <code>bower_components</code> folder and
+In <code>bower</code>’s way, components are first put inside <code>bower_components</code> folder and
 then included in the HTML page one by one, while with <code>webpack</code> modules
 are loaded as simple as calling <code>require('module-name')</code>.</p>
 
@@ -62,20 +62,20 @@ module.exports = {
 }
 </code></pre>
 
-<h4 id="using-yarn-alongside-npm">Using yarn alongside npm</h4>
+<h4 id="using-yarn-along-with-npm">Using yarn along with npm</h4>
 
 <p><code>npm</code> is fine but there exists <code>yarn</code> that runs faster and output better
 information while running <code>npm|yarn install</code>.</p>
 
 <p><code>yarn</code> generates a <code>yarn.lock</code> file that records packages with version
-numbers so the same packages will be installed across machines.</p>
+numbers so the same packages are installed across machines.</p>
 
 <p>For more of <em>yarn vs npm</em> see this <a href="https://www.sitepoint.com/yarn-vs-npm/">post</a>.</p>
 
 <h3 id="brainstorm-what-to-add">Brainstorm what to add</h3>
 
 <p>Browser start page is personal. There is no pattern or best practices
-associated with the category.</p>
+associated with the genre.</p>
 
 <p>Here is a list of stuff I might include:</p>
 
@@ -96,9 +96,9 @@ associated with the category.</p>
 <p>The <a href="https://startpages.github.io/">Startpage Emporium</a> and <a href="https://www.reddit.com/r/startpages/">/r/startpages</a>
 are good places for seeking inspiration.</p>
 
-<p>As frequently visited as a start page, it’s better kept small
-and fast. Consider importing external assets only when they are
-needed and minimize the <code>.js</code> files in production build.</p>
+<p>As often visited as a start page, it’s better kept small
+and fast. Consider importing external assets only when necessary
+and minimize the <code>.js</code> files in production build.</p>
 
 <h3 id="css-grid">CSS grid</h3>
 
@@ -122,7 +122,7 @@ nested layout (mainly for the bloated meaningless HTML structure), I opted for C
 <figcaption>Fact: CSS grid isn’t widely supported (as of Jan 2017)</figcaption>
 </figure>
 
-<p>In Google Chrome 29 through 56, CSS grid can be enabled through
+<p>In Google Chrome 29 through 56, CSS grid is enabled through
 ‘experimental Web Platform features’ flags in
 <a href="chrome://flags">chrome://flags</a>, so I did that.</p>
 
@@ -139,10 +139,10 @@ lines defined using slightly abstract CSS syntax of
 }
 </code></pre>
 
-<p>The above piece of CSS code defines a 4x4 grids with respective cell
-sizes (or separation between grid lines). Other than an additional grid
-container that contains all grid elements, there is no need to modify
-the existing HTML DOM structure to accommondate for the CSS grid layout.</p>
+<p>The above piece of CSS code defines a 4x4 grids with respective to cell
+sizes (or separation between grid lines). Other than an extra grid
+container that contains all grid elements, there is no need to change
+the existing HTML DOM structure to accommodate for the CSS grid layout.</p>
 
 <p>I look forward to CSS grid being a default feature in major browsers.
 Meanwhile, a comprehensive guide is available on <a href="https://css-tricks.com/snippets/css/complete-guide-grid/">CSS tricks</a>.</p>
@@ -170,7 +170,7 @@ disable those extensions.</p>
 }
 </code></pre>
 
-<p>Unfinished extensions can be loaded into Chrome by clicking <code>Load
+<p>Unfinished extensions are loaded into Chrome by clicking <code>Load
 unpacked extension...</code> in <a href="chrome://extensions/">chrome://extensions</a>
 page.</p>
 
@@ -200,8 +200,8 @@ at 1080 port which essentially wraps the Dark Sky API.</p>
 <p>Make sure your’ve set the API key at the line <code>ForecastIO.api_key =
 'YOUR_DARK_SKY_API_KEY'</code>.</p>
 
-<p>The proxy server is located in <code>web-proxy</code> folder of the demo. With
-Docker installed, it can be started by running:</p>
+<p>The proxy server code is in <code>web-proxy</code> folder of the demo. With
+Docker installed, starte the server by running:</p>
 
 <pre><code class="language-bash">$ ./bin/build
 $ ./bin/run
@@ -254,10 +254,12 @@ loaded.</p>
 &lt;/html&gt;
 </code></pre>
 
-<p>The mask does only one thing: mask the whole page in white before (hopefully) some JavaScript set
-it’s opacity to 0, revealing the fully-loaded page under it.</p>
+<p>The mask does only one thing: mask the page in white before (hopefully) some JavaScript set
+it’s opacity to 0, revealing the fully loaded page under it.</p>
 
-<p>(exactly why you cannot click anything in the page…the mask element is still covering everything after unmasking)</p>
+<s>(exactly why you cannot click anything in the page…the mask element is still covering everything after unmasking)</s>
+
+<p><em>edit: elements underneath the mask can be clicked by setting <code>pointer-events: none</code> on the mask</em></p>
 
 <pre><code class="language-coffeescript"># main.coffee
 # ...
@@ -266,7 +268,10 @@ DateTimePanel = require './date_time_panel.js.coffee'
 Wallpaper = require './wallpaper.js.coffee'
 
 unMask = -&gt;
-  $('.mask').css 'opacity', 0
+  $('.mask').css {
+    opacity: 0,
+    'pointer-events': 'none'
+  }
 
   $ -&gt;
     (new Wallpaper()).bootstrap()

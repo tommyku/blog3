@@ -3,18 +3,18 @@ title: Leaving EventXtra with 26 lessons learned
 kind: article
 created_at: '2017-01-16 00:00:00 +0800'
 slug: leaving-eventxtra-with-26-lesssons-learned
-preview: true
+preview: false
 special: true
 banner: banner2.jpg
 ---
 
 On January 2017 I am leaving EventXtra, a Hong Kong-based event
 management solution which I have been working for since 2016
-(discounting Jan-Apr 2016 which I were on exchange).
+(discounting Jan-Apr 2016 when I were on student exchange).
 
-This place is full of people having unique characters in one way or another.
+This place is full of people having unique characters.
 I had fun working with every single one of them. From whom I learned a
-lot through observation and pain.
+lot through observation, collaboration and even dispute.
 
 To those who are already *tl;dr* at this point, the following list of lessons learned,
 in no particular order, serves as the table of content:
@@ -89,31 +89,31 @@ web development instead of doing both together.
 Android development was in turn handed over to colleagues who are more
 good at Android development than web development. Yes, by outsourcing/automating
 the 80% of work that yield merely 20% of the result, we can better focus
-on the 20% input and reach more preformant overall outcome.
+on the 20% input and reach more preformant outcome.
 
 ## Vision
 <a id='#vision'></a>
 
-We are exposed to thousands of new business prospects every day. Sharing
+We see thousands of new business prospects every day. Sharing
 econonmy, big data, AI, bots, IoT... People are raising/making millions
 out of these new ideas while we humbly keep doing what we are doing&ndash;event
 management solution.
 
-It is easy to get lost and wonder off from our original plan and goal.
+One is easy to get lost and wonder off from our original plan and goal.
 
-However there were company vision and mission which everybody sticks to
+There are company vision and mission which everybody sticks to
 while planning for the next feature and the next prospect. Don't pivot
-too quickly, too often, stick to the vision and mission &mdash; that we
+prematurely, too often, stick to the vision and mission &mdash; that we
 are to make events simple and impactful.
 
 Thinking of myself as a company, what are my visions and missions? How
 do I stay focus while actively seeking opportunity to grow myself? I'll
-have to seriously consider about them.
+have to consider that.
 
 ## Value
 <a id='#value'></a>
 
-Many work to chase moeny while feeling depressed even with a
+People work to chase moeny while feeling depressed even with a
 above-average salary. To me, there's a threshold which when exceeded
 (that it sustains my living standard and funds my personal
 growth/interests), job is more than a mere job.
@@ -141,17 +141,17 @@ questionnaire to determine our own communication style.
 <figcaption>This pretty much summarizes it all (retrived from <a href='http://thesalesevangelist.com/how-disc-profiling-can-help-you-sell/'>TSE 126</a>)</figcaption>
 </figure>
 
-The majority of the sales were categorized as *Steady*, meaning they
+The majority of the sales were *Steady*, meaning they
 are great listeners and empathic. Half of the engineers are *Compliant*
-while the rest are equally *Dominant* and *Influential*.
+while the rest are split by *Dominant* and *Influential*.
 
 Well I am the *Dominant* guy and pretty much still am nowadays.
 
 Being able to identify the communication style of a person, whether they
-have filled in the questionnaire or not, is quite important in knowing
+have filled in the questionnaire or not, is important in knowing
 what we are expecting from each other.
 
-For instance, *dominant* guy wants their voice be heard, so much so that
+For instance, *dominant* guy wants their voice heard, so much so that
 they missed out much of the background information, leaving the listener
 baffled. *Influence* people may be rather impulsive when raising idea,
 leaving out unfilled details those *Compliant* people always want.
@@ -160,7 +160,7 @@ Communication would be smooth and pleasant when we all know what to
 expect from each other and how to communicate effective with different
 types of people in the DiSC framework.
 
-Details on DiSC could be found on [discprofile](https://www.discprofile.com/what-is-disc/overview/).
+Details on DiSC are available on [discprofile](https://www.discprofile.com/what-is-disc/overview/).
 
 ## Observe
 <a id='#observe'></a>
@@ -170,7 +170,7 @@ his secret to mastering the use of God Gundam (by that point he pretty
 much beats everyone in the company) is to watch the games of experts.
 In fact, he stayed overnight in office watching YouTube and practicing the combo.
 
-Many in software engineering prefer learning from examples in addition
+Software engineers prefer learning from examples in addition
 to theories. We learn from clean ingenious abstractions in open source projects;
 tutorials and boilerplates code written by the experienced, *etc.*
 
@@ -193,11 +193,11 @@ This rule that went viral on social networks comes from the book
 Precision aside, the rule means that one could go from 1 to 38 in a year
 if with slight improvement as small as 0.01 everyday.
 
-In just a year, the field of software engineering has seen amazing
+Within a year, the field of software engineering has seen exciting
 advancement in technology from deep learning powered AI, mass-market VR,
 IoT with physical web, bots...*etc.*
 
-However, it isn't only about the technical skills that we should improve
+It isn't only about the technical skills that we should improve
 ourselves upon. Geeks in the office always came showing off their latest
 gadgets from VR headset to DJI drones; the sporty invites everybody for
 a Muay Thai trial lesson, ping pong (until the last ball in office
@@ -207,7 +207,7 @@ Rubik's Cube (we got 2x2, 3x3, Pyramorphix, 12 sides and even irregular).
 
 Everyone is an expert in something and according to the [observe](#observe)
 section, there is no better and cheaper way than your office to improve yourself
-on random things by observing the experts.
+on random matters by observing the experts.
 
 ## Respect
 <a id='#respect'></a>
@@ -242,7 +242,7 @@ lead to big mistakes.
 
 Have you played a game called [*Chinese whispers*](https://en.wikipedia.org/wiki/Chinese_whispers)?
 People queue up in a line, the first person receives a message which has
-to be passed down the line. Additional limitaions may apply such as the
+to be passed down the line. Limitaions may apply such as the
 listener cannot speak while listening. Error and miscommunication occurs
 almost every game no matter how hard the players try.
 
@@ -281,7 +281,7 @@ unintentionally inflated ego.
 ## Process
 <a id='#process'></a>
 
-Many dread prcess when it becomes bureaucratic and inflexible while the
+People dread process when it becomes bureaucratic and inflexible while the
 other end of the spectrum is haphazard procedures that nobody has idea
 what is happening and what is the next step to take. It is suboptimal at
 the two ends of the spectrum.
@@ -322,7 +322,7 @@ give me an [explanation](http://edgeperspectives.typepad.com/edge_perspectives/2
 
 > Passion is what you actively pursue in long term.
 >
-> Obsession is what you frantically pursue, usually for a short period
+> Obsession is what you frantically pursue for a short period
 > of time.
 
 Obsession occurs only on occasion, like sudden burst of inspiration. The
@@ -407,7 +407,7 @@ always suggestion other cost-effective alternatives.
 
 So I ripped a 8GB RAM module off my co-workers' Mac mini (with
 permission from the COO, of course) because an admin person does not need
-16GB of RAM to do edit spreadsheets. Eventually an extra 8GB RAM saved my Mac from
+16GB of RAM to do edit spreadsheets. An extra 8GB RAM saved my Mac from
 freezing while compiling Android apps.
 
 <figure>
@@ -445,7 +445,7 @@ customers stayed, they would be ([arguably](http://www.inc.com/jessica-stillman/
 surprised over the outcome exceeding their expectation; but if customers
 turned away from us because we under-promise, it doesn't work.
 
-Nevertheless, managing expectation by under-promising when customers asks for
+Managing expectation by under-promising when customers asks for
 a fix is rather valid because developers do need some margin for task
 switching, testing the fix and deploying it.
 
@@ -453,7 +453,7 @@ To coworkers, especially the project manager, I tend to provide them
 with the accurate picture as it's the project manager's task to schedule
 tasks and guarantee delivery.
 
-When it comes to manageing expectation, there is no rule of thumb as to
+When it comes to manageing expectation, there is no rule of thumb to
 accurately- or under-promise. The most important point is not to
 over-promise and under-deliver.
 
@@ -490,7 +490,7 @@ often takes place. This is seen the most effective way of us *getting
 there* where both parties want to go.
 
 Our product manager welcomes counter-offering. When we are short of time
-or human resource, scope can be cut and features altered to avoid
+or human resource, scope is reduced and features altered to avoid
 overnight death march and ensure product manager has something to deliver.
 Of course we had to make up for the compromises later but the openness
 and initiative to counter-offering help the team run smoother.
@@ -503,7 +503,7 @@ and initiative to counter-offering help the team run smoother.
 
 One should be responsible for what he promised. I'd take that as the
 bottom line. For the same reason I do not prefer
-over-promising. Unable to deliver what was expected is really
+over-promising. Unable to deliver what was expected is
 depressing for everybody.
 
 In fact, we pledged to many things without even noticing them. Say,
@@ -514,7 +514,7 @@ Not that we signed a contract or made an oral promise that we should do
 them, they were simply the *expected* behavior that we practice and by
 practicing them we are responsible.
 
-Let's take another example, when a bug is found on a certain feature,
+Let's take another example, when a bug is located on a certain feature,
 slipping in a fix on time isn't explicitly requested but is usually expected.
 Walking away from work and not responding to text and phone during
 work hour is far from being responsible unless there's an emergency.
@@ -526,10 +526,11 @@ Building a social network early in career helps discovering and
 leveraging opportunities afterwards. In fact, I became an intern in
 EventXtra because of a personal contact who was a previous intern there.
 
-When you start looking, the world is unexpectedly small. When I was in
-the United States as an exchange student, surprising my Airbnb host was
-a former EventXtra intern! This is called [Six degree of separaion](https://en.wikipedia.org/wiki/Six_degrees_of_separation), where you can reach anyone in the world by
-asking your friend, then your friend's friends, and so on for 6 times.
+When you start looking, the world is unexpectedly small. When my friend
+studying HKUST went to Silicon Valley for an internship, his roommate
+was another friend of mine from CUHK! This is called [Six degree of separaion](https://en.wikipedia.org/wiki/Six_degrees_of_separation),
+where you can reach anyone in the world by asking your friend, then your
+friend's friends, and so on for 6 times.
 
 My freelance jobs usually come from referral, and they are not
 necessarily from my tech-savvy people list. I've once had a client coming to
@@ -554,7 +555,7 @@ they could get the information relatively effortlessly, it is
 distracting and simply shifting the googling part to another person,
 giving rise to the phrase '*Let me google that for you*' or '*[LMGTFY](https://lmgtfy.com/)*'.
 
-On the other hand, with the power of googling even a lay person can
+With the power of googling even a lay person can
 perform a task as if he's experienced. One instance of which has been
 documented in another post [Doing things the layman
 way](/blog/doing-things-the-layman-way).
@@ -569,7 +570,7 @@ were taught in college, is becoming crucial in decision making.
 Family is the community one most committed in. One gives the most to and
 received the most from family.
 
-Yet as a working adult it became extremely easy give excuses like 'this
+Yet as a working adult it became easy give excuses like 'this
 feature must be shipped this week', 'it would be more convenient if I
 eat outside', 'I must take a break during weekends'...
 

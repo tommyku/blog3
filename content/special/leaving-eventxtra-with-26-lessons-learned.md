@@ -133,7 +133,7 @@ encourage or discourage you from bringing that value?
 ## Communication
 <a id='#communication'></a>
 
-At one point everybody in the team has done a [DiSC](https://www.therainmakergroupinc.com/human-capital-strategy-blog/bid/142889/using-disc-behavioral-styles-to-create-do-s-don-ts-of-communi)
+At one point everybody in the team has done a [DISC](https://www.therainmakergroupinc.com/human-capital-strategy-blog/bid/142889/using-disc-behavioral-styles-to-create-do-s-don-ts-of-communi)
 questionnaire to determine our own communication style.
 
 <figure>
@@ -158,9 +158,11 @@ leaving out unfilled details those *Compliant* people always want.
 
 Communication would be smooth and pleasant when we all know what to
 expect from each other and how to communicate effective with different
-types of people in the DiSC framework.
+types of people in the DISC framework.
 
-Details on DiSC are available on [discprofile](https://www.discprofile.com/what-is-disc/overview/).
+Details on DISC are available on [discprofile](https://www.discprofile.com/what-is-disc/overview/).
+
+*edit: I renamed DiSC to DISC thanks to Bullwinkle pointing out their difference*
 
 ## Observe
 <a id='#observe'></a>

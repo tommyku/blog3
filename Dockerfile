@@ -11,6 +11,8 @@ WORKDIR "/app"
 
 RUN bundle install
 
+RUN npm install -g live-server write-good
+
 RUN npm install
 
 EXPOSE 3000

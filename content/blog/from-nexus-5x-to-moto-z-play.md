@@ -3,12 +3,12 @@ title: 'From Nexus 5X to Moto Z Play'
 kind: article
 created_at: '2017-06-09 00:00:00 +0800'
 slug: from-nexus-5x-to-moto-z-play
-preview: true
+preview: false
 ---
 
 Despite inflamous bootloop issue, Nexus 5X is still the best phone I
 have ever used. I had to replace it because bootloop happened the second
-time last month. My choice of replacement was Moto Play Z, it is a
+time last month. My choice of replacement was Moto Play Z, a
 well-built phone balancing battery life, performance and screen quality.
 
 In this post I am going to describe my experience with Nexus 5X and
@@ -18,8 +18,8 @@ compare it with Moto Play Z.
 
 I purchased a Nexus 5X from Google Store Hong Kong on Novemeber 2015.
 At that time, my 2-year old Nexus 4 has been suffering from low battery
-life and excessive heat just by web browsing. Google Store shipment's
-prompt shipment amazed me as I received the phone with additional phone case and
+life and excessive heat during casual web browsing. Google Store shipment's
+prompt shipment amazed me as I received the phone with a phone case and
 USB cable the next day I pressed the buy button.
 
 Fast forward to April 2016, I had been using the phone for about half a
@@ -32,12 +32,12 @@ States, and Hong Kong).
 The experience was stellar until it breaks all of a sudden on August
 2016, it rebooted into bootloop. Google store wasn't helpful at the time
 and they advised me to talk to LG. Of course LG fixed it, by replacing
-the motherboard. Then it was May 2017, bootloop happened again and it
+the motherboard. Then on May 2017, bootloop happened again and it
 has long passed the warranty period.
 
 Google Store was willing to replace the unit this time. My friend got a
-replacement unit just one month prior to mine breaking down. But Google
-ran out of replacement unit so I simply got a refund. That's better than
+replacement unit just one month before mine breaking down. But Google
+ran out of replacement unit so I got a refund instead. That's better than
 getting a replacement that nobody knows when it's gonna break down
 again.
 
@@ -54,11 +54,10 @@ no longer sell them and I have had enough of bootloop. Pixel hasn't been
 officially available in Hong Kong either.
 
 In an attempt to look for a phone with similar qualities as Nexus 5X,
-and most importantly similar 4G LTE network support, I was surprised to
-find that not many phones in Hong Kong support bands at the US. Most of
-them were sold to accomondate people in Hong Kong and China. In general,
-you'd need a phone that supports band 2, 4 mainly used in the USA; band
-1, 3, 7 in Hong Kong; and band 38, 40, 41 in China.
+and most importantly similar 4G LTE network support. Not many phones in
+Hong Kong support bands at the US. Most of them were sold to accomondate
+people in Hong Kong and China. I needed a phone that supports
+band 2, 4 mainly used in the USA; band 1, 3, 7 in Hong Kong; and band 38, 40, 41 in China.
 
 Samsung phones are all out of the question except for the flagship model
 Samsung Galaxy S8, a bit too pricey for me. LG V20 does support
@@ -78,7 +77,7 @@ phone with 4 magnetic points, Moto Mod attachments could be attached the
 same way.
 
 The screen size of Moto Z Play is 5.5 inches, slightly bigger than the
-5.2 inches screen of Nexus 5X. However, after a few weeks of usage I
+5.2 inches screen of Nexus 5X. After a couple weeks of usage I
 have grown used to the bigger screen and phone size. In comparison to
 Nexus 5X, Moto Z Play has comparable 403 PPI at full HD. On enhanced
 color mode, the colors on screen look more vibrant and attractive than
@@ -97,8 +96,8 @@ The Moto Z Play comes with a very stock-like ROM, only with an
 additional File Manager, Moto app and a convenient Device Help app. They
 are all helpful for managing the phone and tweaking the settings, and
 even testing each individual hardware component. So I'd say Moto Z Play comes
-with absolutely no bloatware and the experience is very
-stock Android-like. No lag has been observed on the phone in daily use
+with  no bloatware and the experience is very
+stock Android-like. No lag on the phone during daily use
 despite I couldn't say the same for people who run lots of background
 apps and demanding games.
 
@@ -123,10 +122,10 @@ I did tamper with it using GIMP to blur out people's faces and resized
 them to 25% of their original sizes. The point to be made is, if it
 looks super bad after resizing, it looks at least quite bad before resizing.
 Nexus 5X captures all the details both from afar and near even in
-low light. Moto Z Play, on the other hand, failed to capture much of the
+low light. Moto Z Play failed to capture much of the
 details, say the text and the branches and leaves on the trees. I know
 this is not an apple-to-apple comparison, but as far as I can tell from
-using them, Nexus 5X definitely has a superior camera (or image
+using them, Nexus 5X seems to have a superior camera (or image
 processing software, or both).
 
 <figure>
@@ -140,7 +139,7 @@ processing software, or both).
 </figure>
 
 I am too poor to care about Moto Mods. The 16-pin connector at the back of the
-phone is both visually distracting and completely useless to me.
+phone is both visually distracting and useless to me.
 
 ## Closing words
 

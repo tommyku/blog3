@@ -1,19 +1,17 @@
-FROM ruby:2.3.1-alpine
+FROM ruby:2.4.1-alpine
 MAINTAINER tommyku
 
-RUN apk add --no-cache build-base nodejs openjdk8 rsync
+RUN apk add --update --no-cache build-base nodejs rsync
 
 RUN gem install bundler
 
-COPY Gemfile Gemfile.lock package.json nanoc.yaml Guardfile bin/ /app/
-
 WORKDIR "/app"
+
+COPY Gemfile Gemfile.lock /app/
 
 RUN bundle install
 
-RUN npm install -g live-server write-good
-
-RUN npm install
+RUN npm install -g write-good
 
 EXPOSE 3000
 

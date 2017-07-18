@@ -1,5 +1,5 @@
 #!/bin/sh
 
 nanoc
-npm run-script serve &
+bundle exec ruby -rwebrick -e'WEBrick::HTTPServer.new(Port:3000, DocumentRoot: "/app/output").start' &
 guard

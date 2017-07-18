@@ -5,6 +5,11 @@ created_at: '2015-03-16 00:00:00 +0800'
 slug: adding-html5-application-cache-to-speed-up-your-web-app-in-5-minutes
 ---
 
+<mark style='display: block; background-color: lightcoral; padding: .5em; font-style: italic;'>
+(2017-07-17) AppCache has been deprecated, see how to cache web pages using
+ServiceWorker in <a href='/blog/appcache-revisited'>this post</a>.
+</mark>
+
 OK, let's do this in 5 minutes to get you started with HTML5 app cache.
 
 ### 10 seconds

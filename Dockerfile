@@ -1,7 +1,8 @@
 FROM ruby:2.4.1-alpine
 MAINTAINER tommyku
 
-RUN apk add --update --no-cache build-base nodejs rsync
+RUN apk add --update --no-cache build-base nodejs rsync openjdk8-jre \
+  && rm -rf /var/cache/apk/*
 
 RUN gem install bundler
 

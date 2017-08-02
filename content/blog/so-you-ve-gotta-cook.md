@@ -22,7 +22,7 @@ our meals. I cannot guarantee they are all delicious or healthy because most of 
 the house don't care :p
 
 <figure>
-<img src='./collage.jpg' width='50%'/>
+<img src='./collage.jpg' width='100%' style='max-width: 48em;'/>
 <figcaption>Impromptu meals made with leftover or random ingredients</figcaption>
 </figure>
 
@@ -31,7 +31,7 @@ the house don't care :p
 Made on <time>June 22</time>, serves 2
 
 <figure>
-<img src='./0622_1.jpg' width='75%'/>
+<img src='./0622_1.jpg' width='100%' style='max-width: 48em;'/>
 <figcaption>Sorry this is the only picture I took</figcaption>
 </figure>
 
@@ -74,7 +74,7 @@ after having made it</small>
 Made on <time>June 20</time>, serves 2
 
 <figure>
-<img src='./0620_1.jpg' width='75%'/>
+<img src='./0620_1.jpg' width='100%' style='max-width: 48em;'/>
 </figure>
 
 ### Steps

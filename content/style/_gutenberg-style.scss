@@ -113,13 +113,18 @@ nav {
 main {
   h1 {
     &:before {
-      content: 'You are reading:';
+      content: 'you are reading:';
       display: block;
       color: gray;
       font-weight: 200;
       font-size: 0.5em;
     }
     margin-top: 2.75rem;
+  }
+  h1.no-heading {
+    &:before {
+      content: '';
+    }
   }
 }
 

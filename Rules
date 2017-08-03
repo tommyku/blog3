@@ -56,6 +56,8 @@ end
 route '/**/*.{html,md,slim}' do
   if item.identifier =~ '/index.*'
     '/index.html'
+  elsif item.identifier =~ '/404.*'
+    '/404.html'
   else
     item.identifier.without_ext + '/index.html'
   end

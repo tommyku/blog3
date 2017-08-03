@@ -28,6 +28,62 @@ the house don't care :p
 
 <!-- start of recipe -->
 
+## Very luxurious fusilli pasta
+
+Made on <time>Aug 2</time>, serves 2-3
+
+<figure>
+<img src='./0802_1.jpg' width='100%' style='max-width: 48em;'/>
+</figure>
+
+### Ingredients
+
+- Garlic
+- Italian sausage
+- Egg
+- Milk
+- Spinach
+- White mushroom
+- Fusilli pasta
+- Tomato sauce
+- Feta cheese
+
+<figure>
+<img src='./0802_ingredients.jpg' width='100%' style='max-width: 48em;'/>
+</figure>
+
+### Steps
+
+#### Fusilli pasta
+
+1. Boil fusilli pasta in pot, soaked in salty water
+1. Wash with cold water when cooked, set aside
+
+#### Sauce
+
+1. Chop garlic; slice white mushroom; beat egg, salt and pepper to
+   taste, add some milk
+1. Heat pan with oil, add garlic when hot
+1. Squeeze the meat out of Italian sausage, add when you can smell the garlic
+1. Chop the meat into smaller chunks, better keep the heat low while you
+   are chopping
+1. Add white mushroom, season with pepper
+1. Add spinach with a bit of salt, stir fry until soft
+
+<figure>
+<img src='./0802_2.jpg' width='100%' style='max-width: 48em;'/>
+</figure>
+
+#### Finishing up
+
+1. Pour in cooked fusilli pasta, tomato sauce and egg mixture to the
+   sauce on pan, stir and mix
+1. Add feta cheese and stir until all melt
+
+<!-- end of recipe -->
+
+<!-- start of recipe -->
+
 ## Slightly charred slow simmered beef
 
 Made on <time>June 25</time>, serves 2, including one who usually doesn't

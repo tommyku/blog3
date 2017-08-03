@@ -19,6 +19,58 @@ the house don’t care :p</p>
 <figcaption>Impromptu meals made with leftover or random ingredients</figcaption>
 </figure>
 
+<!-- start of recipe -->
+
+<h2 id="slightly-charred-slow-simmered-beef">Slightly charred slow simmered beef</h2>
+
+<p>Made on <time>June 25</time>, serves 2, including one who usually doesn’t
+eat beef</p>
+
+<figure>
+<img src="./0625_2.jpg" width="100%" style="max-width: 48em;">
+</figure>
+
+<figure>
+<img src="./0625_1.jpg" width="100%" style="max-width: 48em;">
+</figure>
+
+<p>Special thanks to Morten Koldby for teaching me this dish.</p>
+
+<h3 id="steps-as-taught-by-morten">Steps (as taught by Morten)</h3>
+
+<ol>
+  <li>Sear the meat in the pot first.</li>
+  <li>When the meat is caramelized on the edges, put in the onions and fry them lightly.</li>
+  <li>Then pour the stock over the meat &amp; onion and put in the spices. Put in 2-4 bay leafs and maybe a spoonful of thyme.</li>
+  <li>Let it simmer for at least 30 minutes, maybe 45-50.</li>
+</ol>
+
+<p>This one is pretty messed up because all liquid boiled off while simmering. I should have added in enough beef stock.
+The resultant slightly charred beef had thick sauce on the surface and may have been too salty.</p>
+
+<!-- end of recipe -->
+<!-- start of recipe -->
+
+<h2 id="english-muffin-veggie-burger">English muffin veggie burger</h2>
+
+<p>Made on <time>June 24</time>, serves 2</p>
+
+<figure>
+<img src="./0624_1.jpg" width="100%" style="max-width: 48em;">
+</figure>
+
+<h3 id="steps">Steps</h3>
+
+<ol>
+  <li>Grill English muffin on both sides</li>
+  <li>Put cheese on top of English muffin while still hot, set aside</li>
+  <li>Grill veggie burger until it looks done</li>
+  <li>Put the burger inside the English muffin</li>
+</ol>
+
+<!-- end of recipe -->
+<!-- start of recipe -->
+
 <h2 id="white-rice-canned-vegetable-soup-scrambled-egg-with-baby-spinach-and-cheese-and-broccoli-with-sausage-meat">White rice, canned vegetable soup, scrambled egg with baby spinach and cheese, and broccoli with sausage meat</h2>
 
 <p>Made on <time>June 22</time>, serves 2</p>
@@ -28,7 +80,7 @@ the house don’t care :p</p>
 <figcaption>Sorry this is the only picture I took</figcaption>
 </figure>
 
-<h3 id="steps">Steps</h3>
+<h3 id="steps-1">Steps</h3>
 
 <h4 id="rice">Rice</h4>
 
@@ -67,8 +119,10 @@ let it sit till the bottom has hardened</li>
   <li>Add in feta cheese, stir until molten</li>
 </ol>
 
-<p><small>* afterthoughts are what I thought would make the dish better
-after having made it</small></p>
+<after-thought></after-thought>
+
+<!-- end of recipe -->
+<!-- start of recipe -->
 
 <h2 id="fried-rice-with-celery-mixed-vegetables-and-ground-sausage">Fried rice with celery, mixed vegetables and ground sausage</h2>
 
@@ -78,7 +132,7 @@ after having made it</small></p>
 <img src="./0620_1.jpg" width="100%" style="max-width: 48em;">
 </figure>
 
-<h3 id="steps-1">Steps</h3>
+<h3 id="steps-2">Steps</h3>
 
 <ol>
   <li>Make white rice, set aside</li>
@@ -95,8 +149,19 @@ softer celery (afterthought)*</li>
 to your heart’s content</li>
 </ol>
 
-<p><small>* afterthoughts are what I thought would make the dish better
-after having made it</small></p>
+<after-thought></after-thought>
+
+<!-- end of recipe -->
+
+<script type="text/javascript">
+class AfterThought extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = "<small>* afterthoughts are what I thought would make the dish better after having made it</small>";
+  }
+}
+customElements.define('after-thought', AfterThought);
+</script>
+
 </section></main><script src="/js/highlight.pack.js" type="text/javascript"></script><script>(function() {
   hljs.initHighlightingOnLoad();
 

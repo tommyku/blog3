@@ -26,6 +26,54 @@ the house don't care :p
 <figcaption>Impromptu meals made with leftover or random ingredients</figcaption>
 </figure>
 
+<!-- start of recipe -->
+
+## Slightly charred slow simmered beef
+
+Made on <time>June 25</time>, serves 2, including one who usually doesn't
+eat beef
+
+<figure>
+<img src='./0625_2.jpg' width='100%' style='max-width: 48em;'/>
+</figure>
+
+<figure>
+<img src='./0625_1.jpg' width='100%' style='max-width: 48em;'/>
+</figure>
+
+Special thanks to Morten Koldby for teaching me this dish.
+
+### Steps (as taught by Morten)
+
+1. Sear the meat in the pot first.
+1. When the meat is caramelized on the edges, put in the onions and fry them lightly.
+1. Then pour the stock over the meat & onion and put in the spices. Put in 2-4 bay leafs and maybe a spoonful of thyme.
+1. Let it simmer for at least 30 minutes, maybe 45-50.
+
+This one is pretty messed up because all liquid boiled off while simmering. I should have added in enough beef stock.
+The resultant slightly charred beef had thick sauce on the surface and may have been too salty.
+
+<!-- end of recipe -->
+<!-- start of recipe -->
+
+## English muffin veggie burger
+
+Made on <time>June 24</time>, serves 2
+
+<figure>
+<img src='./0624_1.jpg' width='100%' style='max-width: 48em;'/>
+</figure>
+
+### Steps
+
+1. Grill English muffin on both sides
+1. Put cheese on top of English muffin while still hot, set aside
+1. Grill veggie burger until it looks done
+1. Put the burger inside the English muffin
+
+<!-- end of recipe -->
+<!-- start of recipe -->
+
 ## White rice, canned vegetable soup, scrambled egg with baby spinach and cheese, and broccoli with sausage meat
 
 Made on <time>June 22</time>, serves 2
@@ -66,8 +114,10 @@ Made on <time>June 22</time>, serves 2
 1. Stir the content until it looks scrambled
 1. Add in feta cheese, stir until molten
 
-<small>\* afterthoughts are what I thought would make the dish better
-after having made it</small>
+<after-thought />
+
+<!-- end of recipe -->
+<!-- start of recipe -->
 
 ## Fried rice with celery, mixed vegetables and ground sausage
 
@@ -92,5 +142,15 @@ Made on <time>June 20</time>, serves 2
 1. Add rice, add more oil to prevent charring, salt and pepper to taste, stir fry
    to your heart's content
 
-<small>\* afterthoughts are what I thought would make the dish better
-after having made it</small>
+<after-thought />
+
+<!-- end of recipe -->
+
+<script type='text/javascript'>
+class AfterThought extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = "<small>* afterthoughts are what I thought would make the dish better after having made it</small>";
+  }
+}
+customElements.define('after-thought', AfterThought);
+</script>

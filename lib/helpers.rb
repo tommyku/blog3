@@ -14,6 +14,10 @@ def sorted_special_articles
   sorted_articles.select { |item| special?(item) && !preview?(item) }
 end
 
+def sorted_published_articles
+  sorted_articles.select { |item| !preview?(item) }
+end
+
 def abstract?(item)
   !item[:abstract].nil?
 end

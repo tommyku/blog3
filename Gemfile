@@ -10,4 +10,5 @@ source 'https://rubygems.org' do
   gem 'sass'
   gem 'guard'
   gem 'guard-shell'
+  gem 'builder'
 end

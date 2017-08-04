@@ -198,6 +198,10 @@ img {
   }
 }
 
+.hidden {
+  display: none !important;
+}
+
 @media screen and (max-width: #{$max-width / 1.5 + 'em'}) {
   .special {
     width: 100%;

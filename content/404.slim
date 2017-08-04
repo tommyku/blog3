@@ -2,8 +2,29 @@
 title: Tommy Ku's Method Stub
 ---
 
-center
-  h1.no-heading Can't found what you need
-  h3 Really there's nothing here ¯\_(ツ)_/¯
-  p
-    == link_to 'so what now?', @config[:base_url]
+section#bonus style="text-align: center;"
+  section
+    h1.no-heading Can't found what you need
+    h3 Really there's nothing here ¯\_(ツ)_/¯
+  section#default.hidden
+    p
+      == link_to 'so what now?', '/'
+  section#admin.hidden
+    form onSubmit='alert("seriously?");' method="GET" action="."
+      div
+        input#email type="email" name="email" placeholder="Email" style="margin-right: 1em;" required=true
+        input#password type="password" name="password" placeholder="Password" required=true
+        br
+        input#submit type="submit"
+  section#logout.hidden
+    p ┬┴┬┴┤( ͡° ͜ʖ├┬┴┬┴
+    p You are now signed out.
+  section#about.hidden
+    p
+      == link_to 'yeap sure...', 'https://hp.tommyku.com/'
+  section#curse.hidden
+    p Yeah sure
+  section#error
+    p I mean you are staring at an error you know
+
+script type="text/javascript" src="/js/404.js"

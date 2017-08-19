@@ -1,8 +1,8 @@
 ---
-title: 'On self-hosting'
+title: 'The hidden cost of self-hosting'
 kind: article
 created_at: '2017-05-17 00:00:00 +0800'
-slug: on-self-hosting
+slug: the-hidden-cost-of-self-hosting
 preview: false
 ---
 

@@ -78,10 +78,10 @@ feta cheese and sliced cheese
 
 ## Fancy egg for barbecue day
 
-Made on <time>Aug 19</time>, serves 3
+Made on <time>Aug 18</time>, serves 3
 
 <figure>
-<img src='./0819_1.jpg' width='100%' style='max-width: 48em;'/>
+<img src='./0818_1.jpg' width='100%' style='max-width: 48em;'/>
 </figure>
 
 Special thanks to Ian Hays for teaching me this dish. It's perfect for

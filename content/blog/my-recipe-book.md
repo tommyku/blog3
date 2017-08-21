@@ -1,8 +1,8 @@
 ---
-title: So you've gotta cook
+title: My recipe book
 kind: article
 created_at: '2017-08-01 00:00:00 -0700'
-slug: so-you-ve-gotta-cook
+slug: my-recipe-book
 preview: false
 ---
 
@@ -25,6 +25,98 @@ the house don't care :p
 <img src='./collage.jpg' width='100%' style='max-width: 48em;'/>
 <figcaption>Impromptu meals made with leftover or random ingredients</figcaption>
 </figure>
+
+<!-- start of recipe -->
+
+## Animal style sliced potato
+
+Made on <time>Aug 19</time>, serves 2-3
+
+<figure>
+<img src='./0819_1.jpg' width='100%' style='max-width: 48em;'/>
+</figure>
+
+### Ingredients
+
+- Potato
+- Shredded Cheddar cheese
+- Feta cheese
+- Sliced cheese
+- Smoked paprika
+
+### Steps
+
+#### Fried potato slices
+
+1. Slice 2-3 potatoes into 0.5cm slices
+2. Season with salt and pepper
+
+   <img src='./0819_2.jpg' width='100%' style='max-width: 48em;'/>
+
+3. Heat oil on pan, the oil is ready when it bubbles around a chopstick
+head
+4. Fry the potato slices, add smoked paprika, salt and pepper on one
+side as it fries, turn when it looks slightly brown on edges but not on
+surface
+5. Leave the finished slices on kitchen paper to absorb oil
+
+   <img src='./0819_3.jpg' width='100%' style='max-width: 48em;'/>
+
+#### Baking with cheese
+
+1. Layer the fried potato slices on a baking sheet, or stack them in a
+metal bowl
+2. Generously cover the potato slices with shredded cheddar cheese,
+feta cheese and sliced cheese
+
+   <img src='./0819_4.jpg' width='100%' style='max-width: 48em;'/>
+
+3. Heat oven to 425&#8457;, bake the potatoes for 15-25 minutes
+4. Serve while hot with a fork
+
+<!-- end of recipe -->
+
+## Fancy egg for barbecue day
+
+Made on <time>Aug 19</time>, serves 3
+
+<figure>
+<img src='./0819_1.jpg' width='100%' style='max-width: 48em;'/>
+</figure>
+
+Special thanks to Ian Hays for teaching me this dish. It's perfect for
+refreshment in barbecue comprising mainly of heavy salty meat.
+
+### Ingredients
+
+- Egg
+- Bacon slices
+- Yellow mustard
+- Mayonnaise
+- Apple cider vinegar (substituted with rice vinegar in the making of
+the one in picture)
+
+### Steps
+
+#### Egg and bacon
+
+1. Boil 4 eggs, boil for longer to ensure the yulks solidify
+1. Peel eggs, cut into half, put the yulk into a separate bowl
+1. Cook thick bacon slices slowly over low heat, flip often until
+crispy
+1. Use fork to sear the bacon slices into small bits, pour into the bowl
+   with egg yulks
+
+#### The mix
+
+1. Add rice vinegar, yellow mustard and mayonnaise, start with small
+   portions to avoid liquidly mix
+1. Use fork to smash the yulks and mix, add pepper generously
+1. Taste the mix and add vinegar, mustard or mayonnaise as needed
+1. Place the paste on where the yulks were, refrigerate for 30 minutes
+   before served
+
+<!-- end of recipe -->
 
 <!-- start of recipe -->
 
@@ -108,6 +200,14 @@ Special thanks to Morten Koldby for teaching me this dish.
 
 This one is pretty messed up because all liquid boiled off while simmering. I should have added in enough beef stock.
 The resultant slightly charred beef had thick sauce on the surface and may have been too salty.
+
+*update (2017-08-15): I gave it another go, this time using up all beef
+stock and simmered for 40 minutes, giving a much better result. It'd
+taste even better if small chunks of carrot and potato were added.*
+
+<figure>
+<img src='./0815_beef.jpg' width='100%' style='max-width: 48em;'/>
+</figure>
 
 <!-- end of recipe -->
 <!-- start of recipe -->

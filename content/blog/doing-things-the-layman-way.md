@@ -54,7 +54,7 @@ Angus and me have different mindsets; he is an operation guy with a
 couple years of hard-earned experiece in founding EventXtra whilst I
 am strictly from several years of engineering background.
 
-As an engineer I my pride wasn't hurt, instead I was intrigued to employ
+As an engineer my ego wasn't hurt, instead I was intrigued to employ
 what Angus'd have employed in many engineering problems I am facing daily.
 
 Building a program to automate and perform a computationally expensive task

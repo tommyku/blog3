@@ -3,20 +3,24 @@ title: The "cat state" of boolean variable
 kind: article
 created_at: '2017-11-15 00:00:00 +0800'
 slug: preview
-preview: true
+preview: false
 ---
 
-One day when I was implementing the login UI of my app in React, I
+One day when I was implementing a login UI of my app in React, I
 thought about a `let login = true` flag.
 
 For a boolean variable in an object-oriented language such as
-JavaScript, how many states do it have? Let's count, `true` and `false`,
+JavaScript, how many states could it possibly have? Let's count, `true` and `false`,
 there gives you two states.
+
+> S &isin; { True, False }
 
 Nope, there is an extra state, `null`, the variable can point to an empty
 reference. Of course, in such case we aren't talking about the
 variable itself, we are talking about a reference name.
 In JavaScript, such reference could also evaluate to `undefined`!
+
+> S &isin; { True, False, null, undefined }
 
 ## Why does it matter?
 
@@ -38,10 +42,14 @@ took is to make use of the non-determinism of the variable, to wit:
 > I don't know whether it's true or false, so it's in a "[cat state](https://en.wikipedia.org/wiki/Cat_state)"
 > that's neither true nor false.
 
+In other words,
+
+> S &isin; { True, False, Cat }
+
 ## Should I use it?
 
-Don't do that. There are better alternatives without too much additional
-complexity, and you make your code harder to understand.
+Don't do that. There exists better alternative without additional
+complexity, and by using the cat state you make your code harder to understand.
 
 Alternatives such as enum, like a set of constants
 encapsulate exactly what this non-deterministic boolean variable is trying
@@ -64,7 +72,7 @@ switch (login) {
     renderComponent = LoginPage;
     break;
   case LoginState.LOGGEDIN:
-    renderComponent = LOGGEDIN;
+    renderComponent = IndexPage;
     break;
   default:
     renderComponent = SplashPage;

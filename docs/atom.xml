@@ -3,13 +3,170 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:base="https://blog.tommyku.com/">
   <id>https://blog.tommyku.com/</id>
   <title>Tommy Ku's Method Stub</title>
-  <updated>2017-08-28T16:00:00Z</updated>
+  <updated>2017-11-14T16:00:00Z</updated>
   <link rel="alternate" href="https://blog.tommyku.com/"/>
   <link rel="self" href="https://blog.tommyku.com/atom.xml"/>
   <author>
     <name>Tommy Ku</name>
     <uri>https://blog.tommyku.com</uri>
   </author>
+  <entry>
+    <id>tag:blog.tommyku.com,2017-11-14:/blog/the-cat-state-of-boolean-variable/</id>
+    <title type="html">The "cat state" of boolean variable</title>
+    <published>2017-11-14T16:00:00Z</published>
+    <updated>2017-11-14T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/the-cat-state-of-boolean-variable/"/>
+    <content type="html">
+&lt;p&gt;One day when I was implementing a login UI of my app in React, I
+thought about a &lt;code&gt;let login = true&lt;/code&gt; flag.&lt;/p&gt;
+
+&lt;p&gt;For a boolean variable in an object-oriented language such as
+JavaScript, how many states could it possibly have? Let’s count, &lt;code&gt;true&lt;/code&gt; and &lt;code&gt;false&lt;/code&gt;,
+there gives you two states.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;S ∈ { True, False }&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Nope, there is an extra state, &lt;code&gt;null&lt;/code&gt;, the variable can point to an empty
+reference. Of course, in such case we aren’t talking about the
+variable itself, we are talking about a reference name.
+In JavaScript, such reference could also evaluate to &lt;code&gt;undefined&lt;/code&gt;!&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;S ∈ { True, False, null, undefined }&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id="why-does-it-matter"&gt;Why does it matter?&lt;/h2&gt;
+
+&lt;p&gt;Consider the &lt;code&gt;login&lt;/code&gt; flag we mentioned, the
+following table summarizes all possible values and component it should
+render as a result.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;login&lt;/th&gt;
+      &lt;th&gt;Component&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;true&lt;/td&gt;
+      &lt;td&gt;IndexPage&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;false&lt;/td&gt;
+      &lt;td&gt;LoginPage&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;null&lt;/td&gt;
+      &lt;td&gt;SplashPage&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;undefined&lt;/td&gt;
+      &lt;td&gt;SplashPage&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Rendering &lt;code&gt;IndexPage&lt;/code&gt; and &lt;code&gt;LoginPage&lt;/code&gt; when &lt;code&gt;login&lt;/code&gt; is true or false
+looks straightforward, but &lt;code&gt;null&lt;/code&gt;? How about &lt;code&gt;undefined&lt;/code&gt;? One trick I
+took is to make use of the non-determinism of the variable, to wit:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I don’t know whether it’s true or false, so it’s in a “&lt;a href="https://en.wikipedia.org/wiki/Cat_state"&gt;cat state&lt;/a&gt;”
+that’s neither true nor false.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;In other words,&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;S ∈ { True, False, Cat }&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id="should-i-use-it"&gt;Should I use it?&lt;/h2&gt;
+
+&lt;p&gt;Don’t do that. There exists better alternative without additional
+complexity, and by using the cat state you make your code harder to understand.&lt;/p&gt;
+
+&lt;p&gt;Alternatives such as enum, like a set of constants
+encapsulate exactly what this non-deterministic boolean variable is trying
+to do. For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-javascript"&gt;// LoginState.js
+export DONNO = 1;
+export NOT_LOGGEDIN = 1;
+export LOGGEDIN = 2;
+
+// app.js
+import LoginState from 'LoginState'
+
+let login = LoginState.DONNO;
+let renderComponent;
+
+switch (login) {
+  case LoginState.NOT_LOGGEDIN:
+    renderComponent = LoginPage;
+    break;
+  case LoginState.LOGGEDIN:
+    renderComponent = IndexPage;
+    break;
+  default:
+    renderComponent = SplashPage;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A quick-and-dirty implementation using non-determinism of boolean
+variable wouldn’t save you much more lines of code than that.&lt;/p&gt;
+
+&lt;p&gt;As my professor used to say:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;[insert programming language] gives you lots of ropes to hang
+yourself.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;In this case, the rope is to make use of a boolean variable’s cat state and
+relying on it to decide the next action. You can do that of
+course, but I have shown above there is a better way to do that.&lt;/p&gt;
+
+&lt;p&gt;When we evaluate a boolean variable, string like
+&lt;code&gt;'123'&lt;/code&gt;, or integer &lt;code&gt;3&lt;/code&gt; could both be evaluated to true, while &lt;code&gt;null&lt;/code&gt;,
+and &lt;code&gt;undefined&lt;/code&gt; both are evaluated to false. However, you shouldn’t rely
+on it because it’s inconsistent.&lt;/p&gt;
+
+&lt;p&gt;Consider the following if-statement:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-javascript"&gt;if (login === true) {
+  // ...logged in
+} else {
+  // ...cat state 🐱
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Our understanding on boolean variable is that it’s value could either be
+true or false, there is no cat state before OOP, and now with cat state
+we are just inviting troubles because to interpret the if-statement
+above, we must also consider what that boolean could be — an
+integer, a string, a &lt;code&gt;null&lt;/code&gt;, or an &lt;code&gt;undefined&lt;/code&gt;?&lt;/p&gt;
+
+&lt;p&gt;If the codebase has never relied on &lt;code&gt;null&lt;/code&gt; or &lt;code&gt;undefined&lt;/code&gt; in the first
+place for it’s logic, then we could even forgo the &lt;code&gt;=== true&lt;/code&gt; part
+(note &lt;code&gt;1 == true&lt;/code&gt; evaluates to true).&lt;/p&gt;
+
+&lt;h2 id="verdict"&gt;Verdict&lt;/h2&gt;
+
+&lt;p&gt;Using the “cat state” of a boolean variable might be a neat
+trick  on project where everyone working on the code is aware
+of the possible values of that variable might contain. It could be
+true, false, and anything else.&lt;/p&gt;
+
+&lt;p&gt;A safer bet, would be to use boolean strictly with its true/false
+values by using &lt;code&gt;===&lt;/code&gt; operator, or use TypeScript that comes with static
+type-checking.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <id>tag:blog.tommyku.com,2017-08-28:/blog/how-to-make-epubs-with-vertical-layout/</id>
     <title type="html">How to make EPUB ebooks with vertical layout?</title>
@@ -2280,161 +2437,6 @@ we could potentially have saved lots of time and money.&lt;/p&gt;
 &lt;br&gt;
 &lt;em&gt;Be like Angus.&lt;/em&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog.tommyku.com,2016-10-04:/blog/feature-ownership-and-motivation/</id>
-    <title type="html">Feature ownership and motivation</title>
-    <published>2016-10-04T16:00:00Z</published>
-    <updated>2016-10-04T16:00:00Z</updated>
-    <link rel="alternate" href="https://blog.tommyku.com/blog/feature-ownership-and-motivation/"/>
-    <content type="html">
-&lt;p&gt;With 3 of my friends I used to join the department-held hackathon at
-HKUST. One of us named Ivan, a talented programmer who were
-somewhat experienced in image editing and video processing.&lt;/p&gt;
-
-&lt;p&gt;We brainstormed a lot before the hackathon and ended up with 1 idea the
-majority of us agreed on.
-Of course, we needed a design before beginning validation or
-development, that
-responsibility fell on Ivan’s shoulder despite he were the minority who
-opposed the idea.&lt;/p&gt;
-
-&lt;p&gt;Ivan did a fine job rolling out a design the next day. Yet we came to
-discover that the idea we supported yesterday could hardly impress us
-anymore. Back to the drawing board, we brainstormed again.&lt;/p&gt;
-
-&lt;p&gt;Of course the one who spent the night creating a design was
-dissatisfied. Ivan, losing trust on the other teammates, disagreed to
-create any design until the rest of the team have made a final decision, the
-one killer idea we would never diverge from.&lt;/p&gt;
-
-&lt;p&gt;The team were demotivated, and it was nobody’s fault. Product feature
-idea and direction changes according to the circumtance. Everybody
-who builds product knows it, but not all can deal with it calmly.&lt;/p&gt;
-
-&lt;h3 id="impromptu-change-and-vague-requirement-demotivate-people"&gt;Impromptu change and vague requirement demotivate people&lt;/h3&gt;
-
-&lt;p&gt;Recalling the experience with the product manager and another engineer in
-Taiwan, we have spent a big chunk of our time working on something and
-had it thrown away because 1) we didn’t validate it beforehand; or 2) the
-project manager has a better idea/something more valuable to do.&lt;/p&gt;
-
-&lt;p&gt;We never gave him a good face whenever the PM wanted to change. Over
-time there developed a sentiment that if a feature is not well-designed
-and validated with the users, we shouldn’t work on it. We played with
-cat instead.&lt;/p&gt;
-
-&lt;p&gt;The situation were made worse because our ‘PM’ were less of detail-focused
-person but more of big-picture driven and gave nothing more than a sentence
-rather. As an CEO that is fine, but as an PM, that is unacceptable.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Don’t ask me to do it until you’re absolutely sure.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;figure&gt;
-&lt;img src="./just-do-it.jpg" style="width: 600px"&gt;
-&lt;figcaption&gt;Really, no&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;We were demotivated. Task assignment became long discussion and took lots
-of persuasion. The unhealthy tension between the devs and the PM
-required much negotiations and trust building before the devs agreed to
-work and the PM promised to not change the schedule until the end of the
-sprint.&lt;/p&gt;
-
-&lt;p&gt;It was that moment that I realized what Ivan felt when I piped his
-night-worth of work into &lt;code&gt;/dev/null&lt;/code&gt;*. And the prospect of the project
-were gloomy.&lt;/p&gt;
-
-&lt;p&gt;&lt;small&gt;* nerdy way to say ‘void’, ‘nothingness’&lt;/small&gt;&lt;/p&gt;
-
-&lt;p&gt;Vroom’s Expectancy theory states that individuals motivation comes from
-the belief that efforts are positively correlated to performance, and
-that performance results in an outcome that brings reward that satisfies
-an individual’s need.&lt;/p&gt;
-
-&lt;p&gt;Now come to think about it, effort were paid yet there came no performance nor
-outcome because the work was trashed. While rewards (paycheck) were
-given every month, developers seek more than monetary rewards. They
-value the sense of achievement when they deploy a feature with nice code
-and novel approaches.&lt;/p&gt;
-
-&lt;p&gt;Therefore impromptu change in plan negates developers’ paid efforts and
-brings nothing but demotivation.&lt;/p&gt;
-
-&lt;h3 id="feature-ownership-motivates-people"&gt;Feature ownership motivates people&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Tommy, I have something to ask you.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Sometime my colleague John would call me to his seat and showed me the
-code I wrote. He could be modifying the code or didn’t understand it.
-Then he would made me feel shameful or feel proud of the piece of code I
-wrote.&lt;/p&gt;
-
-&lt;p&gt;In EventXtra where I worked, every one of us is usually responsible for
-a chunk of feature. One would architech it, write up algorithms to &lt;em&gt;do
-something&lt;/em&gt;. Later somebody else may manage that piece of code, by then
-the piece or code is either &lt;code&gt;git praise&lt;/code&gt;-ed or &lt;code&gt;git blame&lt;/code&gt;-ed.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# ~/.gitconfig
-[alias]
-    praise = blame
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;This’s my feature, and that is your feature. For that part of code,
-you’d better ask &lt;em&gt;Kenneth&lt;/em&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Who the h*ll wrote this? Let me git blame it.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;figure&gt;
-&lt;img src="./git-blame.jpg"&gt;
-&lt;figcaption&gt;Go, &lt;a href="https://github.com/jayphelps/git-blame-someone-else"&gt;blame someone else&lt;/a&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;When we evaluate a piece of work, we refer it by &lt;em&gt;somebody’s&lt;/em&gt; feature
-not because that person is the sole person responsible for developing
-it, but that it’s consolidated a significant amount of effort from that
-person and thus that person feels a &lt;em&gt;psychological ownership&lt;/em&gt; over it.&lt;/p&gt;
-
-&lt;p&gt;The sense of psychological ownership also spawns from the fact that
-someone being a opinion leader over a feature, in which he possesses
-control over a major part of the design or implementation of the
-feature.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href="http://cqtesting.com/papers/JOB%202004%20Van%20Dyne%20Pierce%20Psychological%20Ownership.pdf"&gt;Research by Dyne and Pierce&lt;/a&gt; demonstrates
-positively links between psychological ownership for the organization and employee
-attitudes, and work behavior.&lt;/p&gt;
-
-&lt;p&gt;Of course, when a piece of code is &lt;code&gt;git praise&lt;/code&gt;-ed the developer feels good
-about it due to a sense of ownership. Ownership positively influences
-the attitude and performance of a developer as a feature is being
-developed.&lt;/p&gt;
-
-&lt;h3 id="feedback-and-discussion-are-the-keys"&gt;Feedback and discussion are the keys&lt;/h3&gt;
-
-&lt;p&gt;We have talked about what demotivates and what motivates. To those who
-are attempting to improve their own working motivation, these are what
-to fix and what to reinforce. For those who attempts to motivate, they
-should take note on and avoid the behaviors demotivating their colleagues.&lt;/p&gt;
-
-&lt;p&gt;Open communication aiming at trust-building instead of blaming can help
-the managements to better understand the need of their colleagues.&lt;/p&gt;
-
-&lt;p&gt;As a friend of mine always says: ‘When your trust bank has bankrupted,
-you’ve to work hard to build the trust back up.’ Should you see your
-colleagues demotivated on their jobs, trust-building is the first step.&lt;/p&gt;
-
-&lt;p&gt;Have you encountered motivation issues in workplace, either on yourself
-or your colleagues? How did you deal with it? Tell us in the comment
-section!&lt;/p&gt;
 </content>
   </entry>
 </feed>

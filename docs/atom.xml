@@ -3,13 +3,417 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:base="https://blog.tommyku.com/">
   <id>https://blog.tommyku.com/</id>
   <title>Tommy Ku's Method Stub</title>
-  <updated>2017-11-14T16:00:00Z</updated>
+  <updated>2018-01-12T16:00:00Z</updated>
   <link rel="alternate" href="https://blog.tommyku.com/"/>
   <link rel="self" href="https://blog.tommyku.com/atom.xml"/>
   <author>
     <name>Tommy Ku</name>
     <uri>https://blog.tommyku.com</uri>
   </author>
+  <entry>
+    <id>tag:blog.tommyku.com,2018-01-12:/blog/communication-between-cpp-and-php-program-using-socket/</id>
+    <title type="html">Communication between C++ and PHP program using socket</title>
+    <published>2018-01-12T16:00:00Z</published>
+    <updated>2018-01-12T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/communication-between-cpp-and-php-program-using-socket/"/>
+    <content type="html">
+&lt;h2 id="background"&gt;Background&lt;/h2&gt;
+
+&lt;p&gt;In a recent job, I had to integrate a piece of hardware with my
+PHP server. The only library available was written in C and Java, yet
+it’s unreasonable to port the whole PHP application just because it
+lacks the library to communicate with the hardware.&lt;/p&gt;
+
+&lt;p&gt;Then I came up with an idea of writting a C++ application to bridge the
+hardware and the PHP application. The C++ application can use the
+library, no problem, but how could I let my C++ and my PHP applications
+communicate?&lt;/p&gt;
+
+&lt;p&gt;I chose to use socket because it’s straightforward to implement and
+reliable enough (for TCP) for my little application that exchanges only
+short texts per transaction.&lt;/p&gt;
+
+&lt;p&gt;In this short post, I will go over writing a C++ server and a PHP
+client that communicate using socket. Demo code can be found on
+&lt;a href="https://github.com/tommyku/cpp-php-socket-demo"&gt;tommyku/cpp-php-socket-demo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id="c-server"&gt;C++ Server&lt;/h2&gt;
+
+&lt;p&gt;Our C++ server is a simple echo server — it echos back to the
+client whatever it receives.&lt;/p&gt;
+
+&lt;p&gt;First, we need to include some libraries.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-cpp"&gt;#include &amp;lt;arpa/inet.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;stdlib.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+#include &amp;lt;sys/types.h&amp;gt;
+#include &amp;lt;sys/socket.h&amp;gt;
+#include &amp;lt;unistd.h&amp;gt;
+#include &amp;lt;signal.h&amp;gt;
+
+using namespace std;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next I create a signal handler to handle &lt;code&gt;SIGTERM&lt;/code&gt;, &lt;code&gt;SIGKILL&lt;/code&gt; and &lt;code&gt;SIGINT&lt;/code&gt;.
+This handler becomes useful when I ran my server as a daemon in the background
+because I can clean things up such as removing wthe socket file and flushing the log buffer
+here when the application closes. Note I made the socket file descriptor &lt;code&gt;server&lt;/code&gt;
+global so that the signal handler can access it outside of the &lt;code&gt;main&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-cpp"&gt;#define SOCKET_FILENAME "/tmp/server.sock"
+
+int server;
+
+void signal_callback_handler(int signum)
+{
+  // close server
+  close(server);
+  // remove the socket file
+  unlink(SOCKET_FILENAME);
+  // signal handled
+  exit(0);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here goes the rest of the application.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-cpp"&gt;int main(int argc, char **argv)
+{
+  struct sockaddr_un server_addr, client_addr;
+  socklen_t clientlen = sizeof(client_addr);
+  int client, buflen, nread;
+  char *buf;
+
+  puts("Hell World");
+
+  // listen to SIGINT, SIGTERM, and SIGKILL
+  signal(SIGINT, signal_callback_handler);
+  signal(SIGTERM, signal_callback_handler);
+  signal(SIGKILL, signal_callback_handler);
+
+  // setup socket address structure
+  memset(&amp;amp;server_addr, 0, sizeof(server_addr));
+  server_addr.sun_family = AF_UNIX;
+  strcpy(server_addr.sun_path, SOCKET_FILENAME);
+
+  // create socket
+  server = socket(PF_UNIX, SOCK_STREAM, 0);
+  if (!server) {
+    perror("socket");
+    exit(-1);
+  }
+
+  // call bind to associate the socket with our local address and
+  // port
+  if (bind(server, (const struct sockaddr *)&amp;amp;server_addr, sizeof(server_addr)) &amp;lt; 0) {
+    perror("bind");
+    exit(-1);
+  }
+
+  // convert the socket to listen for incoming connections
+  if (listen(server, 0) &amp;lt; 0) {
+    perror("listen");
+    exit(-1);
+  }
+
+  puts("Listening to connection...");
+
+  // allocate buffer
+  buflen = 1024;
+  buf = new char[buflen+1];
+
+  // loop to handle all requests
+  while (1) {
+    unsigned int client = accept(server, (struct sockaddr *)&amp;amp;client_addr, &amp;amp;clientlen);
+
+    // read a request
+    memset(buf, 0, buflen);
+    nread = recv(client, buf, buflen, 0);
+
+    printf("\nClient says: %s\n\n", buf);
+
+    // echo back to the client
+    send(client, buf, nread, 0);
+
+    close(client);
+  }
+
+  close(server);
+
+  unlink(SOCKET_FILENAME);
+
+return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;At first you create a socket file descriptor with socket domain and type,
+which hasn’t been bind to anything yet. Then you bind it to a specific address described in
+&lt;code&gt;server_addr&lt;/code&gt;. After that, you put the socket in passive mode which
+waits for clients to approach and make connection.&lt;/p&gt;
+
+&lt;p&gt;When creating a socket, I had to made a design decision whether to use
+UNIX domain or Internet domain when creating my socket.&lt;/p&gt;
+
+&lt;p&gt;UNIX domain (using PF_UNIX when creating socket) is a component of
+POSIX, so it’s internal of the host and does not require (de)encapsulation
+of the internet and network layer of TCP/IP. Therefore, it’s more
+efficient for IPC and more secure as other devices in the LAN cannot tap
+into this socket.&lt;/p&gt;
+
+&lt;p&gt;On the other hand, Internet domain is just like UNIX domain but the
+socket is binded to an address and a port instead of a socket file as in
+UNIX domain. It works like UNIX domain socket but other devices in the LAN
+can connect to this socket (depending on your firewall setting).&lt;/p&gt;
+
+&lt;p&gt;Since the purpose of this socket is purely for interprocess
+communication, there is no need to expose the port to outside devices,
+so I chose to create my socket in UNIX domain.&lt;/p&gt;
+
+&lt;p&gt;In the infinite while loop, the program accepts connection from a
+client, and use &lt;code&gt;recv&lt;/code&gt; to read the content sent by the client. After
+doing something with the content received (in this program it does
+nothing), &lt;code&gt;sent&lt;/code&gt; is used to send a reply to the client.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-cpp"&gt;  while (1) {
+    unsigned int client = accept(server, (struct sockaddr *)&amp;amp;client_addr, &amp;amp;clientlen);
+    // rest of the code...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="php-client"&gt;PHP Client&lt;/h2&gt;
+
+&lt;p&gt;The PHP code does pretty much the similar thing. Except that instead of
+binding to a socket, it connects to a socket that’s already opened by
+the C++ program. It will send a message, wait for the first reply while the
+C++ program does it’s thing, and then terminate.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-php"&gt;&amp;lt;?php
+error_reporting(E_ALL);
+
+if(!($sock = socket_create(AF_UNIX, SOCK_STREAM, 0)))
+{
+    $errorcode = socket_last_error();
+    $errormsg = socket_strerror($errorcode);
+
+    die("Couldn't create socket: [$errorcode] $errormsg \n");
+}
+
+echo "Socket created";
+
+if(!socket_connect($sock , '/tmp/server.sock'))
+{
+    $errorcode = socket_last_error();
+    $errormsg = socket_strerror($errorcode);
+    die("Could not connect: [$errorcode] $errormsg \n");
+}
+
+echo "Connection established \n";
+
+$message = $argv[1];
+
+if(!socket_send( $sock , $message , strlen($message) , 0))
+{
+    $errorcode = socket_last_error();
+    $errormsg = socket_strerror($errorcode);
+
+    die("Could not send data: [$errorcode] $errormsg \n");
+}
+
+echo "Message send successfully \n";
+
+// Now receive reply from server
+if(socket_recv( $sock , $buf , 1024, MSG_WAITALL ) === FALSE)
+{
+    $errorcode = socket_last_error();
+    $errormsg = socket_strerror($errorcode);
+    die("Could not receive data: [$errorcode] $errormsg \n");
+}
+
+echo "Message received \n";
+
+// print the received message
+var_dump($buf);
+
+socket_close($sock);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;One thing to note if you’re like me who develops the PHP application in
+a docker container which has a separate file system from the host is
+that you need to mount the directory where your socket file resides in
+the host into the docker container. Otherwise, you may scratch your head
+like I did when &lt;code&gt;socket_connect&lt;/code&gt; reports: &lt;code&gt;socket_connect(): unable to connect [2]: No such file or directory&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id="accepting-one-connection-at-a-time"&gt;Accepting one connection at a time&lt;/h2&gt;
+
+&lt;p&gt;As the hardware I was working with prohibits parallelism, only one
+request should be handled by it at a time. It was tempting for me to
+leave the socket open and push the requests into a queue, but how’d the
+C++ program know if one request is still valid without the PHP program
+first look at the respond of the last request?&lt;/p&gt;
+
+&lt;p&gt;As a result, I simply closed the socket once a connection is established
+and something is being sent in. The program handles the requets, send a
+response back and then binds to the socket again.&lt;/p&gt;
+
+&lt;p&gt;To do so, we define a function &lt;code&gt;bind_listen_socket&lt;/code&gt; that wraps all the
+code needed to create, bind and listen to a socket. This function will
+be called when the program starts and after a request has been
+processed. This piece of code was originally in &lt;code&gt;main&lt;/code&gt; but now it’s
+being moved to a function.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-cpp"&gt;#include &amp;lt;arpa/inet.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;stdlib.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+#include &amp;lt;sys/types.h&amp;gt;
+#include &amp;lt;sys/socket.h&amp;gt;
+#include &amp;lt;sys/un.h&amp;gt;
+#include &amp;lt;unistd.h&amp;gt;
+#include &amp;lt;signal.h&amp;gt;
+
+using namespace std;
+
+#define SOCKET_FILENAME "/tmp/server.sock"
+
+int server;
+
+void bind_listen_socket(int &amp;amp;server, sockaddr_un &amp;amp;server_addr)
+{
+  // create socket
+  server = socket(PF_UNIX, SOCK_STREAM, 0);
+  if (!server) {
+    perror("socket");
+    exit(-1);
+  }
+
+  // call bind to associate the socket with our local address and
+  // port
+  if (bind(server, (const struct sockaddr *)&amp;amp;server_addr, sizeof(server_addr)) &amp;lt; 0) {
+    perror("bind");
+    exit(-1);
+  }
+
+  // convert the socket to listen for incoming connections
+  if (listen(server, 0) &amp;lt; 0) {
+    perror("listen");
+    exit(-1);
+  }
+
+  puts("Listening to connection...");
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The rest of the program remains similar to the orginal version, however
+it calls &lt;code&gt;bind_listen_socket&lt;/code&gt; whenever it wants to create, bind and
+listen to a socket. Moreover, the socket file descriptor is closed and
+the socket file removed once there is a request coming in from a client.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-cpp"&gt;void signal_callback_handler(int signum)
+{
+  // close server
+  close(server);
+  // remove the socket file
+  unlink(SOCKET_FILENAME);
+  // signal handled
+  exit(0);
+}
+
+int main(int argc, char **argv)
+{
+  struct sockaddr_un server_addr, client_addr;
+  socklen_t clientlen = sizeof(client_addr);
+  int client, buflen, nread;
+  char *buf;
+
+  puts("Hell World");
+
+  // listen to SIGINT, SIGTERM, and SIGKILL
+  signal(SIGINT, signal_callback_handler);
+  signal(SIGTERM, signal_callback_handler);
+  signal(SIGKILL, signal_callback_handler);
+
+  // setup socket address structure
+  memset(&amp;amp;server_addr, 0, sizeof(server_addr));
+  server_addr.sun_family = AF_UNIX;
+  strcpy(server_addr.sun_path, SOCKET_FILENAME);
+
+  // bind and listen on the socket file
+  bind_listen_socket(server, server_addr);
+
+  // allocate buffer
+  buflen = 1024;
+  buf = new char[buflen+1];
+
+  // loop to handle all requests
+  while (1) {
+    unsigned int client = accept(server, (struct sockaddr *)&amp;amp;client_addr, &amp;amp;clientlen);
+
+    // got a request, close the socket
+    close(server);
+    unlink(SOCKET_FILENAME);
+
+    // read a request
+    memset(buf, 0, buflen);
+    nread = recv(client, buf, buflen, 0);
+
+    printf("\nClient says: %s\n\n", buf);
+
+    // echo back to the client
+    send(client, buf, nread, 0);
+
+    close(client);
+
+    sleep(2);
+
+    // re-bind and listen on the socket
+    bind_listen_socket(server, server_addr);
+  }
+
+  close(server);
+
+  unlink(SOCKET_FILENAME);
+
+  return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;During the execution of the &lt;code&gt;while&lt;/code&gt; loop body and that 2 seconds delay I
+added to demonstrate that the socket really does not take any new
+connection during the execution. This is illustrated below. When trying
+to connect to the socket, the client couldn’t open the socket file
+during the 2-second period.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;/run/app # php client.php Hi
+Socket createdConnection established 
+Message send successfully 
+Message received 
+string(2) "Hi"
+
+/run/app # php client.php Hi
+Socket created
+Warning: socket_connect(): unable to connect [2]: No such file or directory in /run/app/client.php on line 14
+Could not connect: [2] No such file or directory 
+
+/run/app # php client.php Hi
+Socket createdConnection established 
+Message send successfully 
+Message received 
+string(2) "Hi"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="remarks"&gt;Remarks&lt;/h2&gt;
+
+&lt;p&gt;During the handling of my job and creation of this post,
+I learned that socket in UNIX domain is a very fast and effective way to achieve
+interprocess communication using different programming languages&lt;/p&gt;
+
+&lt;p&gt;The code used as examples here are available at &lt;a href="https://github.com/tommyku/cpp-php-socket-demo"&gt;tommyku/cpp-php-socket-demo&lt;/a&gt;.
+As I was searching for socket programming with PHP and C++, a tutorial from &lt;a href="http://www.binarytides.com/php-socket-programming-tutorial/"&gt;BinaryTides&lt;/a&gt;
+and &lt;a href="https://github.com/zappala/socket-programming-examples-c"&gt;zappala/socket-programming-examples-c&lt;/a&gt; have been very useful.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <id>tag:blog.tommyku.com,2017-11-14:/blog/the-cat-state-of-boolean-variable/</id>
     <title type="html">The "cat state" of boolean variable</title>
@@ -2360,83 +2764,6 @@ the latest data from API when it becomes available.&lt;/p&gt;
 &lt;p&gt;, many of the mentioned practices can be carried into general web developing and optimization.&lt;/p&gt;
 
 &lt;p&gt;And it’s always pleasant to see &lt;em&gt;your own&lt;/em&gt; startpage isn’t?&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog.tommyku.com,2016-11-16:/blog/doing-things-the-layman-way/</id>
-    <title type="html">Doing things the layman way</title>
-    <published>2016-11-16T16:00:00Z</published>
-    <updated>2016-11-16T16:00:00Z</updated>
-    <link rel="alternate" href="https://blog.tommyku.com/blog/doing-things-the-layman-way/"/>
-    <content type="html">
-&lt;p&gt;There was an old project I took as a freelancer before. It was about
-scraping the web pages of The Law Society of Hong Kong. They have
-put up a long comprehensive list of registered members.&lt;/p&gt;
-
-&lt;p&gt;Literally listing out &lt;a href="http://www.hklawsoc.org.hk/pub_e/memberlawlist/mem_withcert.asp"&gt;right&lt;/a&gt;
-&lt;a href="http://www.hklawsoc.org.hk/pub_e/memberlawlist/mem_withoutcert.asp"&gt;there&lt;/a&gt; inviting just anyone to scrape,
-all 10,288 of them.&lt;/p&gt;
-
-&lt;p&gt;The page structure were in simple table format in plain HTML, no
-Javascript to run before getting any useful value.&lt;/p&gt;
-
-&lt;h3 id="my-way"&gt;My way&lt;/h3&gt;
-
-&lt;p&gt;For folks reading out there who’re probably also an engineer, at this
-momemnt you must’ve formulated various ways to scrape the page from
-HTML. You may have a preference towards a certain framework or language
-that you’ve used or heard about before.&lt;/p&gt;
-
-&lt;p&gt;So did I, back then the Python web crawling / scraping framework Scrapy
-were perfect for the job. (by the way Scrapy is one brillient framework…
-I scraped my university’s timetable and built “&lt;a href="http://re.ck2ustudio.com/"&gt;UST Break-in&lt;/a&gt;”)&lt;/p&gt;
-
-&lt;p&gt;It was done overnight and I earned some money for some better dinners
-for a week. Everybody was happy.&lt;/p&gt;
-
-&lt;h3 id="the-layman-way"&gt;The Layman way&lt;/h3&gt;
-
-&lt;p&gt;Later I came to learn from a guy, the COO Angus in &lt;a href="https://www.eventxtra.com/"&gt;EventXtra&lt;/a&gt;.
-Briefly speaking he is the “brute-force it” sort of guy who simply broke the
-lock in a room escape game (which didn’t go down well).&lt;/p&gt;
-
-&lt;p&gt;As Angus, he’d Google it and eventually land on a site called
-‘&lt;a href="https://www.import.io"&gt;import.io&lt;/a&gt;’.&lt;/p&gt;
-
-&lt;p&gt;Angus simply plug the links in and TaDa! All data from the site is
-automatically scraped by import.io and instantly available to Angus in
-spreadsheet formats.&lt;/p&gt;
-
-&lt;p&gt;Really this felt like cheating when I learned about import.io from Angus.&lt;/p&gt;
-
-&lt;p&gt;Angus could have earned better dinners for the week in a much shorter time.&lt;/p&gt;
-
-&lt;h3 id="reflection"&gt;Reflection&lt;/h3&gt;
-
-&lt;p&gt;Angus and me have different mindsets; he is an operation guy with a
-couple years of hard-earned experiece in founding EventXtra whilst I
-am strictly from several years of engineering background.&lt;/p&gt;
-
-&lt;p&gt;As an engineer my ego wasn’t hurt, instead I was intrigued to employ
-what Angus’d have employed in many engineering problems I am facing daily.&lt;/p&gt;
-
-&lt;p&gt;Building a program to automate and perform a computationally expensive task
-is one thing that all software engineers are more than prepared for. But doing
-things the layman way and achieve virtually the same result in lower cost is much much better.&lt;/p&gt;
-
-&lt;p&gt;Of course not everything has an easy way out, still I think it doesn’t
-hurt if we could just google it before jumping to the solution. This way
-we could potentially have saved lots of time and money.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;em&gt;Angus is a layman.&lt;/em&gt;
-&lt;br&gt;
-&lt;em&gt;Angus googles stuff and get things done at lower cost.&lt;/em&gt;
-&lt;br&gt;
-&lt;em&gt;Angus is smart.&lt;/em&gt;
-&lt;br&gt;
-&lt;em&gt;Be like Angus.&lt;/em&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
 </content>
   </entry>
 </feed>

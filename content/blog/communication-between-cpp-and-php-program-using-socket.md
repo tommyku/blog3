@@ -3,7 +3,7 @@ title: 'Communication between C++ and PHP program using socket'
 kind: article
 created_at: '2018-01-13 00:00:00 +0800'
 slug: communication-between-cpp-and-php-program-using-socket
-preview: true
+preview: false
 ---
 
 ## Background

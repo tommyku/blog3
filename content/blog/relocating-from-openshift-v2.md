@@ -1,9 +1,9 @@
 ---
 title: Relocating from OpenShift v2
 kind: article
-created_at: '2017-10-25 00:00:00 +0800'
+created_at: '2018-05-18 00:00:00 +0800'
 slug: relocating-from-openshift-v2
-preview: true
+preview: false
 ---
 
 This post summaries my efforts over September and October to migrate my

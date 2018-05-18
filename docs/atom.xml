@@ -3,13 +3,170 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:base="https://blog.tommyku.com/">
   <id>https://blog.tommyku.com/</id>
   <title>Tommy Ku's Method Stub</title>
-  <updated>2018-01-12T16:00:00Z</updated>
+  <updated>2018-05-17T16:00:00Z</updated>
   <link rel="alternate" href="https://blog.tommyku.com/"/>
   <link rel="self" href="https://blog.tommyku.com/atom.xml"/>
   <author>
     <name>Tommy Ku</name>
     <uri>https://blog.tommyku.com</uri>
   </author>
+  <entry>
+    <id>tag:blog.tommyku.com,2018-05-17:/blog/relocating-from-openshift-v2/</id>
+    <title type="html">Relocating from OpenShift v2</title>
+    <published>2018-05-17T16:00:00Z</published>
+    <updated>2018-05-17T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/relocating-from-openshift-v2/"/>
+    <content type="html">
+&lt;p&gt;This post summaries my efforts over September and October to migrate my
+websites and apps away from OpenShift v2 to other hosting platforms as
+Red Hat finally closed it down.&lt;/p&gt;
+
+&lt;h2 id="what-is-openshift"&gt;What is OpenShift?&lt;/h2&gt;
+
+&lt;p&gt;OpenShift is an PaaS service by Red Hat originated from 2011, it
+provides infrastructure for users to deploy their apps with little to no
+concern about the underlying infrastructure where the app runs on.
+Deployment can be as simple as a &lt;code&gt;git push&lt;/code&gt; command, given that the
+git &lt;code&gt;post-receive&lt;/code&gt; hooks have been properly configured.&lt;/p&gt;
+
+&lt;p&gt;I have been using OpenShift v2 since 2012 to deploy production
+application for my freelance and personal projects. The free bronze tier of
+OpenShift v2 allows for 3 ‘gears’, which are instances of a virtual
+machine on OpenShift platform. The resource constraint never bothered
+me. If you run out of 3 gears, you can register for another OpenShift
+account, then link the new account to the existing one such that
+you can use the same SSH public key to deploy to the 3 additional gears
+in the new account.&lt;/p&gt;
+
+&lt;p&gt;That means you can run virtually unlimited number of apps for free,
+without credit card.&lt;/p&gt;
+
+&lt;p&gt;To Red Hat, this exploit might have costed them so much that they had
+to close down OpenShift v2 in favor of the newer OpenShift v3. On
+OpenShift v3 the cheapest tier ‘Starter’ allows for only 1 project, the
+next tier ‘Pro’ allows for 10 projects at $50/month. Well, OpenShift v2
+could have died of old age though.&lt;/p&gt;
+
+&lt;p&gt;That sucks. I had to move 14 websites/apps, including a client project from
+OpenShift to other platforms:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;1 client project&lt;/li&gt;
+  &lt;li&gt;1 web API (require relocation)&lt;/li&gt;
+  &lt;li&gt;4 website/web apps (require relocation)&lt;/li&gt;
+  &lt;li&gt;8 website/web apps (trashed)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id="options-aside-from-openshift-v2"&gt;Options aside from OpenShift v2&lt;/h2&gt;
+
+&lt;p&gt;I love free things. Free things that remain free in long term are even
+better. On September I had these options:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Digital Ocean (with GitHub’s $50 student credit)&lt;/li&gt;
+  &lt;li&gt;Free tier from AWS, Azure and GCP (free for 12 months)&lt;/li&gt;
+  &lt;li&gt;GitHub Page&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Digital Ocean offers virtual private server that I can install anything
+on. AWS, Azure and GCP provide a wide variety of products and solutions
+to suit various requirements and at different price ranges.&lt;/p&gt;
+
+&lt;p&gt;If you don’t mind open-sourcing your static site or that your site uses
+external APIs for dynamic features, GitHub Page would be your best
+choice because it’s completely free and ships with HTTPS by default.&lt;/p&gt;
+
+&lt;h2 id="post-openshift-v2-life-of-hosting"&gt;Post-OpenShift v2 life of hosting&lt;/h2&gt;
+
+&lt;p&gt;Long story short, I moved all static assets from OpenShift to GitHub
+Page. These include blog, static websites and web apps using self-hosted
+database like Hoodie. For sites that are dynamic, I would re-think
+whether it needs to be dynamic, or whether I really need the site
+itself. I will go into more details about those sites. And for those
+which I really must host on a VPS, I hosted them together on one single
+instance on Linode or Digital Ocean, whichever I have free credits on.&lt;/p&gt;
+
+&lt;h3 id="static-sites"&gt;Static sites&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href="https://pages.github.com/"&gt;GitHub Pages&lt;/a&gt; are great because it is free,
+it hosts reasonably big static sites, it serves sites over HTTPS, it
+allows for CNAME binding so I could use the domain names of my choosing
+and I have never had any issue with it except the deployment time after
+&lt;code&gt;git push&lt;/code&gt; is rather random.&lt;/p&gt;
+
+&lt;p&gt;My sites and web apps locally using static site generator such as Nanoc
+or bundler such as webpack, then I would commit the build to &lt;code&gt;gh-pages&lt;/code&gt;
+branch of my repo, then off it goes with &lt;code&gt;git push&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I have deployed some of my &lt;a href="https://github.com/tommyku/expense-tracker-lite"&gt;progressive&lt;/a&gt;
+&lt;a href="https://github.com/tommyku/tip3"&gt;web apps&lt;/a&gt; and deployed them using the
+&lt;code&gt;gh-pages&lt;/code&gt; package from the npm repository. It copies your build folder
+and commit it to the &lt;code&gt;gh-pages&lt;/code&gt; branch, and deploy (push) it to GitHub.
+As my PWAs are using a self-hosted Hoodie backend of mine to store the
+data, I did not have to worry about leaking my keys or tokens to the
+public because my apps simply don’t rely on them.&lt;/p&gt;
+
+&lt;h3 id="unnecessarily-dynamic-sites"&gt;Unnecessarily dynamic sites&lt;/h3&gt;
+
+&lt;p&gt;After writing the &lt;a href="../doing-things-the-layman-way/"&gt;post about doing things the layman way&lt;/a&gt;,
+I have embraced the lazy approach to things — I don’t have to do
+everything by myself, and if I am to do them myself, I would take the
+shortest path and the easiest approach.&lt;/p&gt;
+
+&lt;p&gt;Which means I discontinued my project of building my own bookmarking
+service &lt;a href="https://github.com/tommyku/link2-server"&gt;link2&lt;/a&gt; and embrace
+the simplicity of Google Form and Spreadsheet instead. Simple, easy, and
+free. I didn’t have to pay for my own bookmarking now, and Google
+probably won’t care enought to look at my Spreadsheet to try to
+“understand” me.&lt;/p&gt;
+
+&lt;p&gt;I used to host a website that tells you which room on campus is probably
+empty, so instead of going to the library where everyone is coughing or
+sneezing or both, people can use empty classroom to study free from
+distractions. The website was written in Laravel, which requires PHP and
+a MySQL database. Deeper look into the service made me realize that it
+doesn’t have to be dynamic. It could just be a bunch of JSON files, and
+a progressive web app that loads up those files for once, then read from
+cache forever. Yes, the service is no longer dynamic and it’s now hosted
+freely on GitHub Pages instead.&lt;/p&gt;
+
+&lt;h3 id="dynamic-sites-databases-and-bots"&gt;Dynamic sites, databases and bots&lt;/h3&gt;
+
+&lt;p&gt;Although offloading static content to GitHub Pages saved me a bunch of
+money from VPS, some still require a server to run on. For example, a
+Hoodie backend requires a Node.js environment and CouchDB. Plus I am
+running a bunch of small Telegram utility bots and web services
+such as a link shortener, a wrapper for youtube-dl and HTTP file server as
+its companion, and some secret sites of mine.&lt;/p&gt;
+
+&lt;p&gt;I don’t need 512MB RAM and 1 vCPU per service. In face, an VPS instance
+of 1GB RAM and 1 vCPU is more than enough to run all of them. I used
+docker to better maintain multiple servers and services in containers,
+and fired up a &lt;a href="https://github.com/jwilder/nginx-proxy"&gt;Nginx reverse proxy&lt;/a&gt;
+to tunnel traffic for each service into their respective container. It’s
+automatic and I could disable/enable any of them with a few lines of
+commands.&lt;/p&gt;
+
+&lt;p&gt;I paid $5/month to Linode for an VPS instance which I run multiple
+services on. It is fairly cheap, but if I wish I could even set the same
+thing up at home, using a Raspberry Pi 1 Model B which I had no purpose
+for since I have bought it a few years back. I could set up
+port-forwarding from my router, and use &lt;code&gt;ddclient&lt;/code&gt; to update my Cloudflare
+DNS record automatically. However, the marginal benefit of doing this
+would be minimal compared to having an VPS on the cloud where they have
+better spec and more bandwidth.&lt;/p&gt;
+
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;OpenShift v2 has been the birth place of my career by allowing me to host
+my random and mostly crappy creations over the years, but I had to move on.
+Like dynasty, hosting services live and die. They might discontinue all
+of a sudden for a lack of profit or prospect (obviously). And people
+have to move on. Hosting has never been as cheap and accessible as
+today, and I wish they continue to live on, free or paid alike so I
+could continue to have a place on the Internet.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <id>tag:blog.tommyku.com,2018-01-12:/blog/communication-between-cpp-and-php-program-using-socket/</id>
     <title type="html">Communication between C++ and PHP program using socket</title>
@@ -2414,356 +2571,6 @@ tailing whitespace or missing blank lines before and after &lt;code&gt;private&l
 &lt;p&gt;It became a habit of mine to write up scripts for starting, building and
 stopping Docker containers in projects so I can set up once and never
 again having to worry about the parameters.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog.tommyku.com,2017-01-09:/blog/have-fun-building-browser-start-page/</id>
-    <title type="html">Have fun building browser start page</title>
-    <published>2017-01-09T16:00:00Z</published>
-    <updated>2017-01-09T16:00:00Z</updated>
-    <link rel="alternate" href="https://blog.tommyku.com/blog/have-fun-building-browser-start-page/"/>
-    <content type="html">
-&lt;figure&gt;
-&lt;img src="./multiple-tiles.jpg"&gt;
-&lt;figcaption&gt;My current setup&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Maybe it was my colleague, or maybe I feel the heat from &lt;a href="https://www.reddit.com/r/startpages/"&gt;/r/startpages&lt;/a&gt;…
-Whichever the reason is, I began building browser start page.&lt;/p&gt;
-
-&lt;p&gt;Default browser start pages are totally fine. Engineers’ put in hard
-work to make it convenient and visually pleasing, but it is not &lt;em&gt;my&lt;/em&gt;
-page. Just as people customize their desktop wallpaper, I want my browser
-start page to do &lt;em&gt;this&lt;/em&gt; and &lt;em&gt;that&lt;/em&gt; while showing a refreshing background
-image.&lt;/p&gt;
-
-&lt;p&gt;More than just simple background image replacement, or listing bookmarks in
-various ways, it should show time and weather which are cool to look at
-but essentially useless.&lt;/p&gt;
-
-&lt;p&gt;The finished code is available at:&lt;/p&gt;
-
-&lt;div style="text-align: center;"&gt;
-  &lt;div class="github-card" data-github="tommyku/start-page-demo" data-width="400" data-height="" data-theme="default"&gt;&lt;/div&gt;
-  &lt;script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"&gt;&lt;/script&gt;
-&lt;/div&gt;
-
-&lt;h3 id="setting-things-up"&gt;Setting things up&lt;/h3&gt;
-
-&lt;h4 id="using-webpack-as-module-bundler"&gt;Using webpack as module bundler&lt;/h4&gt;
-
-&lt;p&gt;In this start-page project, &lt;code&gt;bower&lt;/code&gt; is substituted by &lt;code&gt;webpack&lt;/code&gt;, a
-module bundler which compiles the source code along with modules used.
-In &lt;code&gt;bower&lt;/code&gt;’s way, components are first put inside &lt;code&gt;bower_components&lt;/code&gt; folder and
-then included in the HTML page one by one, while with &lt;code&gt;webpack&lt;/code&gt; modules
-are loaded as simple as calling &lt;code&gt;require('module-name')&lt;/code&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-coffeescript"&gt;# example.coffee
-$ = require 'cash-dom'
-$(document.body).text 'Hello World' # 'Hello World' is injected into &amp;lt;body&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Webpack uses &lt;code&gt;loaders&lt;/code&gt; to pipe files through a set of processors when we
-call &lt;code&gt;require&lt;/code&gt; such that &lt;code&gt;gulp-sass&lt;/code&gt; and &lt;code&gt;gulp-coffee&lt;/code&gt; are no longer
-needed.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-coffeescript"&gt;# example.coffee
-require '../css/app.scss'
-# content of `app.scss` is passed through style-loader, css-loader, sass-loader and postcss-loader
-# then injected into the page with JavaScript
-# note: better keep a copy of the stylesheet inside &amp;lt;noscript&amp;gt; just in case
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code class="language-javascript"&gt;// webpack.config.js
-module.exports = {
-// ...
-  module: {
-    loaders: [
-      { test: /\.scss$/, loader: "style-loader!css-loader?importLoaders=1!sass-loader!postcss-loader" },
-    ]
-  }
-// ...
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id="using-yarn-along-with-npm"&gt;Using yarn along with npm&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;npm&lt;/code&gt; is fine but there exists &lt;code&gt;yarn&lt;/code&gt; that runs faster and output better
-information while running &lt;code&gt;npm|yarn install&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;yarn&lt;/code&gt; generates a &lt;code&gt;yarn.lock&lt;/code&gt; file that records packages with version
-numbers so the same packages are installed across machines.&lt;/p&gt;
-
-&lt;p&gt;For more of &lt;em&gt;yarn vs npm&lt;/em&gt; see this &lt;a href="https://www.sitepoint.com/yarn-vs-npm/"&gt;post&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id="brainstorm-what-to-add"&gt;Brainstorm what to add&lt;/h3&gt;
-
-&lt;p&gt;Browser start page is personal. There is no pattern or best practices
-associated with the genre.&lt;/p&gt;
-
-&lt;p&gt;Here is a list of stuff I might include:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;search bar #&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;bookmarks&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;clock (w/without alarm) #&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;weather report/forecast #&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;calendar&lt;/li&gt;
-  &lt;li&gt;kitten pics, lots of them&lt;/li&gt;
-  &lt;li&gt;notepad&lt;/li&gt;
-  &lt;li&gt;uptime of your current relationship&lt;/li&gt;
-  &lt;li&gt;doomsday countdown&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;small&gt;&lt;attr&gt;#&lt;/attr&gt; included in demo repo&lt;/small&gt;&lt;/p&gt;
-
-&lt;p&gt;The &lt;a href="https://startpages.github.io/"&gt;Startpage Emporium&lt;/a&gt; and &lt;a href="https://www.reddit.com/r/startpages/"&gt;/r/startpages&lt;/a&gt;
-are good places for seeking inspiration.&lt;/p&gt;
-
-&lt;p&gt;As often visited as a start page, it’s better kept small
-and fast. Consider importing external assets only when necessary
-and minimize the &lt;code&gt;.js&lt;/code&gt; files in production build.&lt;/p&gt;
-
-&lt;h3 id="css-grid"&gt;CSS grid&lt;/h3&gt;
-
-&lt;p&gt;CSS grid is probably the reason for broken layout when you first build
-and open build from the demo repo.&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img src="./broken.jpg"&gt;
-&lt;figcaption&gt;How broken it looks with CSS grid disabled&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;The design shown of the demo is so simple it can be effortlessly
-implemented with grids from &lt;code&gt;foundation&lt;/code&gt;, &lt;code&gt;pure.css&lt;/code&gt; or &lt;code&gt;bootstrap&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Flexbox is too a viable option if I want to avoid UI framework entirely,
-yet considering how troublesome flexbox is when implementing a 2D
-nested layout (mainly for the bloated meaningless HTML structure), I opted for CSS grid instead.&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img src="./caniuse-css-grid.jpg"&gt;
-&lt;figcaption&gt;Fact: CSS grid isn’t widely supported (as of Jan 2017)&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;In Google Chrome 29 through 56, CSS grid is enabled through
-‘experimental Web Platform features’ flags in
-&lt;a href="chrome://flags"&gt;chrome://flags&lt;/a&gt;, so I did that.&lt;/p&gt;
-
-&lt;p&gt;A grid is exactly a grid, a 2D layout structure with grid cells and
-lines defined using slightly abstract CSS syntax of
-&lt;code&gt;grid-template-columns&lt;/code&gt; and &lt;code&gt;grid-template-rows&lt;/code&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-scss"&gt;/* src/css/app.scss */
-.grid-container {
-  height: 100vh;
-  display: grid;
-  grid-template-columns: 12% 38% 38% 12%;
-  grid-template-rows: 25% 25% 25% 25%
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The above piece of CSS code defines a 4x4 grids with respective to cell
-sizes (or separation between grid lines). Other than an extra grid
-container that contains all grid elements, there is no need to change
-the existing HTML DOM structure to accommodate for the CSS grid layout.&lt;/p&gt;
-
-&lt;p&gt;I look forward to CSS grid being a default feature in major browsers.
-Meanwhile, a comprehensive guide is available on &lt;a href="https://css-tricks.com/snippets/css/complete-guide-grid/"&gt;CSS tricks&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id="chrome-new-tab-page-override"&gt;Chrome new-tab page override&lt;/h3&gt;
-
-&lt;p&gt;Chrome pages namely Bookmark manager, History and New Tab pages can be
-replaced by arbitrary Chrome extension with &lt;code&gt;chrome_url_overrides&lt;/code&gt;
-declared in &lt;code&gt;manifest.json&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Note other extensions might override your url overrides. In such case,
-disable those extensions.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-json"&gt;/* manifest.json */
-{
-  "name": "Start page demo",
-  "description": "New tab replacer demo",
-  "version": "0.1",
-  "incognito": "split",
-  "chrome_url_overrides": {
-    "newtab": "index.html"
-  },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  "manifest_version": 2
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Unfinished extensions are loaded into Chrome by clicking &lt;code&gt;Load
-unpacked extension...&lt;/code&gt; in &lt;a href="chrome://extensions/"&gt;chrome://extensions&lt;/a&gt;
-page.&lt;/p&gt;
-
-&lt;h3 id="sinitra-web-proxy-on-docker"&gt;Sinitra web proxy on Docker&lt;/h3&gt;
-
-&lt;p&gt;Have you experienced &lt;a href="https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy"&gt;&lt;em&gt;Same-origin policy&lt;/em&gt;&lt;/a&gt;
-getting in the way when you attempt to make a &lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS"&gt;cross-origin HTTP request&lt;/a&gt;,
-which most likely to happen when making an API request to 3rd party
-service.&lt;/p&gt;
-
-&lt;p&gt;While it enhances security, it’s hindering legitimate API calls we want
-to make, specifically &lt;a href="https://darksky.net/dev/"&gt;Dark Sky API&lt;/a&gt; for weather
-report.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-coffee"&gt;# src/js/weather.js.coffee
-request = require 'superagent'
-
-module.exports = {
-  getWeather: ()-&amp;gt;
-    request.get('http://0.0.0.0:1080/weather')
-  # ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In the demo repo &lt;code&gt;weather.js&lt;/code&gt; makes a call to a local server listening
-at 1080 port which essentially wraps the Dark Sky API.&lt;/p&gt;
-
-&lt;p&gt;Make sure your’ve set the API key at the line &lt;code&gt;ForecastIO.api_key =
-'YOUR_DARK_SKY_API_KEY'&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;The proxy server code is in &lt;code&gt;web-proxy&lt;/code&gt; folder of the demo. With
-Docker installed, starte the server by running:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-bash"&gt;$ ./bin/build
-$ ./bin/run
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For those not running Docker, the server can still be started by:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-bash"&gt;$ bundle install
-$ ruby server.rb
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;While the server itself is straight-forward proxy that returns exactly
-what Dark Sky API returns, Docker conveniently comes with &lt;code&gt;--restart=always&lt;/code&gt; flag which
-starts the container automatically on reboot, allowing us to run the
-proxy with startpage with zero operational overhead.&lt;/p&gt;
-
-&lt;h3 id="maskingfaking-it-til-its-loaded"&gt;Masking/faking it til it’s loaded&lt;/h3&gt;
-
-&lt;h4 id="masking-the-render"&gt;Masking the render&lt;/h4&gt;
-
-&lt;p&gt;The page looks ugly for a split second before any CSS is injected and image loaded, then
-everything looks normal again. There should be an element over
-everything else masking all the ugly elements before the page is fully
-loaded.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-html"&gt;&amp;lt;!-- output/index.html --&amp;gt;
-&amp;lt;html&amp;gt;
-  &amp;lt;head&amp;gt;
-    &amp;lt;!-- ... --&amp;gt;
-    &amp;lt;style&amp;gt;
-      .mask {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: white;
-        z-index: 10000;
-        opacity: 1;
-        transition: opacity 0.2s linear;
-        will-change: opacity;
-      }
-    &amp;lt;/style&amp;gt;
-    &amp;lt;!-- ... --&amp;gt;
-  &amp;lt;/head&amp;gt;
-  &amp;lt;body&amp;gt;
-    &amp;lt;div class="mask"&amp;gt;&amp;lt;/div&amp;gt;
-    &amp;lt;!-- ... --&amp;gt;
-  &amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The mask does only one thing: mask the page in white before (hopefully) some JavaScript set
-it’s opacity to 0, revealing the fully loaded page under it.&lt;/p&gt;
-
-&lt;s&gt;(exactly why you cannot click anything in the page…the mask element is still covering everything after unmasking)&lt;/s&gt;
-
-&lt;p&gt;&lt;em&gt;edit: elements underneath the mask can be clicked by setting &lt;code&gt;pointer-events: none&lt;/code&gt; on the mask&lt;/em&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-coffeescript"&gt;# main.coffee
-# ...
-WeatherPanel = require './weather_panel.js.coffee'
-DateTimePanel = require './date_time_panel.js.coffee'
-Wallpaper = require './wallpaper.js.coffee'
-
-unMask = -&amp;gt;
-  $('.mask').css {
-    opacity: 0,
-    'pointer-events': 'none'
-  }
-
-  $ -&amp;gt;
-    (new Wallpaper()).bootstrap()
-    (new WeatherPanel()).bootstrap()
-    (new DateTimePanel()).bootstrap()
-    unMask()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The demo uses a bad approximation on the timing of unmasking. Bootstraping the panels do not mean
-their respective assets (e.g. wallpaper, weather data) are fully loaded. This could be improved by a
-&lt;code&gt;Promise&lt;/code&gt;-based approach on each bootstrapped class, but we are simplifying here.&lt;/p&gt;
-
-&lt;h4 id="faking-api-call"&gt;Faking API call&lt;/h4&gt;
-
-&lt;p&gt;As it turns out, everything looks fine even on unmasking (disclaimer: works on my machine),
-even the weather data is there despite our local proxy hasn’t returned anything yet.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class="language-coffeescript"&gt;# src/js/weather_panel.js.coffee
-# ...
-class WeatherPanel
-  # ...
-  updatePage: -&amp;gt;
-    return unless @report?
-    $('.temperature').html "#{@lo @report.temperature}&amp;amp;deg;"
-    $('.summary').html @report.current_summary
-    $('.weather-icon').prop src: "static/weatherIcons/#{@report.icon}.png"
-
-  getWeatherHandler: (err, res)-&amp;gt;
-    return unless res? &amp;amp;&amp;amp; res.body.currently?
-    current = res.body.currently
-    @report =
-      icon: weather.getWeatherIcon(current.icon)
-      current_summary: current.summary
-      temperature: current.temperature
-      hour_summary: res.body.hourly.summary
-    store.set 'weather.report', @report # store @report object into localStorage
-    @updatePage()
-
-  bootstrap: -&amp;gt;
-    weather.getWeather().end (err, res)=&amp;gt;
-      @getWeatherHandler(err, res)
-    @report = store.get 'weather.report' # retrieve @report object from localStorage
-    @updatePage()
-
-module.exports = WeatherPanel
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The trick is to cache API call result, either by simply storing it into localStorage or add a
-service worker. In our case we are storing the data into localStorage, then update the page with
-the latest data from API when it becomes available.&lt;/p&gt;
-
-&lt;h3 id="conclusion"&gt;Conclusion&lt;/h3&gt;
-
-&lt;p&gt;This post illustrates the techniques I used when building my own &lt;a href="https://github.com/tommyku/start-page-demo"&gt;startpage demo&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Although many corners were cut to ensure timely delivery such as&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;only supports Google Chrome with flag enabling CSS Grid toggled&lt;/li&gt;
-  &lt;li&gt;code not really organized by components&lt;/li&gt;
-  &lt;li&gt;unmask on page loaded instead of on content loaded&lt;/li&gt;
-  &lt;li&gt;wallpaper not optimized per screen size&lt;/li&gt;
-  &lt;li&gt;used localStorage instead of service worker to cache API result&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;, many of the mentioned practices can be carried into general web developing and optimization.&lt;/p&gt;
-
-&lt;p&gt;And it’s always pleasant to see &lt;em&gt;your own&lt;/em&gt; startpage isn’t?&lt;/p&gt;
 </content>
   </entry>
 </feed>

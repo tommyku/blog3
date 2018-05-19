@@ -50,7 +50,7 @@ the third window occupies one-forth of the screen, and so on.&lt;/p&gt;
 &lt;figcaption&gt;i3wm with non-overlapping tiling windows&lt;/figcaption&gt;
 &lt;/figure&gt;
 
-&lt;p&gt;On Reddit /r/unixporn, there is a strong following for tiling
+&lt;p&gt;On Reddit &lt;a href="https://www.reddit.com/r/unixporn/"&gt;/r/unixporn&lt;/a&gt;, there is a strong following for tiling
 windows manager as new “rices” are posted onto the subreddit daily, with
 a lot of them using a fork of i3wm, i3-gaps, which add gaps between the
 tiles and some other features.&lt;/p&gt;

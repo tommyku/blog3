@@ -3,7 +3,7 @@ title: 'I switched from GNOME to i3wm'
 kind: article
 created_at: '2018-05-19 00:00:00 +0800'
 slug: i-switched-from-gnome-to-i3wm
-preview: true
+preview: false
 ---
 
 My ThinkPad X230 (yes it's still kicking since [the upgrade](/blog/do-i-need-a-new-laptop/))
@@ -12,9 +12,9 @@ far behind the common resolution of 1920x1080 that has became widely
 available today. Vendors even went up to QHD+ with 3200x1800 like my
 Razer Blade 2015 to please the eyes of the customers. Due to battery
 life issue and that there is no viable battery replacement solution
-except paying expensively to ship it back to Razer and replace it, I had
-to stick to my ThinkPad X230 which only holds 60% of its battery's original
-design capacity now.
+except paying expensively to ship it back to Razer and replace it.
+Therefore, I had to stick to my ThinkPad X230 which only holds 60%
+of its battery's original design capacity now.
 
 Recently I upgraded to Ubuntu 18.04 LTS hoping Linux 4.15 could give me
 some better battery life and prettier layouts. Naive was I. Desktop

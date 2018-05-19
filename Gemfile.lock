@@ -39,15 +39,15 @@ GEM
       ruby_dep (~> 1.2)
     lumberjack (1.0.12)
     method_source (0.8.2)
-    mini_portile2 (2.2.0)
+    mini_portile2 (2.3.0)
     nanoc (4.8.0)
       cri (~> 2.8)
       ddplugin (~> 1.0)
       hamster (~> 3.0)
       ref (~> 2.0)
     nenv (0.3.0)
-    nokogiri (1.8.0)
-      mini_portile2 (~> 2.2.0)
+    nokogiri (1.8.2)
+      mini_portile2 (~> 2.3.0)
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -95,4 +95,4 @@ DEPENDENCIES
   yuicompressor!
 
 BUNDLED WITH
-   1.15.3
+   1.16.1

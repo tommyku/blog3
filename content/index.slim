@@ -9,7 +9,7 @@ title: Tommy Ku's Method Stub
   - specials.each do |article|
     a.special href=url_for(article)
       figure.side-figure
-        img src="#{url_for(article)}#{article[:preview_banner]}"
+        img src="#{url_for(article)}#{article[:preview_banner]}" alt="Preview image for #{article[:title]}"
       h4 = article[:title]
 ul#article-list
   - sorted_articles.each do |article|

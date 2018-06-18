@@ -1,0 +1,3 @@
+#!/bin/bash
+
+find ./content/assets -iname '*.jpg' | xargs jpegoptim

@@ -98,8 +98,13 @@ convenient binding I haven't thought of, or better ways to do something.
 Currently my i3 config is also hosted on GitHub via [tommyku/my-i3-config](https://github.com/tommyku/my-i3-config).
 
 <figure>
+<img src='./i3wm_polybar.jpg' width='100%' style='max-width: 48em;'/>
+<figcaption>June 2018: How my current setup with polybar looks like</figcaption>
+</figure>
+
+<figure>
 <img src='./i3wm_current.jpg' width='100%' style='max-width: 48em;'/>
-<figcaption>How my current setup looks like</figcaption>
+<figcaption><s>How my current setup looks like</s></figcaption>
 </figure>
 
 The window manager has been working very well for me, I still have some minor

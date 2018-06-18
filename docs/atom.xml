@@ -111,8 +111,13 @@ convenient binding I haven’t thought of, or better ways to do something.
 Currently my i3 config is also hosted on GitHub via &lt;a href="https://github.com/tommyku/my-i3-config"&gt;tommyku/my-i3-config&lt;/a&gt;.&lt;/p&gt;
 
 &lt;figure&gt;
+&lt;img src="./i3wm_polybar.jpg" width="100%" style="max-width: 48em;"&gt;
+&lt;figcaption&gt;June 2018: How my current setup with polybar looks like&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
 &lt;img src="./i3wm_current.jpg" width="100%" style="max-width: 48em;"&gt;
-&lt;figcaption&gt;How my current setup looks like&lt;/figcaption&gt;
+&lt;figcaption&gt;&lt;s&gt;How my current setup looks like&lt;/s&gt;&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The window manager has been working very well for me, I still have some minor

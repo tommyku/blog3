@@ -18,7 +18,7 @@ html lang='en'
           strong style='color: brown'
             | This post is preview only (╯°□°）╯︵ ┻━┻
         h1 = @item[:title]
-        i = "Posted on #{attribute_to_time(@item[:created_at]).strftime '%Y.%m.%d'}"
+        i = "Posted on #{attribute_to_time(@item[:created_at]).strftime '%B %d, %Y'}"
       section#content
         == yield
 

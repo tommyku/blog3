@@ -47,6 +47,237 @@ principles (in this case, autosuspending USB port).&lt;/p&gt;
 </content>
   </entry>
   <entry>
+    <id>tag:blog.tommyku.com,2018-06-22:/blog/a-case-of-web-component-revising-wc-blink/</id>
+    <title type="html">A case of Web Component: Revising &lt;wc-blink&gt;</title>
+    <published>2018-06-22T16:00:00Z</published>
+    <updated>2018-06-22T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/a-case-of-web-component-revising-wc-blink/"/>
+    <content type="html">
+&lt;p&gt;On 2015, I wrote &lt;code&gt;&amp;lt;wc-blink&amp;gt;&lt;/code&gt; (check it out on &lt;a href="https://github.com/tommyku/wc-blink"&gt;GitHub&lt;/a&gt;), a custom element that mimics the notorious
+and obsolete native element &lt;code&gt;&amp;lt;blink&amp;gt;&lt;/code&gt; (except that it has a &lt;code&gt;display: block&lt;/code&gt;
+instead of &lt;code&gt;display: inline&lt;/code&gt; now that I think about it).&lt;/p&gt;
+
+&lt;link rel="import" href="https://tommyku.github.io/wc-blink/wc-blink-element.html" async=""&gt;
+
+&lt;wc-blink&gt;If your browser supports custom component and HTML import,
+you’ll see this blinking! (and appreciate the fact that it’s now
+obsolete)&lt;/wc-blink&gt;
+
+&lt;pre&gt;&lt;code class="language-html"&gt;&amp;lt;link rel="import" href="https://tommyku.github.io/wc-blink/wc-blink-element.html" async /&amp;gt;
+
+&amp;lt;wc-blink&amp;gt;If your browser supports custom component and HTML import, you'll see this blinking! (and appreciate the fact that it's now obsolete)&amp;lt;/wc-blink&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It was absoluely unnecessary to make it a web component because there
+exists a &lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blink"&gt;CSS-only polyfill&lt;/a&gt;
+that receives wide browser support (it’s just CSS) and requires no
+JavaScript or custom element support.&lt;/p&gt;
+
+&lt;p&gt;This element was written to explore the then-v0 customer element
+standard. Even today, it still sound like the future to come, where you can plug
+and play any HTML element without having to convert them from front-end
+frameworks such as React, Vue.js or AngularJS.&lt;/p&gt;
+
+&lt;p&gt;When I was reading Mikeal’s &lt;a href="https://medium.com/@mikeal/ive-seen-the-future-it-s-full-of-html-2577246f2210"&gt;post on web component&lt;/a&gt;, I was still full of
+hope even though I jumped into developing in React a few months before
+and never turned back. Web component is still at it’s infancy in terms
+of adoption and browser supports while component-based front-end
+frameworks are quickly fulfilling its promise - except the
+interoperatbility part.&lt;/p&gt;
+
+&lt;script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/1457_RC04/embed_loader.js"&gt;&lt;/script&gt;
+
+&lt;script type="text/javascript"&gt;
+  trends.embed.renderExploreWidget("TIMESERIES", {"comparisonItem":[{"keyword":"React","geo":"","time":"2015-01-01 2017-06-23"},{"keyword":"Vue","geo":"","time":"2015-01-01 2017-06-23"},{"keyword":"Web component","geo":"","time":"2015-01-01 2017-06-23"},{"keyword":"Custom element","geo":"","time":"2015-01-01 2017-06-23"}],"category":31,"property":""}, {"exploreQuery":"cat=31&amp;date=2015-01-01%202017-06-23&amp;q=React,Vue,Web%20component,Custom%20element","guestPath":"https://trends.google.com:443/trends/embed/"});
+&lt;/script&gt;
+
+&lt;p style="text-align: center;font-size: 0.8125em;"&gt;
+  &lt;i&gt;&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;h2 id="in-case-of-wc-blink-in-2015"&gt;In case of &amp;lt;wc-blink&amp;gt; in 2015&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;&amp;lt;wc-blink&amp;gt;&lt;/code&gt; was originally written in custom element v0, without the
+ES2015 vibe of JavaScript class. Yet the general idea was the same: first you
+attach a shadowDOM to the element housing your content, then fill it up
+with lifecycle callbacks such as attachedCallback() or
+attributeChangedCallback() which reassembles React’s componentDidMount() and a high level shouldComponentUpdate() + render() + componentDidUpdate().&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-html"&gt;&amp;lt;!-- Commit: df3fcb41c880cb6762c609d7657cc0fd833d9134 --&amp;gt;
+&amp;lt;!-- wc-blink.html --&amp;gt;
+&amp;lt;template&amp;gt;
+  &amp;lt;style&amp;gt;
+    /* Credit goes to google for this part
+       Search "html blink" on google and see */
+    @-webkit-keyframes blink {80%{opacity:0.0}}
+    @keyframes blink {80%{opacity:0.0}}
+    :host, * {
+      -webkit-animation:blink 1s steps(1,end) 0s infinite;
+      animation:blink 1s steps(1,end) 0s infinite;
+    }
+  &amp;lt;/style&amp;gt;
+  &amp;lt;content&amp;gt;&amp;lt;/content&amp;gt;
+&amp;lt;/template&amp;gt;
+
+&amp;lt;script&amp;gt;
+  (function() {
+    // Refers to the "importer", which is index.html
+    var thatDoc = document;
+
+    // Refers to the "importee", which is src/hello-world.html
+    var thisDoc =  (thatDoc._currentScript || thatDoc.currentScript).ownerDocument;
+
+    // Gets content from &amp;lt;template&amp;gt;
+    var template = thisDoc.querySelector('template').content;
+
+    // Creates an object based in the HTML Element prototype
+    var element = Object.create(HTMLElement.prototype);
+
+    // Fires when an instance of the element is created
+    element.createdCallback = function() {
+      var shadowRoot = this.createShadowRoot();
+      shadowRoot.appendChild(document.importNode(template, true));
+    };
+
+    // Fires when an instance was inserted into the document
+    element.attachedCallback = function() {};
+
+    // Fires when an instance was removed from the document
+    element.detachedCallback = function() {};
+
+    // Fires when an attribute was added, removed, or updated
+    element.attributeChangedCallback = function(attr, oldVal, newVal) {};
+
+    // Registers &amp;lt;hello-world&amp;gt; in the main document
+    window.WcBlink = thatDoc.registerElement('wc-blink', {
+        prototype: element
+    });
+  }());
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Of course, this is not pretty. Despite &lt;code&gt;&amp;lt;template&amp;gt;&lt;/code&gt; reassembles the
+convenient JSX where we define the HTML structure of the “shadowDOM”
+(it isn’t exactly shadowDOM in React’s case despite some degree of
+encapusulation).&lt;/p&gt;
+
+&lt;p&gt;Nevertheless, custom component v0 &lt;code&gt;&amp;lt;wc-blink&amp;gt;&lt;/code&gt; has a much lighter
+footprint compared to even the simpliest React app. All you need is a
+&lt;code&gt;wc-blink.html&lt;/code&gt;, and a line of &lt;code&gt;&amp;lt;link rel='import' href='wc-blink.html'&amp;gt;&lt;/code&gt;.
+No &lt;code&gt;npm install&lt;/code&gt; (I used &lt;code&gt;git submodule add&lt;/code&gt;). Bundling isn’t necessary
+until you have multiple HTML elements to import depending on how much extra
+lines of &lt;code&gt;&amp;lt;link&amp;gt;&lt;/code&gt; you can tolerate in your HTML file.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;&amp;lt;wc-blink&amp;gt;&lt;/code&gt; was built as an exercise to see how the custom element
+standard works. Judging from the amount of code I need to write by
+myself to create an element as simple as &lt;code&gt;&amp;lt;blink&amp;gt;&lt;/code&gt;, it wasn’t really
+attractive back then. I did love the part that I could import an element
+and expect it’ll work like a charm, it was just that betting on a web
+standard that was in drafting stage was rather reckless.&lt;/p&gt;
+
+&lt;p&gt;With such a simple component, I haven’t even got to partial shadowDOM
+update (where I really hoped there was something like React’s VirtualDOM)
+or inter-component communication. As the web component standard is less
+opinionated than frameworks like React, &lt;em&gt;it gives you lots of ropes to hang
+yourself&lt;/em&gt;, ending up writing overly coupled components, unnecessary
+DOM updates and weirdly behaving components due to lifecycle issue (like
+things not initializing/firing properly).&lt;/p&gt;
+
+&lt;h2 id="in-case-of-wc-blink-in-2018"&gt;In case of &amp;lt;wc-blink&amp;gt; in 2018&lt;/h2&gt;
+
+&lt;p&gt;My worry came true. Custom element v0 was removed and v1 was introduced
+relying on ES2015. &lt;code&gt;document.registerElement&lt;/code&gt; was no longer in the web
+standard and we should expect one day no browser would support it
+(Firefox never supported v0 in the first place 😐, nor v1 at the time of
+writing)&lt;/p&gt;
+
+&lt;p&gt;In general, my v0 and v1 implementations of &lt;code&gt;&amp;lt;wc-blink&amp;gt;&lt;/code&gt; are quite similar. This revision
+only makes use of ES2015 class, and replaced &lt;code&gt;&amp;lt;content&amp;gt;&lt;/code&gt; with &lt;code&gt;&amp;lt;slot&amp;gt;&lt;/code&gt; to
+give users a better idea where the dynamic content go.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-html"&gt;&amp;lt;!-- Commit: 3f8fa76675c15177baf9ccb81dcbb9b6831effcd --&amp;gt;
+&amp;lt;!-- wc-blink-element.html --&amp;gt;
+&amp;lt;template id='wc-blink'&amp;gt;
+  &amp;lt;style&amp;gt;
+    /* Credit goes to google for this part
+       Search "html blink" on google and see */
+    @keyframes blink {80%{opacity:0.0}}
+    :host, * {
+      animation:blink 1s steps(1,end) 0s infinite;
+    }
+  &amp;lt;/style&amp;gt;
+  &amp;lt;slot name='content'&amp;gt;&amp;lt;/slot&amp;gt;
+&amp;lt;/template&amp;gt;
+
+&amp;lt;script type='text/javascript'&amp;gt;
+  // hack to get reference to this document even if calling constructors somewhere else
+  const thisDoc = document.currentScript.ownerDocument;
+
+  class WcBlink extends HTMLElement {
+    constructor() {
+      super();
+
+      const template = thisDoc.getElementById('wc-blink')
+        .content;
+
+      const shadowRoot = this.attachShadow({ mode: 'open' })
+        .appendChild(template.cloneNode(true));
+
+      this.blinkStep = 0;
+      this.blinkInterval = setInterval(function() {
+        this.updateDisplay();
+      }.bind(this), 200);
+    }
+
+    connectedCallback() {
+      const content = document.createElement('div');
+      content.setAttribute('slot', 'content');
+
+      content.setAttribute('slot', 'content');
+      this.childNodes.forEach((child) =&amp;gt; content.appendChild(child));
+      this.appendChild(content);
+    }
+
+    updateDisplay() {
+      const content = this.querySelector('div[slot=content]');
+      content.style.opacity = (this.blinkStep == 3) ? 0 : content.style.opacity;
+      content.style.opacity = (this.blinkStep == 4) ? 1 : content.style.opacity;
+
+      this.blinkStep++;
+      this.blinkStep = this.blinkStep % 5;
+    }
+  }
+
+  customElements.define('wc-blink', WcBlink);
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Even in 2018, tutorials on the topic are hard to find. Web component
+is much less opinionated than frameworks and therefore each tutorial author has their
+own way of doing things. For example, to get content &lt;code&gt;&amp;lt;template&amp;gt;&lt;/code&gt; from
+template some decided to use &lt;code&gt;await fetch('template.html')&lt;/code&gt; while some
+referenced the &lt;code&gt;link[rel="import"]&lt;/code&gt; to get the template document when
+importing the component into other documents. At the end, I figured out
+a way to get a hold of the reference to &lt;code&gt;ownerDocument&lt;/code&gt; even after
+importing the component from other documents.&lt;/p&gt;
+
+&lt;p&gt;You may have also noticed &lt;code&gt;blickStep&lt;/code&gt; and &lt;code&gt;updateDisplay&lt;/code&gt;, which are
+unnnecessary given that there’s a blinking animation applied to the
+shadowDOM. Although the selector can select the element within the
+shadowDOM (verified using &lt;code&gt;color: red !important;&lt;/code&gt;), animation simply
+doesn’t fire, perhaps owing to browser bug as it works on my mobile
+browser but not on desktop.&lt;/p&gt;
+
+&lt;p&gt;Although adoption of web component is still low to date and there seems to
+be a larger community for Polymer, I still think that going through
+all the hassles to write a web component-powered app less attractive
+than writing a React app in a production setting.&lt;/p&gt;
+
+&lt;p&gt;With that being said, I may still have some fun writing web components
+when I am offline.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <id>tag:blog.tommyku.com,2018-05-18:/blog/i-switched-from-gnome-to-i3wm/</id>
     <title type="html">I switched from GNOME to i3wm</title>
     <published>2018-05-18T16:00:00Z</published>
@@ -1805,139 +2036,6 @@ of Nexus 5X, it’d have been a perfect phone. Still, if you are looking
 for an alternative or replacement to Nexus 5X, I’d say Moto Z Play is
 the closest alternative at the price range of HKD$3,000 ~ HKD$4,000 price
 range (I got mine at HKD$2,870).&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog.tommyku.com,2017-05-16:/blog/the-hidden-cost-of-self-hosting/</id>
-    <title type="html">The hidden cost of self-hosting</title>
-    <published>2017-05-16T16:00:00Z</published>
-    <updated>2017-05-16T16:00:00Z</updated>
-    <link rel="alternate" href="https://blog.tommyku.com/blog/the-hidden-cost-of-self-hosting/"/>
-    <content type="html">
-&lt;p&gt;One day I stumbled upon a list on GitHub
-&lt;a href="https://github.com/Kickball/awesome-selfhosted"&gt;Kickball/awesome-selfhosted&lt;/a&gt;
-listing open-source services and applications that can be hosted locally
-or on my own servers. The list covers much more than you’d expect, you
-can find alternatives to most close-sourced services you use daily on
-the list. For example, Nextcloud does mostly what G Suite does; use GitLab to
-replace GitHub; use Mastodon, the free (as in freedom) clone of Twitter…&lt;/p&gt;
-
-&lt;p&gt;Nowadays high-quality (and some not-so-high-quality) online services are
-available for free to the public in every steps of life. All it takes is
-usually just an email address and a password, maybe phone verification
-too, then one can enjoy limitless photo backup on Google Photo,
-reach millions of people on Twitter, etc. Sounds awesome? No, there
-comes the hidden cost as you hand over your data and willingly subject
-yourself to their &lt;a href="https://www.theguardian.com/technology/2014/oct/02/facebook-sorry-secret-psychological-experiment-users"&gt;experiments&lt;/a&gt; and &lt;a href="https://privacy.google.com/intl/en/how-ads-work.html"&gt;selection of ads&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Of course, I don’t mean stop using all those awesome free services and
-start self-hosting everything yourself. That’ll be impractical and
-prohibitively expensive in both storage and actually running the
-services. The good thing is, there are always self-hosted alternatives
-to opt for.&lt;/p&gt;
-
-&lt;p&gt;As it turned out, it wasn’t a easy task to self-host anything, not at
-all.&lt;/p&gt;
-
-&lt;h2 id="hosting-my-own-note-taking-service"&gt;Hosting my own note-taking service&lt;/h2&gt;
-
-&lt;p&gt;The time was the beginning of the semester, when I had to decide which
-note-taking application to use for the semester. I used to take note
-with pen and paper. They are ineffective and too heavy to carry around
-near the end of the semester.&lt;/p&gt;
-
-&lt;p&gt;I needed something that syncs and backups automatically, works on both
-laptop and mobile, and should look nice enough. Originally it wasn’t about
-self-hosting. I took notes on Vim and sync them to GitLab. Shortly
-after, I trashed this practice because my notes are always out of sync
-and I couldn’t read them on the phone.&lt;/p&gt;
-
-&lt;p&gt;Then I found Standard Notes.&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img src="./hero-banner.png"&gt;
-&lt;figcaption&gt;Standard Notes, a self-hosted note app (image: &lt;a href="https://standardnotes.org/"&gt;Standard Notes&lt;/a&gt;)&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Standard Notes is just one app thats connects to a &lt;a href="https://standardfile.org/"&gt;Standard File&lt;/a&gt;
-server. Think of it as a personal database that can be used across all
-apps in an encrypted, standardized format. With Standard File server, you
-own your own data. Nobody can tamper with your data. Nobody can look into
-the data and tell what kind of ads or site you should visit. Standard File server
-should remain private and encrypted, end-to-end. As such, I was sold.&lt;/p&gt;
-
-&lt;p&gt;The time is 2017, it is easy to gather the necessities to self-host
-something. Domain name? GoDaddy. SSL? Let’s Encrypt or Cloudflare.
-Hosting? Digital Ocean/Linode. With the proper knowledge and choice of
-service provider it shouldn’t break your bank trying to self-host
-something.&lt;/p&gt;
-
-&lt;p&gt;However there were a few issues. Setting up a Standard File server could
-be a &lt;a href="https://github.com/standardfile/ruby-server/wiki/Deploying-a-private-Standard-File-server-with-Amazon-EC2-and-Nginx"&gt;lengthy process&lt;/a&gt; involving a bunch of command crunchings. To facilitate the process
-one could use Docker, if there was a Dockerfile with documentation.&lt;/p&gt;
-
-&lt;p&gt;Turned out there was no proper &lt;code&gt;Dockerfile&lt;/code&gt; merged to the repo
-&lt;a href="https://github.com/standardfile/ruby-server"&gt;standardfile/ruby-server&lt;/a&gt;
-and no documentation regardling deployment using Docker whatsoever. It
-took me two nights to modify a &lt;code&gt;Dockerfile&lt;/code&gt; from a fork, and a few more nights to finish a
-&lt;a href="https://github.com/standardfile/ruby-server/pull/44"&gt;&lt;em&gt;proper&lt;/em&gt; one&lt;/a&gt; and get it merged.&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img src="./standard.png"&gt;
-&lt;figcaption&gt;The exact screen you see when you navigate to your Standard File server domain&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Cool, now can I finally deploy it and don’t have to worry about it for the
-decades to come? Not really.&lt;/p&gt;
-
-&lt;p&gt;When you own a server out there you’d have to worry about what any
-sysadmin would worry about. You should &lt;a href="https://about.gitlab.com/2017/02/01/gitlab-dot-com-database-incident/"&gt;backup regularily&lt;/a&gt;, prevent &lt;a href="https://www.fail2ban.org/wiki/index.php/Main_Page"&gt;attacks&lt;/a&gt;, keep the software
-up to date, &lt;a href="https://uptimerobot.com/"&gt;monitor the uptime&lt;/a&gt; and remember to pay for the domain and hosting. This may seem to be a no-brainer for seasoned admins but as someone new to the field,
-it felt frustrating to configure multiple additional software just to get one
-self-hosted online service running. A couple hours should be enough to configure everything and
-you can eventually begin to enjoy your own self-hosted service that probably
-won’t work better then its commercial counterpart, but it’s free, and
-you own the data.&lt;/p&gt;
-
-&lt;p&gt;Very soon you may think it’s too crappy and want to modify the
-source code yourself. That might take a couple more days away from your life
-albeit in the open-source community perspective it’s the preferable way
-to do things.&lt;/p&gt;
-
-&lt;h2 id="so-should-i-start-self-hosting"&gt;So, should I start self-hosting?&lt;/h2&gt;
-
-&lt;p&gt;Nobody has to self-host something if free commercial
-services should suffice. But one big feature of those services is the safety
-of your data, even &lt;a href="https://mobile.nytimes.com/2015/06/29/technology/when-a-company-goes-up-for-sale-in-many-cases-so-does-your-personal-data.html"&gt;if the company hosting it is sold&lt;/a&gt;. Government, good or evil,
-could forcefully access your data. If you believe your data worths more
-protection then their own business interest, &lt;a href="https://govtrequests.facebook.com/"&gt;think again&lt;/a&gt;, &lt;a href="https://www.google.com/transparencyreport/userdatarequests/legalprocess/"&gt;think thrice&lt;/a&gt;
-if you have to. You may not have something to hide, most people don’t.
-That doesn’t mean in essence someone can legitimately look at your
-data without asking.&lt;/p&gt;
-
-&lt;p&gt;Self-hosting gives you the option to lock something up and throw away
-the key when necessary. While it is possible to reset password on most
-online services, you can keep the password that also serves as the
-encryption key of your data only in your head. If you decide to hit
-yourself in the head to forget the password, nothing better than brute-force
-guessing can recover the data.&lt;/p&gt;
-
-&lt;p&gt;You pay your hosting company to keep the server running every month. For
-anything that you’d rather take to your grave, just leave it. Take
-Digital Ocean as an example, your data &lt;a href="https://www.digitalocean.com/help/pricing-and-billing/general/"&gt;will be purged&lt;/a&gt; if you don’t pay the bill for a long enough time.&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img src="./after-i-died.jpg"&gt;
-&lt;figcaption&gt;Self-host things that you want to keep secret forever&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Self-hosting is difficult to set up and troublesome to maintain. Most of the
-the open-source self-hosting solutions are less user-friendly and less
-functional then their commercial counterparts. Domain name renewal and
-hosting may cost a lot in long run. In exchange, you can own your data
-and peace in mind knowing nobody can sell your data for profit or
-access it without your authorization (unless they hack, but who cares
-about your data).&lt;/p&gt;
 </content>
   </entry>
 </feed>

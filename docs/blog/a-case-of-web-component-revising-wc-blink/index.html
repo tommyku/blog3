@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="A case of Web Component: Revising &lt;wc-blink&gt; - Tommy Ku&#39;s Method Stub - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="A case of Web Component: Revising &lt;wc-blink&gt; - Tommy Ku&#39;s Method Stub - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><title>A case of Web Component: Revising &lt;wc-blink&gt; - Tommy Ku&#39;s Method Stub</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/tomorrow-night-eighties.css" rel="stylesheet" /><meta content="Nanoc 4.8.0" name="generator" /></head><body><header><h2><img alt="Profile pic of Tommy Ku" class="author" src="/assets/images/author.jpg" />Tommy Ku's Method Stub</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Atom Feed</a></nav><main id="main"><section id="meta"><strong style="color: brown">This post is preview only (╯°□°）╯︵ ┻━┻</strong><h1>A case of Web Component: Revising &lt;wc-blink&gt;</h1><i>Posted on June 23, 2018</i></section><section id="content">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="A case of Web Component: Revising &lt;wc-blink&gt; - Tommy Ku&#39;s Method Stub - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="A case of Web Component: Revising &lt;wc-blink&gt; - Tommy Ku&#39;s Method Stub - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><title>A case of Web Component: Revising &lt;wc-blink&gt; - Tommy Ku&#39;s Method Stub</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/tomorrow-night-eighties.css" rel="stylesheet" /><meta content="Nanoc 4.8.0" name="generator" /></head><body><header><h2><img alt="Profile pic of Tommy Ku" class="author" src="/assets/images/author.jpg" />Tommy Ku's Method Stub</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Atom Feed</a></nav><main id="main"><section id="meta"><h1>A case of Web Component: Revising &lt;wc-blink&gt;</h1><i>Posted on June 23, 2018</i></section><section id="content">
 <p>On 2015, I wrote <code>&lt;wc-blink&gt;</code> (check it out on <a href="https://github.com/tommyku/wc-blink">GitHub</a>), a custom element that mimics the notorious
 and obsolete native element <code>&lt;blink&gt;</code> (except that it has a <code>display: block</code>
 instead of <code>display: inline</code> now that I think about it).</p>
@@ -11,15 +11,16 @@ obsolete)</wc-blink>
 
 <pre><code class="language-html">&lt;link rel="import" href="https://tommyku.github.io/wc-blink/wc-blink-element.html" async /&gt;
 
-&lt;wc-blink&gt;You will see this blinking if your browser supports!&lt;/wc-blink&gt;
+&lt;wc-blink&gt;If your browser supports custom component and HTML import, you'll see this blinking! (and appreciate the fact that it's now obsolete)&lt;/wc-blink&gt;
 </code></pre>
 
 <p>It was absoluely unnecessary to make it a web component because there
-exists a <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blink">CSS-only polyfill</a> that receives wide browser support (it’s just
-CSS) and requires no JavaScript or custom element support.</p>
+exists a <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blink">CSS-only polyfill</a>
+that receives wide browser support (it’s just CSS) and requires no
+JavaScript or custom element support.</p>
 
 <p>This element was written to explore the then-v0 customer element
-standard. Even today, it still sound like the future to some, where you can plug
+standard. Even today, it still sound like the future to come, where you can plug
 and play any HTML element without having to convert them from front-end
 frameworks such as React, Vue.js or AngularJS.</p>
 
@@ -43,7 +44,7 @@ interoperatbility part.</p>
 <h2 id="in-case-of-wc-blink-in-2015">In case of &lt;wc-blink&gt; in 2015</h2>
 
 <p><code>&lt;wc-blink&gt;</code> was originally written in custom element v0, without the
-ES2015 vibe of class. Yet the general idea was the same: first you
+ES2015 vibe of JavaScript class. Yet the general idea was the same: first you
 attach a shadowDOM to the element housing your content, then fill it up
 with lifecycle callbacks such as attachedCallback() or
 attributeChangedCallback() which reassembles React’s componentDidMount() and a high level shouldComponentUpdate() + render() + componentDidUpdate().</p>
@@ -120,9 +121,10 @@ attractive back then. I did love the part that I could import an element
 and expect it’ll work like a charm, it was just that betting on a web
 standard that was in drafting stage was rather reckless.</p>
 
-<p>With such as simple component, I haven’t even got to optional shadowDOM
-update or inter-component communication. As web components are less
-opinionated than React, <em>it gives you lots of ropes to hang
+<p>With such a simple component, I haven’t even got to partial shadowDOM
+update (where I really hoped there was something like React’s VirtualDOM)
+or inter-component communication. As the web component standard is less
+opinionated than frameworks like React, <em>it gives you lots of ropes to hang
 yourself</em>, ending up writing overly coupled components, unnecessary
 DOM updates and weirdly behaving components due to lifecycle issue (like
 things not initializing/firing properly).</p>
@@ -135,10 +137,9 @@ standard and we should expect one day no browser would support it
 (Firefox never supported v0 in the first place 😐, nor v1 at the time of
 writing)</p>
 
-<p>The implementation wasn’t so far away in general idea. This revision
-simply makes use of ES2015 class, and the <code>&lt;slot&gt;</code> API to replace
-<code>&lt;content&gt;</code> which gives you a better idea where the dynamic content
-goes.</p>
+<p>In general, my v0 and v1 implementations of <code>&lt;wc-blink&gt;</code> are quite similar. This revision
+only makes use of ES2015 class, and replaced <code>&lt;content&gt;</code> with <code>&lt;slot&gt;</code> to
+give users a better idea where the dynamic content go.</p>
 
 <pre><code class="language-html">&lt;!-- Commit: 3f8fa76675c15177baf9ccb81dcbb9b6831effcd --&gt;
 &lt;!-- wc-blink-element.html --&gt;
@@ -197,8 +198,8 @@ goes.</p>
 &lt;/script&gt;
 </code></pre>
 
-<p>Even in 2018, the tutorials on the topic is hard to find. Web component
-is much less opinionated and therefore each tutorial author has their
+<p>Even in 2018, tutorials on the topic are hard to find. Web component
+is much less opinionated than frameworks and therefore each tutorial author has their
 own way of doing things. For example, to get content <code>&lt;template&gt;</code> from
 template some decided to use <code>await fetch('template.html')</code> while some
 referenced the <code>link[rel="import"]</code> to get the template document when
@@ -210,10 +211,11 @@ importing the component from other documents.</p>
 unnnecessary given that there’s a blinking animation applied to the
 shadowDOM. Although the selector can select the element within the
 shadowDOM (verified using <code>color: red !important;</code>), animation simply
-doesn’t fire, perhaps owing to browser bug.</p>
+doesn’t fire, perhaps owing to browser bug as it works on my mobile
+browser but not on desktop.</p>
 
-<p>As the adoption of web component is still low to date and there seems to
-have a larger community for Polymer, I still think that going through
+<p>Although adoption of web component is still low to date and there seems to
+be a larger community for Polymer, I still think that going through
 all the hassles to write a web component-powered app less attractive
 than writing a React app in a production setting.</p>
 
@@ -224,7 +226,7 @@ when I am offline.</p>
 
 }).call(this);
 </script><div id="disqus_thread"></div><script>var disqus_config = function () {
-  this.page.url = "https://blog.tommyku.com/preview/a-case-of-web-component-revising-wc-blink/";
+  this.page.url = "https://blog.tommyku.com/blog/a-case-of-web-component-revising-wc-blink/";
   this.page.identifier = "a-case-of-web-component-revising-wc-blink";
 };
 

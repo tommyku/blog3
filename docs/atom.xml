@@ -3,13 +3,49 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:base="https://blog.tommyku.com/">
   <id>https://blog.tommyku.com/</id>
   <title>Tommy Ku's Method Stub</title>
-  <updated>2018-05-18T16:00:00Z</updated>
+  <updated>2018-06-26T16:00:00Z</updated>
   <link rel="alternate" href="https://blog.tommyku.com/"/>
   <link rel="self" href="https://blog.tommyku.com/atom.xml"/>
   <author>
     <name>Tommy Ku</name>
     <uri>https://blog.tommyku.com</uri>
   </author>
+  <entry>
+    <id>tag:blog.tommyku.com,2018-06-26:/blog/my-laptop-refused-to-charge-my-phone/</id>
+    <title type="html">My laptop refused to charge my phone</title>
+    <published>2018-06-26T16:00:00Z</published>
+    <updated>2018-06-26T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/my-laptop-refused-to-charge-my-phone/"/>
+    <content type="html">
+&lt;p&gt;To extends my 6 year-old Thinkpad X230’s battery life per charge, I have
+taken measures from installing power saving software tlp to &lt;a href="../i-switched-from-gnome-to-i3wm/"&gt;switching to
+a lightweight window manager&lt;/a&gt;.
+It has since served me well with over 2 hours of battery life under normal
+load of web development.&lt;/p&gt;
+
+&lt;p&gt;Last night I was trying to charge my phone over the laptop’s USB port.
+For a moment the phone showed that it’s charging, then the charging
+symbol of the phone quickly switched to non-charging symbol. I tried
+rebooting both the phone and laptop to no avail. The phone simply
+refused to be charged.&lt;/p&gt;
+
+&lt;p&gt;Or was it?&lt;/p&gt;
+
+&lt;p&gt;As I later realized, my laptop is willing to autosuspend power to USB ports
+in order to save power. So I typed &lt;code&gt;sudo powertop&lt;/code&gt; and found the one
+toggleable that caused the issue.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img src="./powertop.png" width="100%"&gt;
+&lt;figcaption&gt;By toggling this to “Bad”, my phone could be charged from my laptop again&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Well that’s weird. Nowadays we assume things to “just work”, but there
+are things behind the scene that we might not realize if all we did
+was just installing software without understanding their working
+principles (in this case, autosuspending USB port).&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <id>tag:blog.tommyku.com,2018-05-18:/blog/i-switched-from-gnome-to-i3wm/</id>
     <title type="html">I switched from GNOME to i3wm</title>
@@ -1902,56 +1938,6 @@ hosting may cost a lot in long run. In exchange, you can own your data
 and peace in mind knowing nobody can sell your data for profit or
 access it without your authorization (unless they hack, but who cares
 about your data).&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog.tommyku.com,2017-02-20:/blog/do-i-need-a-new-laptop/</id>
-    <title type="html">Do I need a new laptop</title>
-    <published>2017-02-20T16:00:00Z</published>
-    <updated>2017-02-20T16:00:00Z</updated>
-    <link rel="alternate" href="https://blog.tommyku.com/blog/do-i-need-a-new-laptop/"/>
-    <content type="html">
-&lt;p&gt;Last year I &lt;a href="../looking-for-a-laptop"&gt;wrote about&lt;/a&gt; my
-looking for a new laptop to replace my then 4-year old now 5 &lt;a href="http://shop.lenovo.com/us/en/laptops/thinkpad/x-series/x230/"&gt;Thinkpad X230&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Although I didn’t get a new one, I didn’t keep the ‘old one’ either. Instead of
-buying the latest 12.5 inch offering in the X series (&lt;a href="http://shop.lenovo.com/us/en/laptops/thinkpad/x-series/x260/"&gt;Thinkpad X260&lt;/a&gt;),
-I have upgraded my Thinkpad X230 parts to keep up with the laptop spec
-nowadays.&lt;/p&gt;
-
-&lt;p&gt;Some might have noticed that before &lt;a href="../working-in-taipei-for-a-month"&gt;my trip to Taipei&lt;/a&gt;
-last August, I upgraded the RAM from 4GB to 8GB dual channel
-DDR3 1600MHz. That saved my laptop from freezing while compiling Android
-apps. This time, I upgraded the 512GB 7200rpm hard disk to a 275GB
-Crucial MX300 solid state drive, bringing a sharp performance boost.&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img src="./ssdvshdd.png"&gt;
-&lt;figcaption&gt;SSD performance (left) vs Hard disk performance (right) using
-&lt;a href="http://crystalmark.info/software/CrystalDiskMark/index-e.html"&gt;CrystalDiskMark&lt;/a&gt;&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;The two upgrades costed me $860HKD ($220 for RAM and $640 for SSD)
-— not cheap, but looking at its potential substitute the Thinkpad
-X260, which starts at $8108HKD for comparable spec, this is quite a good
-deal. Although X260 does use RAM with higher clock rate, a &lt;a href="http://cpuboss.com/cpus/Intel-Core-i5-6200U-vs-Intel-Core-i5-3210M"&gt;slightly&lt;/a&gt;
-&lt;a href="http://cpu.userbenchmark.com/Compare/Intel-Core-i5-6200U-vs-Intel-Core-i5-3210M/m36796vs2719"&gt;faster&lt;/a&gt; CPU,
-and an option to upgrade to a full HD IPS panel, X230 offers what X260
-doesn’t — upgradability.&lt;/p&gt;
-
-&lt;p&gt;X230’s RAM slots back cover and a hard disk bay cover can be
-removed with just 5 screws. On X260, the whole back
-plate &lt;a href="http://www.laptopmain.com/how-to-disassemble-lenovo-thinkpad-x260-to-upgrade-ssd-and-ram/"&gt;has to be removed&lt;/a&gt;
-before one could access the only RAM slot and the hard disk. X260
-didn’t allow for simple upgrade and it was nobody’s fault. To keep X260’s
-compact form factor sacrifices had to be made and I was really surprised
-that at least they are not soldering everything on like the 2016 X1 carbon.&lt;/p&gt;
-
-&lt;p&gt;I am a die-hard fan of the Thinkpad X-series despite many prefer Macbook
-more. The upgradability of my X230 enables it to extend its usable life
-beyond 5 years which is hardly achievable without desoldering something
-on a Macbook. Despite battery life is my next concern, I would happily
-set sail on my trustworthy better than ever 5-year old laptop for the time being.&lt;/p&gt;
 </content>
   </entry>
 </feed>

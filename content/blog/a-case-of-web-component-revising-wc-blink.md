@@ -1,5 +1,5 @@
 ---
-title: 'A case of Web Component: Revising <wc-blink>'
+title: 'A case of Web Component: Revising &lt;wc-blink&gt;'
 kind: article
 created_at: '2018-06-23 00:00:00 +0800'
 slug: a-case-of-web-component-revising-wc-blink

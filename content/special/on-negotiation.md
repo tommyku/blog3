@@ -53,7 +53,7 @@ The bus service Unitrans is free for UC Davis students, so how do I work out
 the monetary value of my BATNA (taking bus)? This leads to the concept of
 reservation point.
 
-## Reservation point (Bottom lime)
+## Reservation point (Bottom line)
 
 Reservation point has the equivalent value to you as your BATNA that you can
 get out of the negotiation. Going beyond your reservation point
@@ -71,7 +71,7 @@ which I did.
 How should I value the added convenience? It's totally on me. I could say
 my willingness to pay (WTP) for the added convenience is $125. Any purchase
 pricier than $125 wouldn't worth the price. With that in mind, I refused to
-pay for the $12 U-lock right away because my willing to pay was $125 yet
+pay for the $12 U-lock right away because my willingness to pay was $125 yet
 the owner's offer of bike ($120) + kickstand ($5) + U-lock ($12) was $137.
 
 I could have just walked away knowing I didn't make myself a bad deal right?

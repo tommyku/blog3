@@ -12,6 +12,7 @@ script:
   - docker run --rm -v "`pwd`":/app blog3 ./bin/publish
   - sudo rm -rf .ruby-version .dockerignore .travis.yml content/ bin/ Dockerfile Gemfile* Guardfile layouts lib Makefile nanoc.gh-pages.yaml nanoc.yaml output Rules template tmp yarn.lock
   - cp -r docs/* `pwd`
+  - sudo rm -rf docs
 
 deploy:
   provider: pages

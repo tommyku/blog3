@@ -13,6 +13,7 @@ def success(text)
 end
 
 def check_folder(dir)
+  return unless Dir.exists?(dir)
   Dir.foreach(dir) do |d|
     path = "#{dir}/#{d}"
     next if !File.directory?(path) || !(d =~ /^\.{1,2}$/).nil?

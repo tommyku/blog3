@@ -12,8 +12,6 @@ COPY Gemfile Gemfile.lock /app/
 
 RUN bundle install
 
-RUN npm install -g write-good
-
 EXPOSE 3000
 
 COPY . /app

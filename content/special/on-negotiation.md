@@ -3,7 +3,10 @@ title: 'On negotiation'
 kind: article
 created_at: '2018-07-02 00:00:00 +0800'
 slug: on-negotiation
-preview: true
+preview: false
+special: true
+preview_banner: banner_preview.jpg
+banner: banner.jpg
 ---
 
 When I was on exchange in Davis, CA, I bought a bicycle so I could

@@ -2,3 +2,4 @@ output/
 .sass-cache/
 crash.log
 node_modules/
+docs/

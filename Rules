@@ -58,6 +58,8 @@ route '/**/*.{html,md,slim}' do
     '/index.html'
   elsif item.identifier =~ '/404.*'
     '/404.html'
+  elsif item.identifier =~ '/copyright-exceptions.*'
+    '/copyright-exceptions.html'
   else
     item.identifier.without_ext + '/index.html'
   end

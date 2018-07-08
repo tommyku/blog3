@@ -218,3 +218,17 @@ img {
   }
 }
 
+body > footer {
+  width: auto;
+  margin-top: 1.25rem;
+  font-size: 70%;
+  line-height: 0.84375rem;
+  #cc {
+    img {
+      line-height: 0.84375rem;
+      margin: 0;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+}

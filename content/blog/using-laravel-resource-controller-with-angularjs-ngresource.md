@@ -766,4 +766,4 @@ console.log($scope.$PostService.getPost());
 
 As an appendix I am not going to further details than just making it work, but if you are interested, [someone has written a great article explaining the use of service](https://rclayton.silvrback.com/passing-state-via-services).
 
-Stay tuned to [Method Stub](http://blog.tommyku.com) as I may will post more Laravel/AngularJS articles very soon!
+Stay tuned to [my blog](https://blog.tommyku.com) as I may will post more Laravel/AngularJS articles very soon!

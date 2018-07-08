@@ -195,4 +195,4 @@ This application has only 1 view, `contact.php` under `app/views`. It is the HTM
 
 Even though I missed a couple of key features that make Laravel an enjoyment to use instead of a developer nightmare, but the aim of this tutorial is to get you started with Laravel. If you have tried other PHP frameworks before, congraduation, you will enjoy Laravel beacuse Laravel is highly automated and refined to make normal tasks such as database operations, input and output simple and easy.
 
-Stay tuned to [Method Stub](http://blog.tommyku.com) as I may upload some more Laravel-related articles in the future!
+Stay tuned to [my blog](https://blog.tommyku.com) as I may upload some more Laravel-related articles in the future!

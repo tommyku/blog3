@@ -3,6 +3,8 @@ title: Building reusable things, FTW
 kind: article
 created_at: '2015-03-23 00:00:00 +0800'
 slug: building-reusable-things-ftw
+abstract: 'Exploring the concept of encapsulation that I learned and
+building a reusable package for a pet project'
 ---
 
 I was working on an API wrapper for HKUST library room reservation system for my COMP4971F Independent Work. The nasty way I usually did was to hack the application out of a fresh Laravel build by putting all the parsing, booking and strange work-arounds inside the controllers. This time, I decided to build a composer package `tommyku/liba_lib` ([github](https://github.com/tommyku/liba_lib)) instead.

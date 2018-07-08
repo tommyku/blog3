@@ -3,6 +3,8 @@ title: 'From Nexus 5X to Moto Z Play'
 kind: article
 created_at: '2017-06-09 00:00:00 +0800'
 slug: from-nexus-5x-to-moto-z-play
+abstract: 'Exploiting confirmation bias to justify my choice of new
+phone after my Nexus 5X has kicked the bucket'
 preview: false
 ---
 

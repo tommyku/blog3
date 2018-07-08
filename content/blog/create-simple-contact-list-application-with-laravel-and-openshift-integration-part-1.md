@@ -4,6 +4,8 @@ kind: article
 created_at: '2014-08-01 00:00:00 +0800'
 slug: create-simple-contact-list-application-with-laravel-and-openshift-integration-part-2
 preview: false
+abstract: 'Part 1 of a 2-part tutorial about jump-starting a Laravel
+project on OpenShift, this part is about making a "Hello World" page'
 ---
 
 **This is the part 1 of a 2-part tutorial about jump-starting a Laravel project on Openshift. [go to part2](/blog/create-simple-contact-list-application-with-laravel-and-openshift-integration-part-2)**
@@ -17,6 +19,7 @@ In part 1, I will go through the steps of setting up a running Laravel on Opensh
 1. Deploying Laravel 4.1 with PHP 5.4 and MySQL 5.5
 
    <small>If you use RHC cli</small>
+
    ~~~ php
    rhc create app laravel php-5.4
    rhc cartridge add mysql-5.5 -a laravel

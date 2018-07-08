@@ -3,6 +3,9 @@ title: Fixing the deployment to Openshift error of Hexo
 kind: article
 created_at: '2015-01-08 00:00:00 +0800'
 slug: fixing-the-deployment-to-openshift-error-of-hexo
+abstract: 'I was trying out Hexo and apparently there is a bug in
+deployment command for the version I was using, and here is how I worked
+around it'
 ---
 
 I have always wanted to bail out of php or at least get to learn something new. When I first looked into Node.js, I want to know what it is capable of, and how it was done. 

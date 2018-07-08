@@ -3,6 +3,8 @@ title: Feature ownership and motivation
 kind: article
 created_at: '2016-10-05 00:00:00 +0800'
 slug: feature-ownership-and-motivation
+abstract: 'The power to influence engineering and design choices in a
+project is one good way to keep everyone stay involved and motivated'
 preview: false
 ---
 

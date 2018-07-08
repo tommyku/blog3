@@ -3,6 +3,8 @@ title: 'The hidden cost of self-hosting'
 kind: article
 created_at: '2017-05-17 00:00:00 +0800'
 slug: the-hidden-cost-of-self-hosting
+abstract: 'The hidden costs behind self-hosting a note-taking service and
+why you should consider twice before self-hosting anything'
 preview: false
 ---
 

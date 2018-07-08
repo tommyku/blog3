@@ -3,6 +3,9 @@ title: Integrating two-step two-factor authentication into Rails 4 project with 
 kind: article
 created_at: '2016-07-02 00:00:00 +0800'
 slug: integrating-two-step-two-factor-authentication-into-rails-4-project-with-devise
+abstract: "How I worked around Devise and a two-factor auth library to
+implement two-step (not to be confused with two-factor) auth that wasn't
+available in gems"
 preview: false
 ---
 

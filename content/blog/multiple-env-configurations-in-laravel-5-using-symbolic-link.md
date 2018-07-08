@@ -3,9 +3,11 @@ title: Multiple .env configurations in Laravel 5 using symbolic link
 kind: article
 created_at: '2015-04-04 00:00:00 +0800'
 slug: multiple-env-configurations-in-laravel-5-using-symbolic-link
+abstract: 'Use symbolic link to switch between multiple Laravel 5
+environmental configurations without additional console command'
 ---
 
-In this post I am going to introduce an ingenius approach for having multiple environmental configurations in Laravel 5 without the need for [another artisan command](http://blog3.tommyku.com/blog/an-artisan-command-for-using-multiple-environment-configurations-in-laravel-5). Credit goes to [@Tiquortoo](http://www.reddit.com/r/programming/comments/30h39l/managing_multiple_env_with_artisan_in_laravel_5/) on reddit who nicely pointed that out. 
+In this post I am going to introduce an ingenius approach for having multiple environmental configurations in Laravel 5 without the need for [another artisan command](/blog/an-artisan-command-for-using-multiple-environment-configurations-in-laravel-5). Credit goes to [@Tiquortoo](http://www.reddit.com/r/programming/comments/30h39l/managing_multiple_env_with_artisan_in_laravel_5/) on reddit who nicely pointed that out.
 
 #### Tl;dr;
 

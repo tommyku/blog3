@@ -3,6 +3,8 @@ title: How to make EPUB ebooks with vertical layout?
 kind: article
 created_at: '2017-08-29 00:00:00 +0800'
 slug: how-to-make-epub-ebooks-with-vertical-layout
+abstract: 'Make CJK epub ebooks print texts vertically, just like how
+they are printed physically'
 preview: false
 ---
 

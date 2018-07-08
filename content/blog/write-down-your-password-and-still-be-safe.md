@@ -3,6 +3,9 @@ title: Write down your password and still be safe
 kind: article
 created_at: '2014-07-15 00:00:00 +0800'
 slug: write-down-your-password-and-still-be-safe
+abstract: 'Use mnemonic to remember password and even allow you to write
+it down as innocent quotes (security through obscurity is never a good
+idea though)'
 ---
 
 I am going to tell you how to be safe even if you have your passwords clearly "written down". Nobody could figure it out easily. (well, somebody might do, though, can’t weed that possibility out)

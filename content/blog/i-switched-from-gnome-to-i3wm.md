@@ -3,6 +3,9 @@ title: 'I switched from GNOME to i3wm'
 kind: article
 created_at: '2018-05-19 00:00:00 +0800'
 slug: i-switched-from-gnome-to-i3wm
+abstract: 'Ubuntu 18.04 ditched Unity in favor of GNOME as the default
+window manager, so I switched to i3wm to desperately save some pixels on
+my small laptop screen'
 preview: false
 ---
 

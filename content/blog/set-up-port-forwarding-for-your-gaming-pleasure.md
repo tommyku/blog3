@@ -3,6 +3,7 @@ title: Set up port forwarding for your gaming pleasure
 kind: article
 created_at: '2014-04-20 00:00:00 +0800'
 slug: set-up-port-forwarding-for-your-gaming-pleasure
+abstract: 'Setting up port forwarding on router for others to connect to your local game server'
 ---
 
 Last week is the Easter holiday. Finally, a time for me and friends to play some old school shooters.

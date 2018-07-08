@@ -3,6 +3,8 @@ title: My friend got hacked (by me)
 kind: article
 created_at: '2014-01-27 00:00:00 +0800'
 slug: my-friend-got-hacked-by-me-
+abstract: 'Screwing my friend over who has made a beginner mistake of
+not preventing SQL injection'
 ---
 
 ## Background
@@ -64,9 +66,9 @@ Here are some suggestions to improve security and performance of Evaplus.
 
 Considering the data stored are totally static, SQL database is unnecessary and insecure. The developer can put the records into files and filter the records with little complication. This avoids any sort of SQL injection attack.
 
-####Go restful####
+####Go RESTful####
 
-In addition, static data are even better fit with restful structure in which resources are available given the URIs. This would simplify the system and allow for decoupling the front end and back end. [more about RESTful](http://www.restapitutorial.com/)
+In addition, static data are even better fit with RESTful structure in which resources are available given the URIs. This would simplify the system and allow for decoupling the front end and back end. [more about RESTful](http://www.restapitutorial.com/)
 
 ####Return only data####
 

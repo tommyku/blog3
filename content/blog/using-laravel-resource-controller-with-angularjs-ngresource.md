@@ -3,6 +3,8 @@ title: Using Laravel resource controller with AngularJS ngResource
 kind: article
 created_at: '2014-12-02 00:00:00 +0800'
 slug: using-laravel-resource-controller-with-angularjs-ngresource
+abstract: 'An example of a RESTful API-based web app using Laravel 4.2
+resource controller and AngularJS 1.4 NgResource'
 ---
 
 Laravel provides a simplified workflow to create a RESTful application namely RESTful Resource Controllers. It allows you to generate a set of standardized controller and route RESTful interface efficiently. Meanwhile AngularJS also has a module for facilitating RESTful resource exchange. In this article we will build a simplistic quoting (i.e. record what someone said) web app called *OneLine* which looks like this:

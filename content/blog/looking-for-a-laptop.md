@@ -3,6 +3,8 @@ title: Looking for a laptop
 kind: article
 created_at: '2016-07-29 00:00:00 +0800'
 slug: looking-for-a-laptop
+abstract: 'There is an urge to buy a new shiny laptop despite the old one is
+functioning perfectly well every half-year or so'
 preview: false
 ---
 

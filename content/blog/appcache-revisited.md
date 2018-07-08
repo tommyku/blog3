@@ -3,6 +3,8 @@ title: 'AppCache revisited'
 kind: article
 created_at: '2017-06-10 00:00:00 +0800'
 slug: appcache-revisited
+abstract: 'AppCache has been deprecated in favor or Service Worker for
+caching assets to be served when the device is offline'
 preview: false
 ---
 

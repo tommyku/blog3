@@ -3,6 +3,8 @@ title: Working in Taipei for a month
 kind: article
 created_at: '2016-09-24 00:00:00 +0800'
 slug: working-in-taipei-for-a-month
+abstract: "How it's like being prototyping and testing a new product
+for a month in Taiwan"
 preview: false
 ---
 

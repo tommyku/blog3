@@ -3,6 +3,9 @@ title: Relocating from OpenShift v2
 kind: article
 created_at: '2018-05-18 00:00:00 +0800'
 slug: relocating-from-openshift-v2
+abstract: 'Documenting how I migrated my sites to other hosts at minimal
+cost as the free hosting platform OpenShift v2 I have been using will be
+closed down soon'
 preview: false
 ---
 

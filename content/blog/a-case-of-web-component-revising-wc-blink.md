@@ -3,6 +3,8 @@ title: 'A case of Web Component: Revising wc-blink'
 kind: article
 created_at: '2018-06-23 00:00:00 +0800'
 slug: a-case-of-web-component-revising-wc-blink
+abstract: 'What I learned upgrading a web component I wrote in 2015 from
+Custom Element v0 to Custom Element v1 standard'
 preview: false
 ---
 

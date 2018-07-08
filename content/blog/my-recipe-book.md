@@ -3,6 +3,8 @@ title: My recipe book
 kind: article
 created_at: '2017-08-01 00:00:00 -0700'
 slug: my-recipe-book
+abstract: 'I survived 3 months in San Francisco by cooking myself, these
+are the recipes of what I made for the 2-3 dudes I lived with'
 preview: false
 ---
 

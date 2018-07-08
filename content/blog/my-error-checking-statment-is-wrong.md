@@ -3,6 +3,8 @@ title: My error checking statment is wrong
 kind: article
 created_at: '2014-07-23 00:00:00 +0800'
 slug: my-error-checking-statment-is-wrong
+abstract: "How a misconception on MySQL's update mechanism led to an
+hour of potentially unnecessary debugging had I read the documentation"
 ---
 
 Spent an hour tracking down a bug in updating MySQL row, turned out it has nothing to do with my database library (yes looked into the Medoo library) but my error checking statement.

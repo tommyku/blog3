@@ -3,6 +3,8 @@ title: Setting up Laravel 5.0 for Openshift
 kind: article
 created_at: '2015-02-16 00:00:00 +0800'
 slug: setting-up-laravel-5-0-for-openshift
+abstract: 'A guide to setting up Laravel 5.0 on OpenShift v2.0 platform
+and using the environmental variables provided by OpenShift v2.0'
 ---
 
 Earlier on Laravel 5.0 has been released, with an overhaul on directory structure, easier form validation, out of the box authentication support, introduction of middleware and more. While you can find out more from the [release note](http://laravel.com/docs/5.0/releases), this post explains how a new version of Laravel can be pushed onto Openshift and get running. 

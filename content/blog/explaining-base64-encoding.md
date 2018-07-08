@@ -3,6 +3,8 @@ title: Explaining Base64 encoding
 kind: article
 created_at: '2013-12-28 00:00:00 +0800'
 slug: explaining-base64-encoding
+abstract: 'Base64 encoding is a widely-used yet pretty simple encoding
+scheme to encode any binary/textual data into ASCII printable characters'
 ---
 
 Base64 is a common encoding scheme for representing binary data with a set of 64 ASCII printable characters. Web designer and developers might come across base64 when trying to send machine generated email or embed image into a page. I am going to go through some of its usages and working mechanism.

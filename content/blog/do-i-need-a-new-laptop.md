@@ -3,6 +3,9 @@ title: Do I need a new laptop
 kind: article
 created_at: '2017-02-21 00:00:00 +0800'
 slug: do-i-need-a-new-laptop
+abstract: 'Whenever I ask myself whether I need a new laptop, the answer
+has always been no because my old buddy Thinkpad X230 is so sturdy and
+and serviceable'
 preview: false
 ---
 

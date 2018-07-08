@@ -3,6 +3,9 @@ title: 'One project, one domain: Apache2 Virtual Host on Ubuntu 14.04'
 kind: article
 created_at: '2015-01-20 00:00:00 +0800'
 slug: one-project-one-domain-apache2-virtual-host-on-ubuntu-14-04
+abstract: 'Using name-based virtual hosts of Apache2 to map one domain
+to one project instead of navigating to project folder from htdocs as
+root'
 ---
 
 Sometimes I just want one domain + one server for each project in my local environment. 

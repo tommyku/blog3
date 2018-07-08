@@ -3,6 +3,7 @@ title: Database config trick hosting Laravel on Openshift
 kind: article
 created_at: '2014-10-22 00:00:00 +0800'
 slug: database-config-trick-hosting-laravel-on-openshift
+abstract: 'Setting environmental variables when running the application on OpenShift without changing the config for each deployment'
 ---
 
 Most of the case when I develop using Laravel, I would first host the app locally, then push the changes to Openshift when all tests are done. One thing that bugs me is every time I push I forgot to modify the database settings to Openshift's database setting. The app crashes until I notice it and I ended up pushing an additional commit that does nothing but "fix db setting".

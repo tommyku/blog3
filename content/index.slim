@@ -22,4 +22,4 @@ ul#article-list
     li
       == link_to article[:title], url_for(article)
       - if abstract?(article)
-        p == abstract(article)
+        p.abstract == abstract(article)

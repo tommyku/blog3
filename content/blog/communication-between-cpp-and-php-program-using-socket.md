@@ -3,6 +3,8 @@ title: 'Communication between C++ and PHP program using socket'
 kind: article
 created_at: '2018-01-13 00:00:00 +0800'
 slug: communication-between-cpp-and-php-program-using-socket
+abstract: 'How a C++ application can talk to a PHP application directly
+using socket without shard database or interprocess memory sharing'
 preview: false
 ---
 

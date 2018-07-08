@@ -3,6 +3,9 @@ title: Resolve syntax conflict between AngularJS and Twig
 kind: article
 created_at: '2014-07-18 00:00:00 +0800'
 slug: resolve-syntax-conflict-between-angularjs-and-twig
+abstract: 'Both AngularJS and Twig use {{curly braces}} to wrap the
+variables in HTML templates, here is a few ways to work around the
+syntax conflict'
 ---
 
 AngularJS uses double curly braces (e.g. {{var}}) to wrap the variables in its HTML view while Twig use precisely the same syntax to wrap the variables. Should you use Twig to render a AngularJS app, the HTML view template will simply be messed up.

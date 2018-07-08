@@ -3,11 +3,14 @@ title: Persistent .env configurations across deployments on OpenShift for Larave
 kind: article
 created_at: '2015-09-28 00:00:00 +0800'
 slug: persistent-env-configurations-across-deployments-on-openshift-for-laravel-5
+abstract: 'How I implemented persistent .env configuration on OpenShift
+v2 across deployments using OpenShift data directory and post-receive
+hook'
 ---
 
 People get hacked easily [when they include the environmental files or passwords](http://blog.nortal.com/mining-passwords-github-repositories/) in version control. Yet keeping it all local makes each and every deployment to OpenShift troublesome as you will need to `scp` the environmental file `.env` onto server every time you deploy.
 
-You can set up an action hook to create a symbolic link inside the deployment directory to `$OPENSHIFT_DATE_DIR` which keeps the `.env` persistently. I know this has been covered in [a previous tutorial](http://blog.tommyku.com/blog/using-laravel-5-0-with-angularjs-part-2-of-5-migrations-controllers-validations-in-laravel-5-0#deploying-the-back-end) but it doesn't hurt repeating myself as a reminder of this security trick.
+You can set up an action hook to create a symbolic link inside the deployment directory to `$OPENSHIFT_DATA_DIR` which keeps the `.env` persistently. I know this has been covered in [a previous tutorial](http://blog.tommyku.com/blog/using-laravel-5-0-with-angularjs-part-2-of-5-migrations-controllers-validations-in-laravel-5-0#deploying-the-back-end) but it doesn't hurt repeating myself as a reminder of this security trick.
 
 <div style="text-align: center;">
 <img src="./Screenshot from 2015-09-28 17_34_43.png" title="Screenshot of .env file with passwords" />

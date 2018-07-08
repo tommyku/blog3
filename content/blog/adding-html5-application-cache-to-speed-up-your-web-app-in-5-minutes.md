@@ -3,6 +3,8 @@ title: Adding HTML5 application cache to speed up your web app in 5 minutes
 kind: article
 created_at: '2015-03-16 00:00:00 +0800'
 slug: adding-html5-application-cache-to-speed-up-your-web-app-in-5-minutes
+abstract: 'Using AppCache API to cache your web app for faster loading
+and ability to run offline'
 ---
 
 <mark style='display: block; background-color: lightcoral; padding: .5em; font-style: italic;'>

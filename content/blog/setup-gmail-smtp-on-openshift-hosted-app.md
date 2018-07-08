@@ -3,6 +3,8 @@ title: Setup Gmail SMTP on Openshift hosted app
 kind: article
 created_at: '2014-07-26 00:00:00 +0800'
 slug: setup-gmail-smtp-on-openshift-hosted-app
+abstract: "Using Swift Mailer to send email through Gmail's SMTP server
+on OpenShift"
 ---
 
 Sending email on the PasS Openshift may be a bit troublesome because you cannot install sendmail. By default, mail function of php is not installed as well. You will need to connect to external POP/IMAP/SMTP servers to send and receive email on Openshift. In this post I am showing you how I send verificaiton email from Openshift.

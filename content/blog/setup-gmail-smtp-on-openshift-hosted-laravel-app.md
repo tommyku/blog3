@@ -3,6 +3,9 @@ title: Setup Gmail SMTP on Openshift hosted Laravel app
 kind: article
 created_at: '2015-01-03 00:00:00 +0800'
 slug: setup-gmail-smtp-on-openshift-hosted-laravel-app
+abstract: "Instead of sending email through the server's own mailing
+server, you can use Gmail to send email, but you need to deal with
+Gmail's security policy first"
 ---
 
 **edit**: This guide was written for Laravel 4.2. If you are using Laravel 5.0, similar settings are done separately in your environment configuration file `.env`, or in `config/mail.php` directly

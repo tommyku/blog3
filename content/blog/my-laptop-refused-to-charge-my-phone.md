@@ -3,6 +3,8 @@ title: 'My laptop refused to charge my phone'
 kind: article
 created_at: '2018-06-27 00:00:00 +0800'
 slug: my-laptop-refused-to-charge-my-phone
+abstract: 'When powersaving measure is taken to the extreme, this may
+mean some functions stop working and leaving the user baffled'
 preview: false
 ---
 

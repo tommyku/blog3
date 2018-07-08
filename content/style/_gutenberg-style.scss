@@ -150,6 +150,11 @@ pre {
   li {
     list-style: square;
     margin-top: 0.75rem;
+
+    p.abstract {
+      font-size: 0.9rem;
+      margin: 0.8125rem 0 1.625rem 0;
+    }
   }
 }
 

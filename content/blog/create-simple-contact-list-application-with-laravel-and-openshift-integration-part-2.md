@@ -4,6 +4,9 @@ kind: article
 created_at: '2014-10-18 00:00:00 +0800'
 slug: create-simple-contact-list-application-with-laravel-and-openshift-integration-part-2
 preview: false
+abstract: 'Part 2 of a 2-part tutorial about jump-starting a Laravel
+project on OpenShift, this part is about serving an API using Controller
+and talking to database using Model'
 ---
 
 **This is the part 2 of a 2-part tutorial about jump-starting a Laravel project on Openshift. [go to part1](/blog/create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1)**

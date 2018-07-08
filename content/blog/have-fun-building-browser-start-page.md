@@ -3,6 +3,9 @@ title: 'Have fun building browser start page'
 kind: article
 created_at: '2017-01-10 00:00:00 +0800'
 slug: have-fun-building-browser-start-page
+abstract: "Owning your browser's start page is a good way to keep your
+mood up from the work, even though most of the start pages share similar
+designs"
 preview: false
 ---
 

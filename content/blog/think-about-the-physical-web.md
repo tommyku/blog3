@@ -3,6 +3,8 @@ title: Think about the Physical Web
 kind: article
 created_at: '2016-07-21 00:00:00 +0800'
 slug: think-about-the-physical-web
+abstract: 'The amazing promise of the Physical Web of controlling any
+physical smart device using just the web browser'
 preview: false
 ---
 

@@ -3,9 +3,11 @@ title: An artisan command for using multiple environment configurations in Larav
 kind: article
 created_at: '2015-03-27 00:00:00 +0800'
 slug: an-artisan-command-for-using-multiple-environment-configurations-in-laravel-5
+abstract: 'I developed an artisan command to switch between Laravel 5
+environmental configurations'
 ---
 
-The [Laravel framework 5](http://laravel.com/docs/5.0/) has switched to [DotEnv](https://github.com/vlucas/phpdotenv) which does not support multiple environmental configuration. You get only one `.env` file for your Laravel app, only one. As [@leonel](http://blog.tommyku.com/blog/setting-up-laravel-5-0-for-openshift#comment-1905666612) pointed out in [Setting up Laravel 5.0 for Openshift](http://blog.tommyku.com/blog/setting-up-laravel-5-0-for-openshif) it seems like a pain unable to have multiple environmental settings.
+The [Laravel framework 5](http://laravel.com/docs/5.0/) has switched to [DotEnv](https://github.com/vlucas/phpdotenv) which does not support multiple environmental configuration. You get only one `.env` file for your Laravel app, only one. As [@leonel](https://blog.tommyku.com/blog/setting-up-laravel-5-0-for-openshift#comment-1905666612) pointed out in [Setting up Laravel 5.0 for Openshift](/blog/setting-up-laravel-5-0-for-openshif) it seems like a pain unable to have multiple environmental settings.
 
 #### So I wrote an artisan command for that
 
@@ -16,7 +18,7 @@ To save the current `.env` settings to `.$APP_ENV.env`, use `--save` option.
 ~~~ bash
 $ php artisan env
 Current application environment: local
-$ php artisan env:switch --savee
+$ php artisan env:switch --save
 Environmental config file .local.env saved
 ~~~
 

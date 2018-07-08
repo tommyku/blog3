@@ -3,6 +3,8 @@ title: The "cat state" of boolean variable
 kind: article
 created_at: '2017-11-15 00:00:00 +0800'
 slug: preview
+abstract: 'A probably invalid case of using the boolean variable to determine application
+state where enum could have worked better'
 preview: false
 ---
 

@@ -6,7 +6,7 @@ slug: dead-tutorials
 abstract: 'In the frontier of web development, new frameworks rise and
 fall, upgrade to keep up with the trend and fade into obsolescence, yet
 there always have been those rusty old tutorials lurking around'
-preview: true
+preview: false
 ---
 
 Last night I was writing abstracts for my blog posts dated back from
@@ -37,6 +37,5 @@ system. More importantly, they serve as a history of my personal
 development in the field, and what I know of back then. As time goes by,
 these tutorial may become so obsolete that nobody would care to read them
 anymore, like tens of thousands of other blog posts, lurking around the
-tombstone of a dead technolog, like ghosts. Before that, tutorials would
-live on, and even live past the technologies they originally was written
-for.
+tombstone of a dead technology. Before that, tutorials would live on,
+and even live past the technologies they originally was written for.

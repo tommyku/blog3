@@ -115,7 +115,7 @@ you can safely redirect users to server at a new IP should you decide to scale u
 another host later &mdash; just change the A record on your DNS setting.
 
 A domain name helps you remember where your pet self-hosted service resides. You can get them for
-a fairly cheap price nowadays on any domain registrar. My personal favorite is [https://domains.google]
+a fairly cheap price nowadays on any domain registrar. My personal favorite is [https://domains.google](https://domains.google)
 because it provides free [WHOIS information protection](https://support.google.com/domains/answer/3251242?hl=en)
 in which your personal information won't be shown when people look up the WHOIS record of your domain.
 Yet with the advent of European Union's GDPR, there [may no longer be a need to get a WHOIS record

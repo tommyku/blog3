@@ -1,3 +1,4 @@
 #!/bin/bash
 
-find ./content/assets -iname '*.jpg' | xargs jpegoptim
+find ./content/assets -iname '*.jpg' -exec jpegoptim {} \;
+find ./content/assets -iname '*.png' -exec optipng {} \;

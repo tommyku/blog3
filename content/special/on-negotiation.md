@@ -423,3 +423,12 @@ self-reflection are a good teachers to help you do better next time. And remembe
 - coalition (or excluded from)
 - how to break a deal by pretending you dont wanna (harbor co.)
 -->
+
+## Bonus
+
+At the end of the course there was an assignment to write a one A4 page
+personal negotiation guide. I threw in some last-minute notes I believe
+would be useful before jumping into any negotiation.
+
+You may download the negotiation guide in PDF format
+[here](./personal-negotiation-guide.pdf).

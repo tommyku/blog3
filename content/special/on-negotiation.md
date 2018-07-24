@@ -62,7 +62,7 @@ your bottom line, in which case you could just walk away unless the countarpart
 gives you anything better.
 
 To calculate your reservation point, let's consider the scanario above where
-my BATNA to buying a bike is to take bus. Does free bus means I shouldn't be
+my BATNA to buying a bike is to take bus. Does free bus mean I shouldn't be
 willing to pay anything for the bike? No. Riding a bike allows me to explore
 the Davis bike loop during weekends, and I wouldn't be bound to the bus
 schedule. I could ride to the movie theatre to watch Deadpool out of impulse,
@@ -75,7 +75,7 @@ pay for the $12 U-lock right away because my willingness to pay was $125 yet
 the owner's offer of bike ($120) + kickstand ($5) + U-lock ($12) was $137.
 
 I could have just walked away knowing I didn't make myself a bad deal right?
-Not entirely ture. Negotiation usually isn't a game of take it or leave it.
+Not entirely ture. Negotiation isn't usually a game of take it or leave it.
 In fact, many were too greedy with their offer, or they walked away too
 early when they don't get what they wanted, they missed out on a potentially
 win-win deal,
@@ -117,7 +117,7 @@ for its original price of $8, but the added benefit of eating it right now
 and not having to walk to the convenience store worths $12 to her, thus
 she has a $20 reservation point.
 
-Now Adam has made an opening offer of $23 and Betty replied with an counter
+Now Adam has made an opening offer of $23 and Betty replied with a counter
 offer of $8, we can add this to the chart above:
 
 ~~~
@@ -172,14 +172,14 @@ out of this stalemate.
 
 ## Opening offer
 
-Before going into trade and interactive bargaining, let's talking about
+Before going into trade and interactive bargaining, let's talk about
 opening offer, the first offer being made by one of the parties in a
 negotiation.
 
 ### Preparation
 
 Before a negotiation, it's helpful to know about the matter being negotiated
-on and your counterpart. Going back to my bike-purchasing scenario.After having
+on and your counterpart. Going back to my bike-purchasing scenario. After having
 bought the bike, I discovered that the bikes were cheap because the shop was
 selling bikes built from used parts the owner ripped off from salvage bikes
 abundant in the city of Davis.
@@ -269,7 +269,7 @@ interest of added convenience is represented by a stated position of $125.
 
 ### Trade Opportunity
 
-At first the owner offered me $137 for the bike, a kickstand an a U-lock.
+At first the owner offered me $137 for the bike, a kickstand and a U-lock.
 This is beyond my bottom line of $125. This is a negative bargaining zone.
 
 ~~~
@@ -308,7 +308,7 @@ By trading something that I have little interest on (payment methond), I receive
 of greater value to me (free U-lock). The story goes the same for the owner, he traded that
 second-hand U-lock for cash payment which he obviously values more.
 
-At the end, everyone was happy. By trading we can convert a negative bargaining zone into
+At the end, everyone was happy. By trading, we can convert a negative bargaining zone into
 a positive one with minimal cost. Later we'll see how trading can also maximize the
 combined benefit for both negotiating parties.
 
@@ -389,7 +389,7 @@ Assertive
 ~~~
 
 Being accomondating may be disadvantageous when negotiating with a competitive
-person because you're easily taken advantage of. For matters you have little interest
+person because you're easily taken advantage of. For matters that you have little interest
 in (say giving seat on public transport), there's probably no point even negotiating,
 just be accomondating and give your seat to the people in need.
 
@@ -399,7 +399,7 @@ and even take advantage of your counterpart to make yourself better off at the e
 ## Closing Thoughts
 
 In this post I briefly talked about some concepts I learned in the negotiation class.
-There are more such as decision making biases, multiparty negotiation, salary negotiation,
+There are more such as decision-making biases, multiparty negotiation, salary negotiation,
 why you shouldn't celebrate in front of your counterpart, stupid time, playing chicken game...
 
 As we negotiate on different matters in different ways every day, it's important to review
@@ -407,7 +407,7 @@ our past negotiations and figure out what worked for ourselves or for our counte
 constantly improve our negotiation skills.
 
 Even if you didn't get a good deal at the end, don't feel discouraged. Experience and
-self-reflection are a good teachers to help you do better next time. And remember &mdash;
+self-reflection are good teachers to help you do better next time. And remember &mdash;
 
 > Know your own reservation point so you'll never lose.
 >
@@ -421,7 +421,7 @@ self-reflection are a good teachers to help you do better next time. And remembe
 ## Multi-party Negotiation
 
 - coalition (or excluded from)
-- how to break a deal by pretending you dont wanna (harbor co.)
+- how to break a deal by pretending you don't wanna (harbor co.)
 -->
 
 ## Bonus

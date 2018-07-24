@@ -23,7 +23,7 @@ The takeaway I got from self-hosting web service is:
 >
 > ...except that you can abandon it anytime you want (kind of).
 
-This post go through the process I used to decide whether to self-host something,
+This post goes through the process I used to decide whether to self-host something,
 how to keep the service up-to-date and how to tell when I don't need it anymore.
 I will mention a couple pitfalls I encountered when self-hosting that made switching
 or shutting down a self-hosted service difficult.
@@ -79,7 +79,7 @@ for those with a `Dockerfile` in their repositories already. Or, you could look 
 Setting up the service locally feels pretty similar to running it on an actual server,
 minus the security and housekeeping side of it. You will encounter hiccups that hinders
 the deployment, and at that point you'd have a pretty good idea if the software
-package lives up to it's promise.
+package lives up to its promise.
 
 To me, many self-hosted services didn't make it past this point. For some that did please
 you and delivered what they promised, you're left with one simple question to answer (for now).
@@ -108,9 +108,9 @@ fine.
 
 ### Step 1: Domain name & DNS
 
-A domain name pointing to your web service isn't absolutely necessary if you don't mind typing
+A domain name pointing to your web service isn't necessary if you don't mind typing
 in the IP address into the browser's address bar, or that it runs without any user interactions
-(say, a web analytics service), then it's fine without a domain name. However with a domain name,
+(say, a web analytics service), then it's fine without a domain name. However, with a domain name,
 you can safely redirect users to server at a new IP should you decide to scale up or migrate to
 another host later &mdash; just change the A record on your DNS setting.
 
@@ -186,7 +186,7 @@ useful for automatic backup to Dropbox.
 You could first create a development app on Dropbox developer
 [app console](https://www.dropbox.com/developers/apps) and obtain an access token for your app. Use
 this access token when setting up `dropbox_uploader.sh` for the first time. Using an app folder
-helps isolating the backup files of different self-hosted services to guarantee they won't overwrite
+helps to isolate the backup files of different self-hosted services to guarantee they won't overwrite
 each other.
 
 Here is a cron job I set up for backing up my database on a [hoodie server](https://github.com/tommyku/progressive-work-la-7-head-server).
@@ -248,7 +248,7 @@ upgrade regularly to mitigate security risks.
 
 ## Housekeeping/migration
 
-Like habit forming, keeping a habit is harder than getting started. Once you have a self-hosted
+Like habit-forming, keeping a habit is harder than getting started. Once you have a self-hosted
 service up and running, you will face hacking attempts by bots and unending amount of security
 patches and upgrades to apply. You should follow the release page of your self-hosted service
 for any new version, especially critical security patches unless your service comes with automatic
@@ -266,7 +266,7 @@ infrastructures.
 ## Deprecation
 
 Deprecating a service is a tough choice, especially once you have tons of data in proprietary format
-that only the code of your self-hosted service understands. Therefore it's important that your
+that only the code of your self-hosted service understands. Therefore, it's important that your
 service provides an 'exit option', say exporting to JSON/XML, or that it stores data in flat-file
 format in the first place. A web scraper may come in handy should your service refuse to provide any
 exporting option.
@@ -282,7 +282,7 @@ how to ensure the migration is smooth and safe from data loss.
 ---
 
 In this post I have gone through the lifecycle of self-hosting a service using my personal experience
-and some of the thoughts I had when I was running my services. Self-hosting isn't an easy task given
+and some thoughts I had when I was running my services. Self-hosting isn't an easy task given
 so much to consider and to maintain in the long term. Perhaps we should expand the simple formula to
 
 ~~~ javascript

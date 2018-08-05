@@ -50,7 +50,7 @@ a private CodePen but let's not go down that rabbit hole)
 
 Have you noticed that for the upper list, there is a space between list
 items despite I have explicitly declared `margin: 0;` in their CSS properties?
-Also observe that the same spacing doesn't exist in the list below.
+Also, observe that the same spacing doesn't exist in the list below.
 
 What makes the matter worse, if you open up Chrome's DevTool and try to
 inspect the two elements, DevTool's prettifies the HTML code in DevTool,
@@ -62,7 +62,7 @@ ending up not showing the difference between the original HTML code.
 </figure>
 
 To make the matter worse, static site generator likes to minify HTML
-during build but not during development, so it could take you like an
+during build but not during development, so it could take you an
 hour or so diff-ing the pages on DevTool trying to spot the difference,
 which you couldn't, until you shout...
 

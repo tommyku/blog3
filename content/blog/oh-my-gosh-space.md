@@ -5,7 +5,7 @@ created_at: '2018-08-05 00:00:00 +0800'
 slug: oh-my-gosh-space
 abstract: 'If you have written any amount of HTML and is conscious
 enough to notice how whitespace (or the lack thereof) behave in a page,
-welcome to the club.'
+welcome to the club'
 preview: false
 ---
 

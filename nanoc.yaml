@@ -90,3 +90,8 @@ checks:
     # E.g.:
     #   exclude_files: ['blog/page']
     exclude_files: []
+
+# Whether to generate post suggestions - do this only in production because
+# training model takes time, and I haven't figured out how to do them in a Singleton
+# because nanoc runs in parallel
+post_suggestion: false

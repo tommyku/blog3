@@ -6,6 +6,7 @@ source 'https://rubygems.org' do
   gem 'guard-shell'
   gem 'kramdown'
   gem 'nanoc'
+  gem 'narray'
   gem 'nokogiri'
   gem 'rack'
   gem 'rubypants'

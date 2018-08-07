@@ -22,13 +22,14 @@ html lang='en'
       section#content
         == yield
 
-      section#suggestions
-        h2 You might as well look at...
-        - similar_posts(@item)[1..3].each do |similarity|
-          - article = sorted_articles[similarity[:article_index]]
-          == link_to article[:title], url_for(article)
-          - if abstract?(article)
-            p.abstract == abstract(article)
+      - if @config[:post_suggestion]
+        section#suggestions
+          h2 You might as well look at...
+          - similar_posts(@item)[1..3].each do |similarity|
+            - article = sorted_articles[similarity[:article_index]]
+            == link_to article[:title], relative_path_to(article)
+            - if abstract?(article)
+              p.abstract == abstract(article)
 
     script type='text/javascript' src='/js/highlight.pack.js'
     coffee:

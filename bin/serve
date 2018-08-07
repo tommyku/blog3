@@ -1,5 +1,3 @@
 #!/bin/sh
 
-nanoc
-bundle exec ruby -rwebrick -e'WEBrick::HTTPServer.new(Port:3000, DocumentRoot: "/app/output").start' &
-guard
+bundle exec nanoc live

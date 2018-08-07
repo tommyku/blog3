@@ -1,3 +1,6 @@
+require 'matrix'
+require 'tf-idf-similarity'
+
 include Nanoc::Helpers::Rendering
 include Nanoc::Helpers::Blogging
 include Nanoc::Helpers::LinkTo
@@ -24,4 +27,26 @@ end
 
 def abstract(item)
   item[:abstract]
+end
+
+def similar_posts(item)
+  @article_index ||= sorted_articles
+    .map{ |article| TfIdfSimilarity::Document.new(article.compiled_content(snapshot: :raw)) }
+
+  @tfidf_model ||= TfIdfSimilarity::TfIdfModel.new @article_index
+
+  @similarity_matrix ||= @tfidf_model.similarity_matrix
+
+  item_index = sorted_articles.find_index { |i| i.identifier == item.identifier }
+
+  similar_posts = @article_index.map do |article|
+    {
+      article_index: @tfidf_model.document_index(article),
+      similarity: @similarity_matrix[item_index, @tfidf_model.document_index(article)]
+    }
+  end
+
+  similar_posts.sort_by! { |post| -post[:similarity] }
+
+  similar_posts
 end

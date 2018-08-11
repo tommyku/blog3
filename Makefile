@@ -7,4 +7,3 @@ publish: content/preview/$(name).md bin/docker-publish
 	if [ -d "./content/assets/preview_images/$(name)" ]; then \
 		mv "./content/assets/preview_images/$(name)" "./content/assets/blog_images/$(name)"; \
 	fi
-	./bin/docker-publish

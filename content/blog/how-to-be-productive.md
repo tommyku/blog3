@@ -1,7 +1,7 @@
 ---
 title: 'How to be productive'
 kind: article
-created_at: '2018-08-01 00:00:00 +0800'
+created_at: '2018-08-11 00:00:00 +0800'
 slug: how-to-be-productive
 preview: false
 abstract: "There are many methods and tricks that don't work on

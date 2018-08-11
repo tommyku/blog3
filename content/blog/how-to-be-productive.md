@@ -23,7 +23,7 @@ To not fall into the same bucket of bullshit productivity advice, I am
 going to introduce something that are more like common sense than the
 holy grail of productivity.
 
-There are four basic rules for productivity which apply even to general
+There are three basic rules for productivity which apply even to general
 well-being to everyone. At the end of this post you'd probably think: ok
 I knew these already. Why bother?
 

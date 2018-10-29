@@ -1,9 +1,11 @@
 source 'https://rubygems.org' do
-  gem 'adsf'
+  group :nanoc do
+    gem 'adsf'
+    gem 'guard-nanoc'
+  end
   gem 'builder'
   gem 'coffee-script'
   gem 'guard'
-  gem 'guard-nanoc'
   gem 'guard-shell'
   gem 'kramdown'
   gem 'nanoc'

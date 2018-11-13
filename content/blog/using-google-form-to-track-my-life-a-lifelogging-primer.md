@@ -45,7 +45,7 @@ datepicker and timepicker for recording time on top of the automatically
 appended response time (more on that later).
 
 <figure>
-<img style='max-width: 640px;' src='./drink-form.jpg' alt='A google form, tracking the kind of drink I consume with date and time' />
+<img style='width: 100%; max-width: 640px;' src='./drink-form.jpg' alt='A google form, tracking the kind of drink I consume with date and time' />
 <figcaption>I actually use a Chinese version of this form to track my daily coffee/tea intake</figcaption>
 </figure>
 
@@ -69,7 +69,7 @@ interested in alternative form management. To those who are interested
 in dig deeper into how Google Form works, I am presenting&mdash;
 
 <figure>
-<img style='max-width: 320px;' src='./startpage.png' alt='Mobile webapp, with links to each of the forms' />
+<img style='width: 100%; max-width: 320px;' src='./startpage.png' alt='Mobile webapp, with links to each of the forms' />
 <figcaption>Make a progressive web app to collect all forms</figcaption>
 </figure>
 
@@ -111,7 +111,7 @@ of.
 ## Progressive Web App
 
 <figure>
-<img style='max-width: 320px;' src='./expense.png' alt='Mobile webapp, with a form looking different from Google Form' />
+<img style='width: 100%; max-width: 320px;' src='./expense.png' alt='Mobile webapp, with a form looking different from Google Form' />
 <figcaption>Yes, it is Google Form under the hood, but better</figcaption>
 </figure>
 
@@ -136,7 +136,7 @@ is faster than opening up a form and pasting it. Plus Telegram does a
 good job caching the request when my phone is offline.
 
 <figure>
-<img style='max-width: 640px;' src='./telegram.png' alt='A Telegram bot
+<img style='width: 100%; max-width: 640px;' src='./telegram.png' alt='A Telegram bot
 receiving links, and submitting it to Google Form' />
 <figcaption>I use a Telegram bot to receive links and submit them to
 Google Form. It works offline.</figcaption>

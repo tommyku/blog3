@@ -3,7 +3,7 @@ title: 'Using Google Form to track my life: a lifelogging primer'
 kind: article
 created_at: '2018-11-13 00:00:00 +0800'
 slug: using-google-form-to-track-my-life-a-lifelogging-primer
-preview: true
+preview: false
 abstract: 'Not only Google can track your every move, now you can track
 your own life using what Google is offering for free, and for your own
 good'

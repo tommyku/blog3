@@ -1,4 +1,4 @@
 #!/bin/bash
 
-find ./content/assets -iname '*.jpg' -exec jpegoptim {} \;
-find ./content/assets -iname '*.png' -exec optipng {} \;
+find ./content/assets/preview_images -iname '*.jpg' -exec jpegoptim {} \;
+find ./content/assets/preview_images -iname '*.png' -exec optipng {} \;

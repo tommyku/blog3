@@ -1,9 +1,9 @@
 ---
 title: 'Hide Docker containers behind Nginx proxy'
 kind: article
-created_at: '2019-02-04 00:00:00 +0800'
+created_at: '2019-02-06 00:00:00 +0800'
 slug: hide-docker-containers-behind-nginx-proxy
-preview: true
+preview: false
 abstract: 'How I ditched VPN and embrace basica HTTP authentication when
 I am too lazy to implement user authentication into individual app'
 ---

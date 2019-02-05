@@ -109,9 +109,9 @@ that comes with `apache2-utils` in Ubuntu.
 
 ~~~ bash
 # Install apache2-utils
-sudo apt install apache2-utils
+$ sudo apt install apache2-utils
 # Verify that htpasswd has been installed
-htpasswd
+$ htpasswd
 # ...help info of htpasswd is shown
 ~~~
 
@@ -119,8 +119,8 @@ With `htpasswd` ready, we can create a password file.
 
 ~~~ bash
 # replace `test.domain.name` with a virtual host name of your choice
-mkdir ~/htpasswd
-htpasswd -cB ~/htpasswd/test.domain.name username
+$ mkdir ~/htpasswd
+$ htpasswd -c ~/htpasswd/test.domain.name username
 # ...fill in the password according to the promots
 ~~~
 
@@ -128,6 +128,9 @@ The file containing our credentials is named `test.domain.name` because
 nginx-proxy reads htpasswd files accroding to the virtual host's name.
 So use whatever domain name you're going to use for your docker
 container as the filename.
+
+<small>\* You may also consider adding `-B` for encryption using bcrypt,
+however your Nginx/OS may not be supporting that yet, for details see this [SO post](https://stackoverflow.com/questions/31833583/nginx-gives-an-internal-server-error-500-after-i-have-configured-basic-auth).</small>
 
 ### Spinning up a Nginx reverse proxy
 
@@ -137,7 +140,7 @@ in the right environmental variables when we later start our web service
 using Docker.
 
 ~~~ bash
-docker run --detach \
+$ docker run --detach \
     --name nginx-proxy \
     --publish 80:80 \
     --publish 443:443 \
@@ -175,10 +178,10 @@ comes with no security. Anyone accessing the page is able to see what it
 serves.
 
 ~~~ bash
-mkdir test-web && cd test-web
-echo 'be aware of the lizard people!' > index.html
+$ mkdir test-web && cd test-web
+$ echo 'be aware of the lizard people!' > index.html
 
-docker run --name test-web \
+$ docker run --name test-web \
     -v `pwd`:/usr/share/nginx/html:ro \
     --expose 80 \
     -e 'VIRTUAL_HOST=test.domain.name' # change this \
@@ -191,10 +194,95 @@ Assuming your machine is able to resolve the domain name you've set up
 on your DNS, you can already see the outcome:
 
 ~~~ bash
-curl http://test.domain.name
+$ curl http://test.domain.name
+# <html>
+# <head><title>401 Authorization Required</title></head>
+# <body bgcolor="white">
+# <center><h1>401 Authorization Required</h1></center>
+# <hr><center>nginx/1.14.1</center>
+# </body>
+# </html>
+$ curl -u username:password http://test.domain.name
 # be aware of the lizard people!
 ~~~
 
+But this is not enough! As we all know HTTP basic authentication sends
+(base64 encoded) plain text password, which is susceptible to
+eavesdropping. To protect this important payload, we have to add HTTPS.
+
 ### Add HTTPS
 
+To add HTTPS, we need to first enable the Let's Encrypt companion for
+Nginx proxy.
+
+~~~ bash
+$ docker run --detach \
+    --name nginx-proxy-letsencrypt \
+    --volumes-from nginx-proxy \
+    --volume /var/run/docker.sock:/var/run/docker.sock:ro \
+    jrcs/letsencrypt-nginx-proxy-companion
+~~~
+
+This container would automatically create and renew Let's Encrypt
+certificates for your docker containers. This alone isn't enough though,
+we need to configure some environmental variables of our web service to
+let the Let's Encrypt companion pick them up.
+
+~~~ bash
+$ docker stop test-web
+$ docker rm test-web
+$ docker run --name test-web \
+    -v `pwd`:/usr/share/nginx/html:ro \
+    --expose 80 \
+    -e 'VIRTUAL_HOST=test.domain.name' # change this \
+    -e 'LETSENCRYPT_HOST=test.domain.name' # add this \
+    -e 'LETSENCRYPT_EMAIL=user@test.domain.name' # add this \
+    --restart=always \
+    -d \
+    nginx:1.13.8-alpine
+~~~
+
+Now the Let's Encrypt companion should be able to pick up this container
+event and create/renew a certificate for the site. Give it a couple
+minutes and you should be able to access the site using HTTPS without
+invalid server certificate issue.
+
+To debug, you can check the logs by:
+
+~~~ bash
+$ docker logs nginx-proxy
+# or
+$ docker logs nginx-proxy-letsencrypt
+~~~
+
 ### Enforce HTTPS
+
+If you use DNS service provider like Cloudflare that provides page
+rules, you can enforce HTTP by redirecting HTTP traffic to HTTPS.
+Clients will receive HTTP 301 Moved Permanently when requesting through
+HTTP, and be redirected to the HTTPS version of the page.
+
+Also, blocking port 80 may sound like a good idea until one finds that
+Let's Encrypt companion isn't able to complete an HTTP-01 challenge
+because by that point it becomes a problem of chicken first or egg first &mdash;
+without cert it can't get a valid response using HTTPS, yet not passing
+HTTP-01 challenge prohibits it from getting a certificate to enable
+HTTPS.
+
+## Closing thoughts
+
+Let's revisit an important thing: HTTP basic authentication isn't
+an one-size-fit-all security solution, it's far from being one. Not only
+does it sends credentials as plain text, it is also susceptible to CSRF
+attack. `htpasswd` file using MD5 to encrypt passwords isn't exactly
+secure in today's standard either.
+
+However it gest the job done. You get HTTPS, some degree of security
+without modifying the source of whatever service you're hosting, and no
+need of an VPN/DNS. As lazy as I am, this is enough for low-critical
+non-confidential applications.
+
+For apps that requires higher level of security, I still recommand the
+VPN approach because VPN provides encrypted transmission
+out-of-the-box and actually isolates your web services from the world
+wide web.

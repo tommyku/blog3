@@ -99,15 +99,101 @@ your own responsibility.
   - LetsEncrypt companion for nginx-proxy: [JrCs/docker-letsencrypt-nginx-proxy-companion](https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion)
   - Web service: [nginx:1.13.8-alpine](https://hub.docker.com/_/nginx)
 
-### Setting up the web service
-
 ### Creating a file storing the passphrases
 
-First, we need to create a file that contains the encrypted
+First, we need to create a file that contains the credentials for
+HTTP basic authentication. To do that, we use a tool called `htpasswd`
+that comes with `apache2-utils` in Ubuntu.
+
+`apache2-utils` can be installed by running:
+
+~~~ bash
+# Install apache2-utils
+sudo apt install apache2-utils
+# Verify that htpasswd has been installed
+htpasswd
+# ...help info of htpasswd is shown
+~~~
+
+With `htpasswd` ready, we can create a password file.
+
+~~~ bash
+# replace `test.domain.name` with a virtual host name of your choice
+mkdir ~/htpasswd
+htpasswd -cB ~/htpasswd/test.domain.name username
+# ...fill in the password according to the promots
+~~~
+
+The file containing our credentials is named `test.domain.name` because
+nginx-proxy reads htpasswd files accroding to the virtual host's name.
+So use whatever domain name you're going to use for your docker
+container as the filename.
 
 ### Spinning up a Nginx reverse proxy
 
+Now it's time to start a nginx reverse proxy. Don't worry about
+nginx's configurations &mdash; they are done automatically when we plug
+in the right environmental variables when we later start our web service
+using Docker.
+
+~~~ bash
+docker run --detach \
+    --name nginx-proxy \
+    --publish 80:80 \
+    --publish 443:443 \
+    --volume /etc/nginx/certs \
+    --volume `pwd`/htpasswd:/etc/nginx/htpasswd \
+    --volume /etc/nginx/vhost.d \
+    --volume /usr/share/nginx/html \
+    --volume /var/run/docker.sock:/tmp/docker.sock:ro \
+    jwilder/nginx-proxy
+~~~
+
+Basically, this is all that we need for the reverse proxy. After
+starting the container it will listen to Docker events on `docker.sock`,
+pick up newly started containers and reconfigure itself automatically.
+You can head over to the image's [GitHub page](https://github.com/jwilder/nginx-proxy)
+for more info.
+
 ### Point a domain name to the server
+
+The reverse proxy needs a domain name to resolve which Docker container
+to pass incoming traffic to. For example, it forwards the traffic to
+container A when it reads that users are requesting `a.example.com` and
+container B when it's `b.example.com`. This coordination requires a
+proper domain name to be set up per container.
+
+To do this, you need to add an A record to your domain name's DNS
+server and point it to the public IP of the reverse proxy. You can point
+multiple A records with different subdomains to the same IP address.
+
+### Setting up the web service
+
+Similar to [last time](/blog/hide-docker-containers-behind-a-docker-vpn/),
+we are going to set up a web server serving one static file. And it
+comes with no security. Anyone accessing the page is able to see what it
+serves.
+
+~~~ bash
+mkdir test-web && cd test-web
+echo 'be aware of the lizard people!' > index.html
+
+docker run --name test-web \
+    -v `pwd`:/usr/share/nginx/html:ro \
+    --expose 80 \
+    -e 'VIRTUAL_HOST=test.domain.name' # change this \
+    --restart=always \
+    -d \
+    nginx:1.13.8-alpine
+~~~
+
+Assuming your machine is able to resolve the domain name you've set up
+on your DNS, you can already see the outcome:
+
+~~~ bash
+curl http://test.domain.name
+# be aware of the lizard people!
+~~~
 
 ### Add HTTPS
 

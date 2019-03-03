@@ -25,15 +25,33 @@ start from here.
 Ask yourself one question: What are the key differences between my
 system and the system I am troubleshooting on?
 
-The key differences may be:
+As we know, computer systems nowadays are constructed as layers upon
+layers of abstractions, so to troubleshoot we need to focus on each
+layers as if we are peeling an onion.
+
+Starting from runtime level, the key differences may be:
 
 - versions of the runtime
 - versions of the dependencies
 - application state (e.g. uninitialized database, config files)
+
+On layers below the application there are:
+
 - external dependencies (e.g. database, library, network and external
 APIs)
 - system level restrictions/configuration (e.g. firewall, RAM/CPU
 limitation, user permissions)
+
+Then there are hardware, which is rather difficult to troubleshoot
+unless we have replacement parts to see which is working/not working.
+
+We should test our assumptions that every layers of the system works,
+until we figured out which doesn't. To test the assumptions, we
+perform test on separate layers to ensure that they work, and move on
+to the next layer.
+
+> We should test our assumptions that every layers of the system works,
+> until we figured out which doesn't.
 
 Here comes a real-world example of me trying to trouble a mysterious issue
 in my program &mdash; not a bug because the issue ended up to be non-code
@@ -57,11 +75,38 @@ that doesn't work. What about actually running the code? I fired up a
 PHP command prompt with `php artisan tinker` and ran my line
 `var_dump(file_exists('/tmp/something.lock'))` and sure enough I got
 `bool(true)`. By that time I realized that I was stepping into the
-WTF land of deployment.
+WTF land of troubleshooting.
 
 It was supposed to be an one-hour deployment, now it has passed the
-1.5 hour point and I still hasn't figured out what happened. One
+1.5 hour mark and I still hasn't figured out what happened. One
 signature sign of you're looking into the wrong problem is that there
 aren't many StackOverflow questions about the topic because that means
 nobody was unfortunate enought to stumble upon the same problem.
 
+Here is where we begin testing our assumptions. We have tested using
+the PHP interpreter to see that `file_exists` works. Now we need to move
+one layer up (or down depending on which way you look): Apache.
+
+I will skip the dirty details and jump right to the conclusion. I did
+something similar with that `php artisan tinker` step by creating a
+separate PHP script inside my `/var/www/html` where my PHP pages reside.
+
+Thing is, whenever I run `file_exists` by invoking a script from Apache,
+it fails to recognize the file inside `/tmp`, so I can tell that
+something is wrong with Apache. Further investigation by running
+`scandir` tells me that from Apache's prespective, `/tmp` is an empty
+folder.
+
+But why? [systemd - why php can not see /tmp files - Unix & Linux Stack Exchange](https://unix.stackexchange.com/questions/345122/why-php-can-not-see-tmp-files)
+
+When you ask the right question, it's often easier to find the answer.
+And that's why I believe troubleshooting requires testing the
+assumptions. By testing assumptions you can drill down layer by layer
+until you located where the culprit is. Once the defect has been
+identified, it's much easier to figure out a solution.
+
+Consider this approach a linear search &mdash; obviously there exists
+the binary search variant called
+[half-splitting](https://en.wikipedia.org/wiki/Troubleshooting#Half-splitting),
+which I eventually had to employ on another issue that was closely
+related to two pieces of hardware talking to each other.

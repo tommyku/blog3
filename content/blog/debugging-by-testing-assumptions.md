@@ -3,7 +3,7 @@ title: 'Debugging by testing assumptions'
 kind: article
 created_at: '2019-02-23 00:00:00 +0800'
 slug: debugging-by-testing-assumptions
-preview: true
+preview: false
 abstract: 'Recently I have wasted half an hour of my life
 troubleshooting an issue related to Apache2 and systemd when upgrading
 from Ubuntu 16.04 to Ubuntu 18.04, here is what I learned'

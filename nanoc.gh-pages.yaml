@@ -95,3 +95,9 @@ checks:
 # training model takes time, and I haven't figured out how to do them in a Singleton
 # because nanoc runs in parallel
 post_suggestion: true
+
+# Whether to render GA script
+enable_analytics: true
+
+# Whether to render Disqus
+enable_disqus: true

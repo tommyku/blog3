@@ -1,16 +1,17 @@
-#disqus_thread
-javascript:
-  var disqus_config = function () {
-    this.page.url = "#{url_for(@item)}";
-    this.page.identifier = "#{@item[:slug]}";
-  };
+- if @config[:enable_disqus]
+  #disqus_thread
+  javascript:
+    var disqus_config = function () {
+      this.page.url = "#{url_for(@item)}";
+      this.page.identifier = "#{@item[:slug]}";
+    };
 
-  (function() { // DON'T EDIT BELOW THIS LINE
-    var d = document, s = d.createElement('script');
-    s.src = '//methodstub.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-noscript
-  | Please enable JavaScript to view the 
-  a(href='https://disqus.com/?ref_noscript', rel='nofollow') comments powered by Disqus.
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = '//methodstub.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  noscript
+    | Please enable JavaScript to view the 
+    a(href='https://disqus.com/?ref_noscript', rel='nofollow') comments powered by Disqus.

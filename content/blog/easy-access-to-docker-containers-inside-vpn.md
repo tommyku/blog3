@@ -213,3 +213,29 @@ from sniffing between my PC and the server. The traffic goes
 out from the VPN server to containers in the same subnet, meaning
 the traffic never needed to leave the machine hosting these
 services. In my book, this is safe enough for the convenience.
+
+## How do I remember all the hostnames and port numbers?
+
+One thing that happened to me was that many services tend to use
+ports other than 80 port. The most famous are 3000 and 8080, and
+there are some more magic numbers the service's developer decided
+to listen on.
+
+Even though I can remember, say, the hostname `vcs.lan` for
+my Git server, it is difficult for me to remember the port number
+6003.
+
+On an VPN+DNS setup one possible way to solve this is to run
+and internal link shortener service. For example, you can go to
+a site by navigating to `g/vcs` that redirects you to the
+version control site inside the network `vcs.lan:6003`, in which
+`g` is the hostname of your link shortener service.
+
+In fact, you can run this whole thing off a single, static
+HTML file given that your mapping rarely changes.
+Alternatively, you can run a small link shortener service others
+have made.
+
+Me? I use [tommyku/golk](http://github.com/tommyku/golk) which
+as of writing is still in its infancy. Well, it gets the job done
+so why not?

@@ -105,7 +105,7 @@ Add to the end:
 
 ~~~ bash
 # Login Telegram Notification
-session optional pam_exec.so /etc/ssh/login-notify.sh
+session optional pam_exec.so /etc/ssh/login_notify.sh
 ~~~
 
 ## Step 4: Test it

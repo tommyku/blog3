@@ -1,18 +1,18 @@
-FROM ruby:2.4.1-alpine
+FROM ruby:2.5-alpine
 MAINTAINER tommyku
 
 RUN apk add --update --no-cache build-base nodejs rsync openjdk8-jre \
   && rm -rf /var/cache/apk/*
 
-RUN gem install rake bundler
+RUN gem install bundler
 
 WORKDIR "/app"
 
-COPY Gemfile Gemfile.lock /app/
+COPY Gemfile /app/
 
 RUN bundle config
 
-RUN bundle install --system
+RUN bundle install
 
 EXPOSE 3000
 

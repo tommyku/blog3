@@ -1,6 +1,7 @@
 source 'https://rubygems.org' do
   group :nanoc do
     gem 'adsf'
+    gem 'adsf-live'
     gem 'guard-nanoc'
   end
   gem 'builder'

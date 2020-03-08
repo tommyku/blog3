@@ -1,3 +1,4 @@
 #!/bin/sh
 
-bundle exec nanoc live
+bundle exec nanoc compile
+bundle exec nanoc view -L

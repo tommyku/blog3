@@ -1,12 +1,24 @@
 #!/bin/sh
 
+echo "Using config from nanoc.gh-pages.yaml to publish"
 mv nanoc.yaml nanoc.local.yaml
 mv nanoc.gh-pages.yaml nanoc.yaml
 
-nanoc
+echo "Using bundler"
+bundle config
+bundle version
+bundle show
+bundle list
+
+echo "Building pages with nanoc"
+bundle exec nanoc
+
+echo "Copying artifacts from output/ to docs/ folder"
 rsync -avzh output/ docs/
 
+echo "Reverting setting YML file"
 mv nanoc.yaml nanoc.gh-pages.yaml
 mv nanoc.local.yaml nanoc.yaml
 
+echo "Checking page size"
 ruby bin/check_size

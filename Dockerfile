@@ -10,7 +10,7 @@ WORKDIR "/app"
 
 COPY Gemfile Gemfile.lock /app/
 
-RUN bundle install
+RUN bundle install --system
 
 EXPOSE 3000
 

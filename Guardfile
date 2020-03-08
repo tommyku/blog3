@@ -20,7 +20,7 @@ interactor :off
 guard :shell do
   watch(/content\/(.*).(.*)|layouts\/(.*)/) do |modified|
     puts "modified: #{modified[0]}"
-    `nanoc`
+    `nanoc compile`
   end
 end
 

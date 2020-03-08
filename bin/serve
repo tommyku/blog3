@@ -1,4 +1,5 @@
 #!/bin/sh
 
 bundle exec nanoc compile
-bundle exec nanoc view --host 0.0.0.0 -p 3000 -L
+bundle exec nanoc view --host 0.0.0.0 -p 3000 -L &
+bundle exec guard start

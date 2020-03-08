@@ -5,6 +5,7 @@ mv nanoc.yaml nanoc.local.yaml
 mv nanoc.gh-pages.yaml nanoc.yaml
 
 echo "Using bundler"
+bundle config
 bundle version
 bundle show
 bundle list

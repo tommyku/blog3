@@ -4,11 +4,13 @@ MAINTAINER tommyku
 RUN apk add --update --no-cache build-base nodejs rsync openjdk8-jre \
   && rm -rf /var/cache/apk/*
 
-RUN gem install bundler
+RUN gem install rake bundler
 
 WORKDIR "/app"
 
 COPY Gemfile Gemfile.lock /app/
+
+RUN bundle config
 
 RUN bundle install --system
 

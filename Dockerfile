@@ -8,7 +8,7 @@ RUN gem install bundler
 
 WORKDIR "/app"
 
-COPY Gemfile /app/
+COPY Gemfile Gemfile.lock /app/
 
 RUN bundle config
 

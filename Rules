@@ -44,7 +44,6 @@ compile '/**/*.css' do
 end
 
 compile '/**/*.js' do
-  filter :yui_compressor, type: :js
   write item.identifier.without_ext + '.js'
 end
 

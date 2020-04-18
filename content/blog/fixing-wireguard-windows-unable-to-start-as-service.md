@@ -73,7 +73,7 @@ went to look at the config file Wireguard was trying to access.
 inside the system directory `C:\WINDOWS`. Apparently, whichever user Windows
 was trying to start this service with, had not the permission to this file.
 
-~~~
+~~~ plaintext
 "C:\Program Files\WireGuard\wireguard.exe" /tunnelservice C:\WINDOWS\system32\config\systemprofile\AppData\Local\WireGuard\Configurations\Wireguard.conf.dpapi
 ~~~
 
@@ -103,7 +103,7 @@ Inexperienced in software development in Windows, I have no answer to this
 question. I am however aware that on the other side of the Wireguard network,
 I can set a static endpoint for my particular machine.
 
-~~~
+~~~ plaintext
 [Peer]
 PublicKey = dmVyeSByYW5kb20K...
 AllowedIPs = 20.0.0.4/32

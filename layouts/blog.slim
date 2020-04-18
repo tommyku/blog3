@@ -5,7 +5,7 @@ html lang='en'
     title
       = "#{@item[:title]} - Tommy Ku's Blog"
     link rel="stylesheet" href="/style/gutenberg.css"
-    link rel='stylesheet' href='/style/tomorrow-night-eighties.css'
+    link rel='stylesheet' href='/style/prism.css'
     meta name="generator" content="Nanoc #{Nanoc::VERSION}"
   body
     == render '/header.slim'
@@ -33,9 +33,7 @@ html lang='en'
                 - if abstract?(article)
                   p.abstract == abstract(article)
 
-    script type='text/javascript' src='/js/highlight.pack.js'
-    coffee:
-      hljs.initHighlightingOnLoad()
+    script type='text/javascript' src='/js/prism.js'
 
     == render '/disqus.slim'
     hr

@@ -73,7 +73,7 @@ transition marked by `1 min`, I define an if statement to check the state,
 then perform the action and state change. With such a simple finite state
 machine it didn’t take long to debug.
 
-~~~
+~~~ cmd
 IF EXIST ".\should\sleep.txt" (
   DEL ".\is\*.txt"
   DEL ".\should\*.txt"

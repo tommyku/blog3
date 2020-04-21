@@ -87,7 +87,9 @@ Installing Java in the shell doesn’t make it available to the host OS.
 
 ~~~ bash
 # Jail Shell
-pkg install openjdk8
+# pkg install openjdk8
+# Developer of Komga recommends using openjdk11 over openjdk8 for better performance
+pkg install openjdk11
 ~~~
 
 <figure>
@@ -112,7 +114,7 @@ elsewhere and drop it into jail’s own dataset.
 
 ~~~ bash
 # Jail Shell
-fetch https://github.com/gotson/komga/releases/download/v0.20.0/komga-0.20.0.jar
+fetch https://github.com/gotson/komga/releases/download/v0.27.7/komga-0.27.7.jar
 ~~~
 
 To quickly test whether Komga is working, start the Komga server from
@@ -120,7 +122,7 @@ To quickly test whether Komga is working, start the Komga server from
 
 ~~~ bash
 # Jail Shell
-/usr/local/bin/java -jar ./komga-0.20.0.jar
+/usr/local/bin/java -jar ./komga-0.27.7.jar
 ~~~
 
 Navigating to the webpage at port 8080 of your jail’s IP, you will see
@@ -133,7 +135,7 @@ Komga’s login screen.
 
 You won’t be able to login at the moment because no account is created
 yet. Follow [Komga’s installation instruction](https://komga.org/installation/user-accounts.html#automatic-mode-default)
-to get it up and running. 
+to get it up and running.
 
 
 If you want to change some of the default config options, Komga’s
@@ -151,7 +153,7 @@ exec 1>&2
 set -x
 
 cd /root
-nohup /usr/local/bin/java -jar /root/komga-0.20.0.jar
+nohup /usr/local/bin/java -jar /root/komga-0.27.7.jar
 
 exit 0
 ~~~

@@ -80,14 +80,13 @@ will see only files inside its own iocage dataset.
 <figcaption></figcaption>
 </figure>
 
-Komga requires Java to run which is not available. To install Java 8, start
+Komga requires Java to run which is not available. To install Java 11, start
 the jail and click Shell from the Jails page. In the resultant shell screen
 you have logged in to the jail’s shell, not to your FreeNAS host shell.
 Installing Java in the shell doesn’t make it available to the host OS.
 
 ~~~ bash
 # Jail Shell
-# pkg install openjdk8
 # Developer of Komga recommends using openjdk11 over openjdk8 for better performance
 pkg install openjdk11
 ~~~

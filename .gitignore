@@ -3,3 +3,4 @@ output/
 crash.log
 node_modules/
 docs/
+.makeenv

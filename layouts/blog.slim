@@ -12,14 +12,18 @@ html lang='en'
     - unless @item[:banner].nil?
       figure
         img src="./#{@item[:banner]}"
-    main#main
+    main#main class="h-entry"
       section#meta
         - if preview?(@item)
           strong style='color: brown'
             | This post is preview only (╯°□°）╯︵ ┻━┻
-        h1 = @item[:title]
-        i = "Posted on #{attribute_to_time(@item[:created_at]).strftime '%B %d, %Y'}"
-      section#content
+        h1 class="p-name" = @item[:title]
+        i
+          | Posted on&nbsp;
+          time class="dt-published" datetime="#{attribute_to_time(@item[:created_at]).strftime '%FT%T%:z'}" = "#{attribute_to_time(@item[:created_at]).strftime '%B %d, %Y'}"
+          | &nbsp;by&nbsp;
+          span class="p-author" Tommy Ku
+      section#content class="e-content"
         == yield
 
       - if @config[:post_suggestion]
@@ -33,8 +37,10 @@ html lang='en'
                 - if abstract?(article)
                   p.abstract == abstract(article)
 
-    script type='text/javascript' src='/js/prism.js'
+      == render '/permalink.slim'
+      == render '/author.slim'
 
+    script type='text/javascript' src='/js/prism.js'
     == render '/disqus.slim'
     hr
     == render '/footer.slim'

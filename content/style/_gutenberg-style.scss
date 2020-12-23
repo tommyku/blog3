@@ -113,7 +113,7 @@ nav {
 main {
   h1 {
     &:before {
-      content: 'you are reading:';
+      content: 'You are reading:';
       display: block;
       color: gray;
       font-weight: 200;
@@ -178,6 +178,25 @@ table td {
   //font-size: 0.8rem;
   //vertical-align: bottom;
 //}
+
+input#permalink {
+  width: 100%;
+  display: block;
+}
+
+section#bio {
+  display: flex;
+  flex-direction: row;
+  img {
+    max-width: 64px;
+    max-height: 64px;
+    margin: 0;
+  }
+  p {
+    padding: 0 1.5rem;
+    flex: 1;
+  }
+}
 
 .hljs {
   line-height: 1.5em !important;

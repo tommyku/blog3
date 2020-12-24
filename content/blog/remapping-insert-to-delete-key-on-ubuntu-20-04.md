@@ -1,7 +1,7 @@
 ---
 title: Remapping Insert to Delete key on Ubuntu 20.04
 kind: article
-created_at: 2020-12-24 17:50:11 +0800
+created_at: 2020-12-24 18:46:10 +0800
 slug: remapping-insert-to-delete-key-on-ubuntu-20-04
 preview: false
 abstract: Delete key on my ThinkPad X230 fell off years ago, so I repurposed the rarely used Insert key into a Delete key
@@ -20,7 +20,7 @@ At the end I stumbled upon [this answer](https://askubuntu.com/questions/325272/
 
 I needed to change `/usr/share/X11/xkb/symbols/pc` with as root to modify the behavior of Insert key to Delete. Saved the file, reboot and it worked like a charm.
 
-```diff
+~~~diff
 -    key  <INS> {	[  Insert		]	};
 +    key  <INS> {	[  Delete		]	};
-```
+~~~

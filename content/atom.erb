@@ -1,3 +1,3 @@
 <% if @config[:base_url] != '.' %>
-  <%= atom_feed title: 'Tommy Ku\'s Blog', author_name: 'Tommy Ku', author_uri: @config[:base_url], limit: 10, articles: sorted_published_articles %>
+  <%= atom_feed title: 'Tommy Ku\'s Blog', author_name: 'Tommy Ku', author_uri: @config[:base_url], limit: 20, articles: sorted_published_articles %>
 <% end %>

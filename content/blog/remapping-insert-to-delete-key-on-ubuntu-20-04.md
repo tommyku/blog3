@@ -1,7 +1,7 @@
 ---
 title: Remapping Insert to Delete key on Ubuntu 20.04
 kind: article
-created_at: 2020-12-24 18:46:10 +0800
+created_at: 2020-12-24 18:51:19 +0800
 slug: remapping-insert-to-delete-key-on-ubuntu-20-04
 preview: false
 abstract: Delete key on my ThinkPad X230 fell off years ago, so I repurposed the rarely used Insert key into a Delete key

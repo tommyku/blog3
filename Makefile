@@ -1,5 +1,12 @@
 #!make
 include .makeenv
+## makeenv
+# HEADLESS_CMS_HOST_REGEXP=http\:\/\/localhost\:6009
+# HEADLESS_CMS_URL=http://localhost:6009/api/collections/get/Blog
+# HEADLESS_CMS_STAGE_URL=http://localhost:6009/api/collections/get/Staged
+# HEADLESS_CMS_UPDATE_STAGE_URL=http://localhost:6009/api/collections/save/Staged
+# HEADLESS_CMS_TOKEN=1234567890
+
 export $(shell sed 's/=.*//' .makeenv)
 
 post: template/preview.md
@@ -12,14 +19,16 @@ publish: content/preview/$(name).md bin/docker-publish
 		mv "./content/assets/preview_images/$(name)" "./content/assets/blog_images/$(name)"; \
 	fi
 
-download: stage_name download_content download_assets download_move_files stage_update
+download: stage_name download_post_content download_content download_assets download_move_files stage_update
 	rm -rf /tmp/cockpit-*
 
-download_content:
+download_post_content: /tmp/cockpit-download-name
 	@echo "Headless CMS URL is '$(HEADLESS_CMS_URL)'"
 	@echo "Post to download is '$(shell cat /tmp/cockpit-download-name)'"
 	@echo "Downloading post content..."
 	curl "$(HEADLESS_CMS_URL)?token=$(HEADLESS_CMS_TOKEN)" -H 'Content-Type: application/json' --data-binary '{"filter": {"title": "$(shell cat /tmp/cockpit-download-name)"}}' --compressed > /tmp/cockpit-blog-download.json
+
+download_content: /tmp/cockpit-blog-download.json
 	rm -f /tmp/cockpit-post.md
 	@echo "---" >> /tmp/cockpit-post.md
 	@echo "title: $(shell jq -r '.entries[0].title' /tmp/cockpit-blog-download.json)" >> /tmp/cockpit-post.md
@@ -35,7 +44,7 @@ download_content:
 download_assets: /tmp/cockpit-post.md
 	mkdir -p /tmp/cockpit-post-assets
 	grep -oP \"$(HEADLESS_CMS_HOST_REGEXP).*?\" /tmp/cockpit-post.md | uniq | tr -d \" | (xargs wget -P /tmp/cockpit-post-assets/ || true)
-	sed 's/$(HEADLESS_CMS_HOST_REGEXP)\/[^/]\+\/[^/]\+\/[^/]\+\/[^\]\+\/[^\]\+\//.\//' /tmp/cockpit-post.md
+	sed -i 's/$(HEADLESS_CMS_HOST_REGEXP)\/[^/]\+\/[^/]\+\/[^/]\+\/[^\]\+\/[^\]\+\//.\//' /tmp/cockpit-post.md
 
 download_move_files: /tmp/cockpit-post.md /tmp/cockpit-post-assets
 	mv -f /tmp/cockpit-post.md ./content/preview/$(shell jq -r '.entries[0].title' /tmp/cockpit-blog-download.json | tr [:upper:] [:lower:] | tr -d [:cntrl:] | tr -c [:alnum:] '-').md

@@ -11,7 +11,7 @@ title: Tommy Ku's Blog
       figure.side-figure
         img src="#{url_for(article)}#{article[:preview_banner]}" alt="Preview image for #{article[:title]}"
       h4 = article[:title]
-ul#article-list
+ul#article-list.h-feed
   - sorted_articles.each do |article|
     - next if preview?(article) || special?(article)
     - if current_date != attribute_to_time(article[:created_at]).strftime('%Y.%m')
@@ -19,7 +19,7 @@ ul#article-list
         h4
           time
             = current_date = attribute_to_time(article[:created_at]).strftime('%Y.%m')
-    li
-      == link_to article[:title], url_for(article)
+    li.h-entry
+      == link_to article[:title], url_for(article), class: "u-url p-name"
       - if abstract?(article)
-        p.abstract == abstract(article)
+        p.abstract.p-summary == abstract(article)

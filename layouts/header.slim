@@ -1,7 +1,8 @@
 header
-  h2
-    img.author src='/assets/images/author.jpg' alt='Profile pic of Tommy Ku'
-    | Tommy Ku's Blog
+  h2.h-card
+    img.author.u-photo src='/assets/images/author.jpg' alt='Profile pic of Tommy Ku'
+    span.p-name Tommy Ku
+    | 's Blog
   p
     i Reading and thinking
 nav
@@ -9,5 +10,5 @@ nav
   == link_to 'About Me', 'https://tommyku.com'
   == link_to 'AngelList', 'https://angel.co/tommyku'
   == link_to 'LinkedIn', 'https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999'
-  == link_to 'GitHub', 'https://github.com/tommyku'
+  == link_to 'GitHub', 'https://github.com/tommyku', rel: 'me'
   == link_to 'Atom Feed', '/atom.xml'

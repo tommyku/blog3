@@ -49,6 +49,7 @@ download_assets: /tmp/cockpit-post.md
 download_move_files: /tmp/cockpit-post.md /tmp/cockpit-post-assets
 	mv -f /tmp/cockpit-post.md ./content/preview/$(shell jq -r '.entries[0].title' /tmp/cockpit-blog-download.json | tr [:upper:] [:lower:] | tr -d [:cntrl:] | tr -c [:alnum:] '-').md
 	rm -rf ./content/assets/preview_images/$(shell jq -r '.entries[0].title' /tmp/cockpit-blog-download.json | tr [:upper:] [:lower:] | tr -d [:cntrl:] | tr -c [:alnum:] '-')
+	mkdir -p ./content/assets/preview_images
 	mv -f /tmp/cockpit-post-assets ./content/assets/preview_images/$(shell jq -r '.entries[0].title' /tmp/cockpit-blog-download.json | tr [:upper:] [:lower:] | tr -d [:cntrl:] | tr -c [:alnum:] '-')
 
 stage_update:

@@ -6,11 +6,12 @@ title: Tommy Ku's Blog
 - specials = sorted_special_articles
 - if specials.any?
   h3 Featured
-  - specials.each do |article|
-    a.special href=url_for(article)
-      figure.side-figure
-        img src="#{url_for(article)}#{article[:preview_banner]}" alt="Preview image for #{article[:title]}"
-      h4 = article[:title]
+  section#special-article-list
+    - specials.each do |article|
+      a.special href=url_for(article)
+        figure.side-figure
+          img src="#{url_for(article)}#{article[:preview_banner]}" alt="Preview image for #{article[:title]}"
+        h4 = article[:title]
 ul#article-list.h-feed
   - sorted_articles.each do |article|
     - next if preview?(article) || special?(article)

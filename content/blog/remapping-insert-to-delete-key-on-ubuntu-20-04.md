@@ -14,11 +14,11 @@ abstract: Delete key on my ThinkPad X230 fell off years ago, so I repurposed the
 <figcaption>Filmsy keycap of Lenovo ThinkPad's Delete key has broken</figcaption>
 </figure>
 
-I tried a few out-dated methods using `xmodmap` and getting `~/.xinitrc` to run on startup but even if `.xinitrc` is executed, the key is still not mapped.
+I tried a few out-dated methods using `xmodmap`{: .language-} and getting `~/.xinitrc`{: .language-} to run on startup but even if `.xinitrc`{: .language-} is executed, the key is still not mapped.
 
 At the end I stumbled upon [this answer](https://askubuntu.com/questions/325272/permanent-xmodmap-in-ubuntu-13-04/347382) when I was about to give up, and it worked.
 
-I needed to change `/usr/share/X11/xkb/symbols/pc` with as root to modify the behavior of Insert key to Delete. Saved the file, reboot and it worked like a charm.
+I needed to change `/usr/share/X11/xkb/symbols/pc`{: .language-} with as root to modify the behavior of Insert key to Delete. Saved the file, reboot and it worked like a charm.
 
 ~~~diff
 -    key  <INS> {	[  Insert		]	};

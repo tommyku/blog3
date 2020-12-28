@@ -3,6 +3,7 @@
 
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic);
 
+$success-color: #28a745;
 $danger-color: #da1414;
 $warning-color: #ff8800;
 
@@ -245,6 +246,7 @@ img {
 }
 
 section#old,
+section#timeless,
 section#deprecated {
   margin: 1rem 0;
   display: flex;
@@ -277,14 +279,21 @@ section#deprecated {
       color: white;
     }
   }
-}
-
-section#deprecated {
-  p {
-    background-color: $danger-color;
+  &#timeless{
+    p {
+      background-color: $success-color;
+    }
+    span {
+      color: $success-color;
+    }
   }
-  span {
-    color: $danger-color;
+  &#deprecated {
+    p {
+      background-color: $danger-color;
+    }
+    span {
+      color: $danger-color;
+    }
   }
 }
 

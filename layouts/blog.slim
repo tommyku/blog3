@@ -23,7 +23,11 @@ html lang='en'
           time class="dt-published" datetime="#{attribute_to_time(@item[:created_at]).strftime '%FT%T%:z'}" = "#{attribute_to_time(@item[:created_at]).strftime '%B %d, %Y'}"
           | &nbsp;by&nbsp;
           span class="p-author" Tommy Ku
-        - if old?(@item)
+        - if old?(@item) && timeless?(@item)
+          section#timeless
+            span.icon &#9745;
+            p This post is marked timeless by author, even though it is more than 2 years old.
+        - if old?(@item) && !timeless?(@item)
           section#old
             span.icon &#9888;
             p This post is more than 2 years old, it may contain outdated information

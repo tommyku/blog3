@@ -5,6 +5,7 @@ created_at: '2017-01-16 00:00:00 +0800'
 slug: leaving-eventxtra-with-26-lesssons-learned
 preview: false
 special: true
+timeless: true
 preview_banner: banner_preview.jpg
 banner: banner2.jpg
 ---

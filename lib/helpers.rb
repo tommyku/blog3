@@ -6,11 +6,11 @@ include Nanoc::Helpers::Blogging
 include Nanoc::Helpers::LinkTo
 
 def preview?(item)
-  item[:preview] && item[:preview] == true
+  flag_true?(item, :preview)
 end
 
 def special?(item)
-  item[:special] && item[:special] == true
+  flag_true?(item, :special)
 end
 
 def old?(item)
@@ -18,7 +18,15 @@ def old?(item)
 end
 
 def deprecated?(item)
-  item[:deprecated] && item[:deprecated] == true
+  flag_true?(item, :deprecated)
+end
+
+def timeless?(item)
+  flag_true?(item, :timeless) && !flag_true?(item, :deprecated)
+end
+
+def flag_true?(item, flag)
+  item[flag] && item[flag] == true
 end
 
 def sorted_special_articles

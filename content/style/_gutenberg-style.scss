@@ -1,6 +1,11 @@
 /* Gutenberg defaults
    ========================================================================== */
 
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic);
+
+$danger-color: #da1414;
+$warning-color: #ff8800;
+
 // Maximum width of the article (Mobile)
 article,
 body > footer {
@@ -237,6 +242,50 @@ img {
     width: 100%;
     margin-left: 0;
     margin-right: 0;
+  }
+}
+
+section#old,
+section#deprecated {
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  p {
+    display: block;
+    font-size: 0.9rem;
+    flex: 1;
+    background-color: $warning-color;
+    font-family: Open Sans, Arial, Helvetica, Sans-serif;
+    border-radius: 4px;
+    color: white;
+    padding: 0.625rem;
+    margin-bottom: 0;
+  }
+  span {
+    padding-right: 0.5rem;
+    font-size: 3.25rem;
+    color: $warning-color;
+    line-height: 100%;
+    margin-bottom: 0;
+  }
+  a {
+    color: white;
+    &:hover,
+    &:visited,
+    &:active,
+    &:focus {
+      color: white;
+    }
+  }
+}
+
+section#deprecated {
+  p {
+    background-color: $danger-color;
+  }
+  span {
+    color: $danger-color;
   }
 }
 

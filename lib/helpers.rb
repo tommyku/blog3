@@ -13,6 +13,14 @@ def special?(item)
   item[:special] && item[:special] == true
 end
 
+def old?(item)
+  attribute_to_time(item[:created_at]).to_i - Time.now.to_i <= -2 * 3600 * 24 * 365
+end
+
+def deprecated?(item)
+  item[:deprecated] && item[:deprecated] == true
+end
+
 def sorted_special_articles
   sorted_articles.select { |item| special?(item) && !preview?(item) }
 end

@@ -23,6 +23,17 @@ html lang='en'
           time class="dt-published" datetime="#{attribute_to_time(@item[:created_at]).strftime '%FT%T%:z'}" = "#{attribute_to_time(@item[:created_at]).strftime '%B %d, %Y'}"
           | &nbsp;by&nbsp;
           span class="p-author" Tommy Ku
+        - if old?(@item)
+          section#old
+            span.icon &#9888;
+            p This post is more than 2 years old, it may contain outdated information
+        - if deprecated?(@item)
+          section#deprecated
+            span.icon &#9888;
+            p 
+              | This post is marked deprecated by author.&nbsp;
+              a href='/blog/dead-tutorials/' Consider it dead
+              | .
       section#content class="e-content"
         == yield
 

@@ -7,7 +7,9 @@ meta name="description" content=description
 meta name="author" content="Tommy Ku"
 meta property="og:title" content=title
 meta property="og:type" content="article"
-- unless @item[:banner].nil?
+- if @item[:banner].nil?
+  meta property="og:image" content="/assets/images/banner.jpg"
+- else
   meta property="og:image" content="#{url_for(@item)}#{@item[:banner]}"
 link rel="icon" type="image/png" href="/assets/images/author.jpg"
 link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Tommy Ku's Method Stub"

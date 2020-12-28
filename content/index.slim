@@ -4,23 +4,24 @@ title: Tommy Ku's Blog
 
 - current_date = ''
 - specials = sorted_special_articles
-- if specials.any?
-  h3 Featured
-  section#special-article-list
-    - specials.each do |article|
-      a.special href=url_for(article)
-        figure.side-figure
-          img src="#{url_for(article)}#{article[:preview_banner]}" alt="Preview image for #{article[:title]}"
-        h4 = article[:title]
-ul#article-list.h-feed
-  - sorted_articles.each do |article|
-    - next if preview?(article) || special?(article)
-    - if current_date != attribute_to_time(article[:created_at]).strftime('%Y.%m')
-      li.header
-        h4
-          time
-            = current_date = attribute_to_time(article[:created_at]).strftime('%Y.%m')
-    li.h-entry
-      == link_to article[:title], url_for(article), class: "u-url p-name"
-      - if abstract?(article)
-        p.abstract.p-summary == abstract(article)
+section.h-feed
+  - if specials.any?
+    h3 Featured
+    section#special-article-list
+      - specials.each do |article|
+        a.special.h-entry.u-url href=url_for(article)
+          figure.side-figure
+            img src="#{url_for(article)}#{article[:preview_banner]}" alt="Preview image for #{article[:title]}"
+          h4.p-name = article[:title]
+  ul#article-list
+    - sorted_articles.each do |article|
+      - next if preview?(article) || special?(article)
+      - if current_date != attribute_to_time(article[:created_at]).strftime('%Y.%m')
+        li.header
+          h4
+            time
+              = current_date = attribute_to_time(article[:created_at]).strftime('%Y.%m')
+      li.h-entry
+        == link_to article[:title], url_for(article), class: "u-url p-name"
+        - if abstract?(article)
+          p.abstract.p-summary == abstract(article)

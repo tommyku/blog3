@@ -317,3 +317,20 @@ body > footer {
     }
   }
 }
+
+a#tracking-status {
+  display: block;
+  width: 0;
+  line-height: 0;
+  margin: 0 auto;
+  padding: 0;
+  text-decoration: none;
+
+  &.unloaded::before {
+    content: "\1F648";
+  }
+
+  &.loaded::before {
+    content: "\1F440";
+  }
+}

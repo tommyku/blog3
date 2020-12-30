@@ -1,7 +1,7 @@
 ---
 title: Website analytics for lazy people
 kind: article
-created_at: 2020-12-29 21:54:56 +0800
+created_at: 2020-12-30 09:35:58 +0800
 slug: website-analytics-for-lazy-people
 preview: false
 abstract: Being lazy and against self-hosting public-facing services, I made others do it for me
@@ -40,7 +40,7 @@ Therefore, from the users perspective loading this 1x1 pixel, 564 bytes, invisib
 
 The benefit I get from this extra tracking pixel is that every time the bit.ly link is hit, bit.ly would increase its counter and I am able to see the visitor counts to these pages from bit.ly. One caveat to this approach is that I am not able to distinguish repeating visitors, which is fine by me.
 
-When the browser is making a request to the bit.ly URL, it includes a header entry `referrer: https://tommyku.com`{: .language-}, which means for the same site you can reuse the same bit.ly URL across pages. On the bit.ly dashboard you are able to see the breakdown of requests by referrer page.
+When the browser is making a request to the bit.ly URL, it includes a header entry `referrer: https://tommyku.com`{: .language-} <s>, which means for the same site you can reuse the same bit.ly URL across pages. On the bit.ly dashboard you are able to see the breakdown of requests by referrer page.</s> <i>Edit: You cannot. Only the website's domain, not full page URL, is included in referrer field (2020-12-30)</i>
 
 If you want strict segregation between tracking URLs, you can create one bit.ly per page, and link to the same image file. However bit.ly would give you the same bit.ly URL if you're linking to the same URL, so you need to add an extra query parameter (`?now`{: .language-}) to make them look different (bit still resolve to the same image file).
 

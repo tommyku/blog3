@@ -1,6 +1,6 @@
-- if @config[:enable_analytics]
-  a href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" class="unloaded" title="Tracking Indicator"
-  img src="https://bit.ly/3o45bPa" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" onload="javascript: document.querySelector('#tracking-status').classList.replace('unloaded', 'loaded')"
+- if @config[:enable_analytics] || true
+  a href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" class="unloaded" title="I know you viewed this page"
+  img src="https://blog-view.tkcom.workers.dev/?#{url_for(@item)}" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" onload="javascript: document.querySelector('#tracking-status').classList.replace('unloaded', 'loaded')"
   / javascript:
     / (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     / (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

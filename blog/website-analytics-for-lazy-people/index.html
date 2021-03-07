@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Website analytics for lazy people - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Website analytics for lazy people - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Website analytics for lazy people - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Website analytics for lazy people</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2020-12-30T09:35:58+08:00">December 30, 2020</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i></section><section class="e-content" id="content"><p>Imagine shouting into the void where there’s absolutely no echo. This is what it’s like writing this blog after I have <a href="../no-more-google-analytics/">removed Google Analytics</a>. I got organic traffic from time to time back when Google Analytics was enabled, and now I have zero idea.</p>
+
+<p>Pretty sure I am not going back to over-tracking my visitors—but I do want to have an idea at least view counts to my site. Knowing th view count motivates me to continue writing things that someone might find useful.</p>
+
+<p>Being lazy and prefer doing things <a href="../doing-things-the-layman-way/">as simply as possible</a>, I know that most of the web traffic analytics services out there won’t fit. I want something I can drop in, and get out of at any time.</p>
+
+<blockquote>
+  <p>Building a program to automate and perform a computationally expensive task is one thing that all software engineers are more than prepared for. But doing things the layman way and achieve virtually the same result in lower cost is much much better.</p>
+</blockquote>
+
+<h2 id="solution-bitly--tracking-pixel">Solution: bit.ly + tracking pixel</h2>
+
+<figure>
+  <a href="./5feacee4935d9tracking.png" target="_blank">
+    <img src="./5feacee4935d9tracking.png" style="max-width: 100%;" alt="bit.ly link click dashboard">
+  </a>
+<figcaption>bit.ly link click dashboard tracking a bit.ly link to a…pixel.png?</figcaption>
+</figure>
+
+<p>The solution I opted for is easy to set up (took me 10 minutes to get first tracking in) without any configuration. I first created a transparent, 1x1 pixel PNG file. Then, I created a bit.ly link to the pixel.png’s supposed URL.</p>
+
+<p>Then, I inserted the bit.ly link as an <code class="language-">&lt;img&gt;</code> to my homepage’s <code class="language-">index.html</code>.</p>
+
+<pre><code class="language-html">&lt;!-- Tracking pixel --&gt;
+&lt;img src="https://bit.ly/3aP0xkp"
+     style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /&gt;
+</code></pre>
+
+<p>If you have used bit.ly before, you’d have noticed that the URL translation from bit.ly URL to the original URL happens transparently to the user. This is done my a <code class="language-">HTTP 301 Moved Permanently</code> redirection returned by bit.ly, which most browser would automatically follow to the redirected URL.</p>
+
+<p>Therefore, from the users perspective loading this 1x1 pixel, 564 bytes, invisible image won’t make any difference in terms of experience and load speed. To the browser, it’s equally transparent because it’s a <code class="language-">HTTP 301</code> redirection. Ad blockers usually don’t block frequently used link shortener such as bit.ly (my uBlock Origin didn’t block it), so I am more or less sure I am not missing any visitor counts.</p>
+
+<p>The benefit I get from this extra tracking pixel is that every time the bit.ly link is hit, bit.ly would increase its counter and I am able to see the visitor counts to these pages from bit.ly. One caveat to this approach is that I am not able to distinguish repeating visitors, which is fine by me.</p>
+
+<p>When the browser is making a request to the bit.ly URL, it includes a header entry <code class="language-">referrer: https://tommyku.com</code> <s>, which means for the same site you can reuse the same bit.ly URL across pages. On the bit.ly dashboard you are able to see the breakdown of requests by referrer page.</s> <i>Edit: You cannot. Only the website’s domain, not full page URL, is included in referrer field (2020-12-30)</i></p>
+
+<p>bit.ly doesn’t forget to sneak in a cookie, but it can be blocked if user disables third-party cookie.</p>
+
+<figure>
+  <a href="./5ff306fe95e963rd_party_cookie.jpg" target="_blank">
+    <img src="./5ff306fe95e963rd_party_cookie.jpg" style="max-width: 100%;" alt="Cookie from bit.ly getting blocked">
+  </a>
+<figcaption>bit.ly, don’t</figcaption>
+</figure>
+
+<p>If you want strict segregation between tracking URLs, you can create one bit.ly per page, and link to the same image file. However bit.ly would give you the same bit.ly URL if you’re linking to the same URL, so you need to add an extra query parameter (<code class="language-">?now</code>) to make them look different (bit still resolve to the same image file).</p>
+
+<pre><code class="language-text">https://bit.ly/urlTokenA =&gt; https://tommyku.com/assets/pixel.png
+https://bit.ly/urlTokenB =&gt; https://tommyku.com/assets/pixel.png?now
+</code></pre>
+
+<p>bit.ly please don’t block me <s>even though I misused you</s>.</p>
+
+<h2 id="user-friendliness">User-friendliness</h2>
+
+<p>Just to sweeten it a bit for the users to <s>swallow</s> accept this visitor counting approach, I have added an event listener to the tracking pixel <code class="language-">&lt;img&gt;</code> tag which changes from a 🙈 (see no evil monkey) to 👀 (eyes) emoji after the tracking pixel has finished loading.</p>
+
+<figure>
+  <a href="./5feb2b0f3aaaetracking-eye-eye.png" target="_blank">
+    <img src="./5feb2b0f3aaaetracking-eye-eye.png" style="max-width: 100%;" alt="Eyes emoji after tracking pixel is loaded">
+  </a>
+<figcaption>“I see you” (on bit.ly)</figcaption>
+</figure>
+
+<p>Clicking on the icon leads users to this article. Visitors will then realize that their visit is being counted.</p>
+
+<pre><code class="language-html">&lt;style&gt;
+  a#tracking-status {
+    display: block;
+    width: 0;
+    line-height: 0;
+    margin: 0 auto;
+    padding: 0;
+    text-decoration: none;
+  }
+
+  a#tracking-status.unloaded::before {
+    content: "\1F648";
+  }
+
+  a#tracking-status.loaded::before {
+    content: "\1F440";
+  }
+&lt;/style&gt;
+&lt;!-- Tracking pixel --&gt;
+&lt;a href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" class="unloaded" title="Tracking Indicator"&gt;&lt;/a&gt;
+&lt;img src="https://bit.ly/3aP0xkp"
+     style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;"
+     onload="javascript: document.querySelector('#tracking-status').classList.replace('unloaded', 'loaded')" /&gt;
+</code></pre>
+
+<h2 id="why-not-self-hostuse-other-analytics-services">Why not self-host/use other analytics services</h2>
+
+<p>The market is saturated with web analytics services, most of them have free tier, many available for self-hosting. I could have used any of them instead of going through this approach.</p>
+
+<p>Aside from ordinary web analytics solutions, I could have also analyzed the web server’s <code class="language-">access.log</code> for page view counts.</p>
+
+<p>The reason I didn’t take the <code class="language-">access.log</code> analysis approach is because the site is hosted on GitHub Pages. Despite the middle layer Cloudflare provides analytics service, it comes with a cost. Visit count needs to happen on client side somehow.</p>
+
+<p>As for self-hosted analytics service, I simply don’t want to pay/setup a service on cloud simply for analytics which I need to maintain over the years. At such a small scale I like to do things <a href="../doing-things-the-layman-way/">the layman way</a>.</p>
+
+<p>Lastly, the reason I am not using other hosted analytics service is because this approach is so simple I can easily swap out bit.ly to something else later if I want to.</p>
+
+<h2 id="bonus-reactions">Bonus: reactions</h2>
+
+<p>Loading an image means adding a count to the tracking. If image loading can be controlled by JavaScript, users can selectively load images to record their reactions to the page, such as leaving “Like” on the page.</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../website-analytics-for-lazy-people-again--with-cloudflare-worker/">Website analytics for lazy people again, with Cloudflare Worker</a><p class="abstract">With the serverless hammer everything looks like a nail, this time with page-wise view counts</p></li><li><a href="../a-self-hosting-lifecycle/">A self-hosting lifecycle</a><p class="abstract">How is it like to self-host something? This post describes the process of self-hosting from the initial thought process, to patching and housekeeping, all the way to the end-of-life of a self-hosted service</p></li><li><a href="../relocating-from-openshift-v2/">Relocating from OpenShift v2</a><p class="abstract">Documenting how I migrated my sites to other hosts at minimal cost as the free hosting platform OpenShift v2 I have been using will be closed down soon</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people/" id="permalink">https://blog.tommyku.com/blog/website-analytics-for-lazy-people/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/website-analytics-for-lazy-people/";
+  this.page.identifier = "website-analytics-for-lazy-people";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/website-analytics-for-lazy-people/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

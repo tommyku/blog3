@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="How to make EPUB ebooks with vertical layout? - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="How to make EPUB ebooks with vertical layout? - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>How to make EPUB ebooks with vertical layout? - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">How to make EPUB ebooks with vertical layout?</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2017-08-29T00:00:00+08:00">August 29, 2017</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>For years I have been reading Chinese/Japanese novels on Kindle and
+Google Play Book. While most Japanese books were formatted to
+scroll from right to left and display texts vertically like real
+books, literally none of the Chinese books I have read do the same
+thing. The more I am used to reading physical books, the more this bugs
+me.</p>
+
+<p>In this post, I demonstrating how to convert Chinese EPUB ebook from
+horizontal left-to-right to vertical right-to-left layout.</p>
+
+<figure>
+<img src="./rl-demo.png" style="max-width: 15em;">
+<figcaption>Above: horizontal left-to-right layout. Below: vertical
+right-to-left layout.</figcaption>
+</figure>
+
+<p>If want to follow this step-by-step guide, you can download a sample
+EPUB <a href="https://github.com/tommyku/vertical-epub/raw/master/static/horizontal.epub">here</a>.
+Althought using advanced EPUB editors like Sigil or Calibre will make your life easier,
+the ZIP archiver and text editors that came with your system
+will work just as well.</p>
+
+<h2 id="structure-of-an-epub-file">Structure of an EPUB file</h2>
+
+<p>A EPUB file is essentially a ZIP archive containing HTML files, CSS
+stylesheets, images and some files with metadata for the ebook.</p>
+
+<p>Because EPUB is based on the widely adopted ZIP format, its content can
+be easily extracted with ZIP archiver that bundles with most operating
+systems. You may try to extract the content from my sample EPUB file by:</p>
+
+<pre><code class="language-bash">$ unzip horizontal.epub
+Archive:  horizontal.epub
+ extracting: mimetype
+  inflating: OEBPS/toc.ncx
+  inflating: OEBPS/Text/Section001.xhtml
+  inflating: OEBPS/Style/style.css
+  inflating: OEBPS/content.opf
+  inflating: META-INF/container.xml
+</code></pre>
+
+<p>The file <code>mimetype</code>, as the name suggests, specifies the MIME type of
+the ebook. <code>toc.ncx</code> serves as a table of content.
+<code>META-INF/container.xml</code> indicates the path to the root file
+<code>content.opf</code>. <code>content.opf</code> contains a list of all resources (like
+HTML/CSS files) in the ebook and a <code>&lt;spine&gt;</code> tag helps specifying page
+direction.</p>
+
+<p>Purposes of files in <code>OEBPS/Text</code> and <code>OEBPS/Style</code> are self-explanatory.</p>
+
+<h2 id="css-rules-for-vertical-layout">CSS rules for vertical layout</h2>
+
+<p>One CSS rules that decides the printing behavior of a
+document is <code>writing-mode</code>.</p>
+
+<p><code>writing-mode</code> can have these values: <code>horizontal-tb</code> (this is the initial value),
+<code>vertical-rl</code> and <code>vertical-lr</code>. To print characters vertically from
+right to left, <code>writing-mode</code> should be set to <code>vertical-rl</code>.</p>
+
+<p>Now open <code>OEBPS/Style/styles.css</code> and modify rules in the <code>html</code>
+selector to the following.</p>
+
+<pre><code class="language-css">/* OEBPS/Style/styles.css */
+@charset "utf-8";
+html {
+  -epub-writing-mode: vertical-rl;
+        writing-mode: vertical-rl;
+ }
+/* ... */
+</code></pre>
+
+<p>Since we are simply dealing with HTML and CSS files, we can go ahead and
+open <code>OEBPS/Text/Section001.xhtml</code> in a browser and see the change.</p>
+
+<figure>
+<img src="./writing-mode-initial.png" style="max-width: 15em;">
+<figcaption>Before: text printed horizontally from the left</figcaption>
+</figure>
+
+<figure>
+<img src="./writing-mode-vertical-rl.png" style="max-width: 5em;">
+<figcaption>After: text printed vertically from the right</figcaption>
+</figure>
+
+<p>If the EPUB you are editing does not have a <code>style.css</code> file, you
+must add it inside <code>&lt;head&gt;</code> of each <code>.html</code> and <code>.xhtml</code> file, and add the file path to
+<code>&lt;manifest&gt;</code> tag in <code>content.opf</code> yourself.</p>
+
+<pre><code class="language-xml">&lt;!-- OEBPS/content.opf --&gt;
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="PrimaryID"&gt;
+  ...
+  &lt;manifest&gt;
+    ...
+    &lt;item id="stylesheet" href="./Style/style.css"  media-type="text/css" /&gt;
+    ...
+  &lt;/manifest&gt;
+  ...
+&lt;/package&gt;
+</code></pre>
+
+<pre><code class="language-html">&lt;!-- OEBPS/Text/Section001.xhtml --&gt;
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;
+  &lt;head&gt;
+    ...
+    &lt;link rel="stylesheet" href="../Style/style.css" type="text/css" /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    ...
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Note that <code>writing-mode</code> in EPUB 3 standard adopted the <code>-epub-</code> prefix, which
+borrows properties from CSS Writing Modes 2011-04-28 because when EPUB 3
+was out, CSS Writing Modes was still a W3C working draft. The rule might
+have changed, or will change in the future, yet <code>-epub-</code> prefix guarantees
+behavior consistent to when EPUB 3 standard was defined.</p>
+
+<h2 id="scrolling-from-right-to-left">Scrolling from right to left</h2>
+
+<p>Most reading systems render the pages from left to right, but there’s an optional
+attribute that can reverse the page direction.</p>
+
+<p>In <code>OEBPS/content.opf</code> there is a tag <code>&lt;spine&gt;</code>. You can set its
+<code>page-progression-direction</code> attribute to <code>rtl</code> to make the pages scroll
+from right to left.</p>
+
+<pre><code class="language-xml">&lt;!-- OEBPS/content.opf --&gt;
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="PrimaryID"&gt;
+  ...
+  &lt;spine toc="..." page-progression-direction="rtl"&gt;
+    ...
+  &lt;/spine&gt;
+  ...
+&lt;/package&gt;
+</code></pre>
+
+<p>To test this, you will have to load the EPUB file into your ebook reader
+or use an ebook reader because this is a EPUB behavior, not HTML/CSS
+which we saw in last section.</p>
+
+<h2 id="packing-up-a-epub-file">Packing up a EPUB file</h2>
+
+<p>EPUB files are ZIP archives. You can use a ZIP archiver to pack up the
+files into a EPUB file. In Linux you can do this.</p>
+
+<pre><code class="language-bash">$ zip -0 vertical.epub mimetype
+$ zip -r vertical.epub META-INF OEBPS
+</code></pre>
+
+<p>First <code>mimetype</code> is added to a ZIP archive with file extension <code>.epub</code>,
+then <code>META-INF</code> and <code>OEBPS</code> are added because <code>mimetype</code> should appear
+at the beginning of the EPUB file.</p>
+
+<p>Now you can add the EPUB file into your favorite ebook reader and enjoy
+your document in a vertical, right-to-left layout.</p>
+
+<p>You can find the outcome of the example file <a href="https://github.com/tommyku/vertical-epub/raw/master/static/vertical.epub">here</a>.</p>
+
+<h2 id="references">References</h2>
+
+<p>This post is inspired by or has referenced to these pages:</p>
+
+<ul>
+  <li><a href="http://www.idpf.org/epub/30/spec/epub30-ocf.html">EPUB Open Container Format (OCF) 3.0</a></li>
+  <li><a href="http://epubzone.org/news/epub-3-and-global-language-support">EPUB 3 and Global Language Support | EPUBZone</a></li>
+  <li><a href="https://blog.altova.com/learning-about-epub-structure-and-content/">Learning About EPUB: Structure and Content - Altova Blog</a></li>
+  <li><a href="https://www.zhihu.com/question/21234737">如何制作竖排文字的 Mobi 格式电子书? - 知乎</a></li>
+</ul>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../adding-html5-application-cache-to-speed-up-your-web-app-in-5-minutes/">Adding HTML5 application cache to speed up your web app in 5 minutes</a><p class="abstract">Using AppCache API to cache your web app for faster loading and ability to run offline</p></li><li><a href="../have-fun-building-browser-start-page/">Have fun building browser start page</a><p class="abstract">Owning your browser's start page is a good way to keep your mood up from the work, even though most of the start pages share similar designs</p></li><li><a href="../a-self-hosting-lifecycle/">A self-hosting lifecycle</a><p class="abstract">How is it like to self-host something? This post describes the process of self-hosting from the initial thought process, to patching and housekeeping, all the way to the end-of-life of a self-hosted service</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/how-to-make-epubs-with-vertical-layout/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/how-to-make-epubs-with-vertical-layout/" id="permalink">https://blog.tommyku.com/blog/how-to-make-epubs-with-vertical-layout/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/how-to-make-epubs-with-vertical-layout/";
+  this.page.identifier = "how-to-make-epub-ebooks-with-vertical-layout";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/how-to-make-epubs-with-vertical-layout/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

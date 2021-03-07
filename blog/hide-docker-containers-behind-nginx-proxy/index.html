@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Hide Docker containers behind Nginx proxy - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Hide Docker containers behind Nginx proxy - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Hide Docker containers behind Nginx proxy - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Hide Docker containers behind Nginx proxy</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2019-02-06T00:00:00+08:00">February 06, 2019</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>In the <a href="../hide-docker-containers-behind-a-docker-vpn/">last
+post</a>
+I have shown how to put docker containers inside a semi-isolated network
+such that only those connected to the VPN can access the containers
+within the network. The promise comes with two caveats: 1) it’s troublesome
+(not impossible) to get HTTPS on the network and 2) we were access the
+containers via their IP addresses instead of some easy-to-remember
+hostnames.</p>
+
+<p>While those issues can be solved by obtaining the cert via DNS-01
+challenge and roll your own DNS inside the VPN to help resolving
+domain names, it’s way too troublesome.</p>
+
+<p>In the one month that I attempted to host a beanscount web client
+<a href="https://github.com/beancount/fava">Fava</a>, I had to frequently connect
+to the VPN, which isn’t fast or reliable in the first place. I feel that
+this isn’t a convenient and scalable way to incorporate authentication
+to a bunch of containers.</p>
+
+<p>Therefore, I am going to do it the old-school way — HTTP basic
+auth via Nginx reverse proxy.</p>
+
+<h2 id="a-few-words-of-caution">A few words of caution</h2>
+
+<p>Before anyone complains, I am fully aware that basic auth sends
+(more or less) plaintext over HTTP and provides no session
+management/CSRF protection and may be stored on browser for however long
+the browser wants to.</p>
+
+<h2 id="why-nginx-reverse-proxy">Why Nginx reverse proxy?</h2>
+
+<p>From a practical standpoint, using HTTP basic is no more scalable than an
+VPN because individual user still need to be onboarded manually. One
+good thing though, is that with Nginx reverse proxy gives you per-domain
+control on user profiles.</p>
+
+<p>Another good thing about Nginx revese proxy is that since the containers
+are not hidden inside an VPN, they can respond to HTTP-01 challenge,
+making obtaining a HTTPS cert easier and of course, these containers can
+be accessed via traditional domain names similar to any public website.</p>
+
+<h2 id="what-is-a-reverse-proxy">What is a reverse proxy?</h2>
+
+<p>Think about HTTP proxy. For example those that highschool libraries used
+to block YouTube/Twitter/Facebook. What a proxy does, in that sense, is
+to shield an user from a number of different web services. In the view
+of the web services, they are only aware of the proxy but not the users.</p>
+
+<p>A reverse proxy is literally, a proxy that’s reversed. Instead of
+shielding user from web services, it shields web services from users. In
+the view of users, it knows only the reverse proxy itself but not anything
+behind it, which are our docker containers.</p>
+
+<p>As such, one can host multiple containers on the same servers, each exposing
+a port different form 80 and 443. Different domains, for example
+<code>a.example.com</code> and <code>b.example.com</code> would each resolve to the same IP
+address — the IP address of the reverse proxy server. Despite
+under the hood reverse proxy redirects the traffics to the respective
+web services, user never has the knowledge about the individual
+containers because reverse proxy shields the user from the underlying
+docker containers.</p>
+
+<p>You can read more about the internal working of Nginx reverse proxy <a href="https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/">here</a>.</p>
+
+<h2 id="hiding-containers-behind-nginx-proxy">Hiding containers behind nginx proxy</h2>
+
+<p>Like last time, we would create a web service that’s a server serving
+some static content without any authentication. We will then add the
+security layer by hiding it behind a reverse proxy and enable HTTPS
+transmission.</p>
+
+<h3 id="another-word-of-caution">Another word of caution</h3>
+
+<p>In writing this piece I am sharing my personal experience of being lazy
+about the security of some non-critical web services that nobody really
+cares about. I understand HTTP basic authentication is flawed and you
+should too. Note that the approach I documented here comes with no
+warranty. If anything breaks or you unluckily get hacked, it’s solely
+your own responsibility.</p>
+
+<h3 id="server-setup">Server setup</h3>
+
+<ul>
+  <li>A Linode instance with 1GB RAM</li>
+  <li>Ubuntu 18.04</li>
+  <li>Docker 18.06.1-ce</li>
+  <li>Docker image
+    <ul>
+      <li>Nginx reverse proxy: <a href="https://github.com/jwilder/nginx-proxy">jwilder/nginx-proxy</a>
+</li>
+      <li>LetsEncrypt companion for nginx-proxy: <a href="https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion">JrCs/docker-letsencrypt-nginx-proxy-companion</a>
+</li>
+      <li>Web service: <a href="https://hub.docker.com/_/nginx">nginx:1.13.8-alpine</a>
+</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="creating-a-file-storing-the-passphrases">Creating a file storing the passphrases</h3>
+
+<p>First, we need to create a file that contains the credentials for
+HTTP basic authentication. To do that, we use a tool called <code>htpasswd</code>
+that comes with <code>apache2-utils</code> in Ubuntu.</p>
+
+<p><code>apache2-utils</code> can be installed by running:</p>
+
+<pre><code class="language-bash"># Install apache2-utils
+$ sudo apt install apache2-utils
+# Verify that htpasswd has been installed
+$ htpasswd
+# ...help info of htpasswd is shown
+</code></pre>
+
+<p>With <code>htpasswd</code> ready, we can create a password file.</p>
+
+<pre><code class="language-bash"># replace `test.domain.name` with a virtual host name of your choice
+$ mkdir ~/htpasswd
+$ htpasswd -c ~/htpasswd/test.domain.name username
+# ...fill in the password according to the promots
+</code></pre>
+
+<p>The file containing our credentials is named <code>test.domain.name</code> because
+nginx-proxy reads htpasswd files accroding to the virtual host’s name.
+So use whatever domain name you’re going to use for your docker
+container as the filename.</p>
+
+<p><small>* You may also consider adding <code>-B</code> for encryption using bcrypt,
+however your Nginx/OS may not be supporting that yet, for details see this <a href="https://stackoverflow.com/questions/31833583/nginx-gives-an-internal-server-error-500-after-i-have-configured-basic-auth">SO post</a>.</small></p>
+
+<h3 id="spinning-up-a-nginx-reverse-proxy">Spinning up a Nginx reverse proxy</h3>
+
+<p>Now it’s time to start a nginx reverse proxy. Don’t worry about
+nginx’s configurations — they are done automatically when we plug
+in the right environmental variables when we later start our web service
+using Docker.</p>
+
+<pre><code class="language-bash">$ docker run --detach \
+    --name nginx-proxy \
+    --publish 80:80 \
+    --publish 443:443 \
+    --volume /etc/nginx/certs \
+    --volume `pwd`/htpasswd:/etc/nginx/htpasswd \
+    --volume /etc/nginx/vhost.d \
+    --volume /usr/share/nginx/html \
+    --volume /var/run/docker.sock:/tmp/docker.sock:ro \
+    jwilder/nginx-proxy
+</code></pre>
+
+<p>Basically, this is all that we need for the reverse proxy. After
+starting the container it will listen to Docker events on <code>docker.sock</code>,
+pick up newly started containers and reconfigure itself automatically.
+You can head over to the image’s <a href="https://github.com/jwilder/nginx-proxy">GitHub page</a>
+for more info.</p>
+
+<h3 id="point-a-domain-name-to-the-server">Point a domain name to the server</h3>
+
+<p>The reverse proxy needs a domain name to resolve which Docker container
+to pass incoming traffic to. For example, it forwards the traffic to
+container A when it reads that users are requesting <code>a.example.com</code> and
+container B when it’s <code>b.example.com</code>. This coordination requires a
+proper domain name to be set up per container.</p>
+
+<p>To do this, you need to add an A record to your domain name’s DNS
+server and point it to the public IP of the reverse proxy. You can point
+multiple A records with different subdomains to the same IP address.</p>
+
+<h3 id="setting-up-the-web-service">Setting up the web service</h3>
+
+<p>Similar to <a href="../hide-docker-containers-behind-a-docker-vpn/">last time</a>,
+we are going to set up a web server serving one static file. And it
+comes with no security. Anyone accessing the page is able to see what it
+serves.</p>
+
+<pre><code class="language-bash">$ mkdir test-web &amp;&amp; cd test-web
+$ echo 'be aware of the lizard people!' &gt; index.html
+
+$ docker run --name test-web \
+    -v `pwd`:/usr/share/nginx/html:ro \
+    --expose 80 \
+    -e 'VIRTUAL_HOST=test.domain.name' # change this \
+    --restart=always \
+    -d \
+    nginx:1.13.8-alpine
+</code></pre>
+
+<p>Assuming your machine is able to resolve the domain name you’ve set up
+on your DNS, you can already see the outcome:</p>
+
+<pre><code class="language-bash">$ curl http://test.domain.name
+# &lt;html&gt;
+# &lt;head&gt;&lt;title&gt;401 Authorization Required&lt;/title&gt;&lt;/head&gt;
+# &lt;body bgcolor="white"&gt;
+# &lt;center&gt;&lt;h1&gt;401 Authorization Required&lt;/h1&gt;&lt;/center&gt;
+# &lt;hr&gt;&lt;center&gt;nginx/1.14.1&lt;/center&gt;
+# &lt;/body&gt;
+# &lt;/html&gt;
+$ curl -u username:password http://test.domain.name
+# be aware of the lizard people!
+</code></pre>
+
+<p>But this is not enough! As we all know HTTP basic authentication sends
+(base64 encoded) plain text password, which is susceptible to
+eavesdropping. To protect this important payload, we have to add HTTPS.</p>
+
+<h3 id="add-https">Add HTTPS</h3>
+
+<p>To add HTTPS, we need to first enable the Let’s Encrypt companion for
+Nginx proxy.</p>
+
+<pre><code class="language-bash">$ docker run --detach \
+    --name nginx-proxy-letsencrypt \
+    --volumes-from nginx-proxy \
+    --volume /var/run/docker.sock:/var/run/docker.sock:ro \
+    jrcs/letsencrypt-nginx-proxy-companion
+</code></pre>
+
+<p>This container would automatically create and renew Let’s Encrypt
+certificates for your docker containers. This alone isn’t enough though,
+we need to configure some environmental variables of our web service to
+let the Let’s Encrypt companion pick them up.</p>
+
+<pre><code class="language-bash">$ docker stop test-web
+$ docker rm test-web
+$ docker run --name test-web \
+    -v `pwd`:/usr/share/nginx/html:ro \
+    --expose 80 \
+    -e 'VIRTUAL_HOST=test.domain.name' # change this \
+    -e 'LETSENCRYPT_HOST=test.domain.name' # add this \
+    -e 'LETSENCRYPT_EMAIL=user@test.domain.name' # add this \
+    --restart=always \
+    -d \
+    nginx:1.13.8-alpine
+</code></pre>
+
+<p>Now the Let’s Encrypt companion should be able to pick up this container
+event and create/renew a certificate for the site. Give it a couple
+minutes and you should be able to access the site using HTTPS without
+invalid server certificate issue.</p>
+
+<p>To debug, you can check the logs by:</p>
+
+<pre><code class="language-bash">$ docker logs nginx-proxy
+# or
+$ docker logs nginx-proxy-letsencrypt
+</code></pre>
+
+<h3 id="enforce-https">Enforce HTTPS</h3>
+
+<p>If you use DNS service provider like Cloudflare that provides page
+rules, you can enforce HTTP by redirecting HTTP traffic to HTTPS.
+Clients will receive HTTP 301 Moved Permanently when requesting through
+HTTP, and be redirected to the HTTPS version of the page.</p>
+
+<p>Also, blocking port 80 may sound like a good idea until one finds that
+Let’s Encrypt companion isn’t able to complete an HTTP-01 challenge
+because by that point it becomes a problem of chicken first or egg first —
+without cert it can’t get a valid response using HTTPS, yet not passing
+HTTP-01 challenge prohibits it from getting a certificate to enable
+HTTPS.</p>
+
+<h2 id="closing-thoughts">Closing thoughts</h2>
+
+<p>Let’s revisit an important thing: HTTP basic authentication isn’t
+an one-size-fit-all security solution, it’s far from being one. Not only
+does it sends credentials as plain text, it is also susceptible to CSRF
+attack. <code>htpasswd</code> file using MD5 to encrypt passwords isn’t exactly
+secure in today’s standard either.</p>
+
+<p>However it gest the job done. You get HTTPS, some degree of security
+without modifying the source of whatever service you’re hosting, and no
+need of an VPN/DNS. As lazy as I am, this is enough for low-critical
+non-confidential applications.</p>
+
+<p>For apps that requires higher level of security, I still recommand the
+VPN approach because VPN provides encrypted transmission
+out-of-the-box and actually isolates your web services from the world
+wide web.</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../easy-access-to-docker-containers-inside-vpn/">Easy access to Docker containers inside VPN</a><p class="abstract">A follow-up to my previous post about hiding docker containers behind VPN, with an DNS for resolving internal hostnames</p></li><li><a href="../hide-docker-containers-behind-a-docker-vpn/">Hide Docker containers behind a Docker VPN</a><p class="abstract">How I safe-guarded my personal web services (many of which have no auth layer at all) without having to integrate authentication to every single of my services</p></li><li><a href="../a-self-hosting-lifecycle/">A self-hosting lifecycle</a><p class="abstract">How is it like to self-host something? This post describes the process of self-hosting from the initial thought process, to patching and housekeeping, all the way to the end-of-life of a self-hosted service</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/hide-docker-containers-behind-nginx-proxy/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/hide-docker-containers-behind-nginx-proxy/" id="permalink">https://blog.tommyku.com/blog/hide-docker-containers-behind-nginx-proxy/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/hide-docker-containers-behind-nginx-proxy/";
+  this.page.identifier = "hide-docker-containers-behind-nginx-proxy";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/hide-docker-containers-behind-nginx-proxy/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

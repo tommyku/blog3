@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="My error checking statment is wrong - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="My error checking statment is wrong - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>My error checking statment is wrong - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">My error checking statment is wrong</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2014-07-23T00:00:00+08:00">July 23, 2014</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>Spent an hour tracking down a bug in updating MySQL row, turned out it has nothing to do with my database library (yes looked into the Medoo library) but my error checking statement.</p>
+
+<p>My code looks like this.</p>
+
+<pre><code class="language-php">$row_affected = $database-&gt;update(//...bleh bleh bleh)
+if ($row_affected != 1) {
+  // http_internal_server_error
+}
+</code></pre>
+
+<p>What it should look like.</p>
+
+<pre><code class="language-php">$row_affected = $database-&gt;update(//...bleh bleh bleh)
+if ($row_affected != 0 &amp;&amp; $row_affected != 1) {
+  // http_internal_server_error
+}
+</code></pre>
+
+<p>What is wrong with my error checking statement? MySQL is so clever that when an UPDATE is trying to update absolutely the same things to the columns, it will not write anything to the database. Then <code>$row_affected</code> will be zero and it throws an error.</p>
+
+<blockquote>
+  <p>If you set a column to the value it currently has, MySQL notices this and does not update it. 
+Source: <a href="http://dev.mysql.com/doc/refman/5.1/en/update.html">MySQL :: MySQL 5.1 Reference Manual :: 13.2.10 UPDATE Syntax</a></p>
+</blockquote>
+
+<p>However, the best fix should be:</p>
+
+<pre><code class="language-php">$row_affected = $database-&gt;update(//...bleh bleh bleh)
+if ($database-&gt;error()[1] != 0) {
+  // http_internal_server_error
+}
+</code></pre>
+
+<p>This error checking statement detects errors in general, with error message available for programmer to debug. I would not have spent an hour fixing that if I had done this in the first time.</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../database-config-trick-hosting-laravel-on-openshift/">Database config trick hosting Laravel on Openshift</a><p class="abstract">Setting environmental variables when running the application on OpenShift without changing the config for each deployment</p></li><li><a href="../create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1/">Create simple contact list application with Laravel and Openshift integration: Part 1</a><p class="abstract">Part 1 of a 2-part tutorial about jump-starting a Laravel project on OpenShift, this part is about making a "Hello World" page</p></li><li><a href="../debugging-by-testing-assumptions/">Debugging by testing assumptions</a><p class="abstract">Recently I have wasted half an hour of my life troubleshooting an issue related to Apache2 and systemd when upgrading from Ubuntu 16.04 to Ubuntu 18.04, here is what I learned</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/my-error-checking-statment-is-wrong/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/my-error-checking-statment-is-wrong/" id="permalink">https://blog.tommyku.com/blog/my-error-checking-statment-is-wrong/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/my-error-checking-statment-is-wrong/";
+  this.page.identifier = "my-error-checking-statment-is-wrong";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/my-error-checking-statment-is-wrong/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

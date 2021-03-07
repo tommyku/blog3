@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Fixing Wireguard Windows unable to start as service - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Fixing Wireguard Windows unable to start as service - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Fixing Wireguard Windows unable to start as service - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Fixing Wireguard Windows unable to start as service</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2019-08-06T00:00:00+08:00">August 06, 2019</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i></section><section class="e-content" id="content"><!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+-->
+
+<p>Wireguard is cool. I happen to be hosting some private web services on a VPS
+instance,some without authentication. To secure them I installed Wireguard and
+restricted access from public Internet. Only traffic coming from Wireguard’s
+interface can go into my hosted service. It’s secure (I hope…), and
+hassle-free.</p>
+
+<p>Now it’s finally the time to have Wireguard set up on my Windows 10 machine
+because I have gotten to use it more often lately. There is an official
+Wireguard client on <a href="https://www.wireguard.com/install/">their website</a> so I
+went on to install it.</p>
+
+<p>Everything went well on my admin user. I was able to add and activate the
+interface.</p>
+
+<figure>
+<img style="max-width: 440px" src="./interface.jpg" alt="Interface properties screen
+of Wireguard">
+<figcaption>And my ethernet connection goes up to 1Gbps, connecting to a crappy
+100Mbps router</figcaption>
+</figure>
+
+<p>I set it up such that only traffic going from/to the <code>10.0.0.0/24</code> subnet is
+using Wireguard’s interface. The rest goes through <code>eth0</code> as before. The
+purpose of using Wireguard is to gain access to services on the VPS, not using
+the VPS as a VPN host.</p>
+
+<p>This setup seemed working until I rebooted the machine and logged into a
+non-admin user as I usually do. This time, there’s a problem. Wireguard isn’t
+connected. When opening the Wireguard client GUI, I was greeted by this message
+box.</p>
+
+<figure>
+<img style="max-width: 100%" src="./wireguard-message.jpg" alt="Error message:
+Manager already installed and running">
+<figcaption>Yeah I know, not helpful</figcaption>
+</figure>
+
+<p>I cannot control the Wireguard as non-admin user. Worse, it doesn’t start
+automatically. I know that Wireguard manager and the Wireguard tunnel I set up
+are running as services and start automatically on boot. Somehow, the tunnel
+cannot be started properly when I boot into non-admin user.</p>
+
+<p>From the <code>services</code> tool of Windows I found this line of log:</p>
+
+<pre><code class="language-plaintext">WireGuardTunnel$Wireguard 服務因下列服務特定錯誤而終止: 
+系統找不到指定的路徑。
+</code></pre>
+
+<p>In English it means Wireguard couldn’t read a particular file. Either it doesn’t
+exist, or Wireguard wasn’t able to read it.</p>
+
+<p>When manually start the <code>WireGuardTunnel$Wireguard</code> service, it works. The
+interface comes back. However, this isn’t good enough for my lazy soul. So I
+went to look at the config file Wireguard was trying to access.</p>
+
+<p><code>WireGuardTunnel$Wireguard</code> starts by reading configurations from this file
+inside the system directory <code>C:\WINDOWS</code>. Apparently, whichever user Windows
+was trying to start this service with, had not the permission to this file.</p>
+
+<pre><code class="language-plaintext">"C:\Program Files\WireGuard\wireguard.exe" /tunnelservice C:\WINDOWS\system32\config\systemprofile\AppData\Local\WireGuard\Configurations\Wireguard.conf.dpapi
+</code></pre>
+
+<p>Well, at this point the fix has became obvious. I granted my non-admin user
+the read permission to this configuration file and rebooted.</p>
+
+<p>It works!!!!!</p>
+
+<h2 id="discussion">Discussion</h2>
+
+<p>At this point I have gotten Wireguard to automatically start when loggin
+in as non-admin user. However there’s a caveat: I granted a non-admin user
+access to the DPAPI-encrypted config file which contains the private key of
+my Wireguard client. Any application can read (but not write to) that file.</p>
+
+<p>Granted, it’s encrypted and the non-admin user has no write permission to
+the folder containing this config file, yet is it possible for malicious
+actors to obtain this file via an exploit in Windows and pretend to be me?</p>
+
+<p>According to Microsoft, DPAPI uses a “pseudo-random 512-bit number named
+a master key” that is “protected using a value that is derived from the
+user’s password”. Who’s the user in this case? The admin group user setting
+up Wireguard? The LocalSystem? Or the non-admin user who requires this
+file to be readable in order make Wireguard service start successfully?</p>
+
+<p>Inexperienced in software development in Windows, I have no answer to this
+question. I am however aware that on the other side of the Wireguard network,
+I can set a static endpoint for my particular machine.</p>
+
+<pre><code class="language-plaintext">[Peer]
+PublicKey = dmVyeSByYW5kb20K...
+AllowedIPs = 20.0.0.4/32
+Endpoint = 1.2.3.4:1234 # host:port of my Windows PC
+</code></pre>
+
+<p>This may be one way to secure my setup because the VPS will verify that
+the traffic came from this particular IP. Malicious have to ues my IP
+address to access the network even though they may have my private key.</p>
+
+<p>This is an ugly workaround, especially if my PC’s public IP changes
+frequently. What would you do? Any better way to deal with this issue?</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../hide-docker-containers-behind-a-docker-vpn/">Hide Docker containers behind a Docker VPN</a><p class="abstract">How I safe-guarded my personal web services (many of which have no auth layer at all) without having to integrate authentication to every single of my services</p></li><li><a href="../easy-access-to-docker-containers-inside-vpn/">Easy access to Docker containers inside VPN</a><p class="abstract">A follow-up to my previous post about hiding docker containers behind VPN, with an DNS for resolving internal hostnames</p></li><li><a href="../hide-docker-containers-behind-nginx-proxy/">Hide Docker containers behind Nginx proxy</a><p class="abstract">How I ditched VPN and embrace basica HTTP authentication when I am too lazy to implement user authentication into individual app</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/fixing-wireguard-windows-unable-to-start-as-service/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/fixing-wireguard-windows-unable-to-start-as-service/" id="permalink">https://blog.tommyku.com/blog/fixing-wireguard-windows-unable-to-start-as-service/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/fixing-wireguard-windows-unable-to-start-as-service/";
+  this.page.identifier = "fixing-wireguard-windows-unable-to-start-as-service";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/fixing-wireguard-windows-unable-to-start-as-service/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

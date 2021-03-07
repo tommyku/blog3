@@ -1,0 +1,2508 @@
+
+  <?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:base="https://blog.tommyku.com/">
+  <id>https://blog.tommyku.com/</id>
+  <title>Tommy Ku's Blog</title>
+  <updated>2021-01-15T15:15:28Z</updated>
+  <link rel="alternate" href="https://blog.tommyku.com/" type="text/html"/>
+  <link rel="self" href="https://blog.tommyku.com/atom.xml" type="application/atom+xml"/>
+  <author>
+    <name>Tommy Ku</name>
+    <uri>https://blog.tommyku.com</uri>
+  </author>
+  <entry>
+    <id>tag:blog.tommyku.com,2021-01-15:/blog/website-analytics-for-lazy-people-again--with-cloudflare-worker/</id>
+    <title type="html">Website analytics for lazy people again, with Cloudflare Worker</title>
+    <published>2021-01-15T15:15:28Z</published>
+    <updated>2021-01-15T15:15:28Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people-again--with-cloudflare-worker/" type="text/html"/>
+    <content type="html">&lt;p&gt;In &lt;a href="../website-analytics-for-lazy-people"&gt;Website analytics for lazy people&lt;/a&gt; I have shown that you can use bit.ly to load a tracking pixel from your page, and thus capture the view count of the page that works even when JavaScript is disabled, and can fly under your ad blocker’s radar.&lt;/p&gt;
+
+&lt;p&gt;For those who finds the previous post on this topic TL;DR, basically I have added a tracking pixel to my site, which loads with the page like any image, and by using a middleman such as URL shortener to capture that request I am able to aggregate the view counts of my page.&lt;/p&gt;
+
+&lt;p&gt;After some time I began using Cloudflare worker, which is a serverless service that has a free tier and key-value storage without extra cost. Using a serverless worker I am able to do tiny tasks and write the results back to the storage entirely for free and without the need of additional infrastructure.&lt;/p&gt;
+
+&lt;p&gt;Then I thought, hey what if I ditch bit.ly and instead use Cloudflare worker to track my page view counts? Given a serverless function what I have more control over how the request sent to it is converted into page view record. I can even add hard-coded parameters to the worker URL in different page to get page-wise view counts.&lt;/p&gt;
+
+&lt;p&gt;I have implemented a quick and dirty page view counter as a Cloudflare worker like below and replaced the bit.ly tracking pixel with this worker tracking pixel. They work exactly the same in high-level, but I am able to track per-page view counts by adding different page parameter (e.g. &lt;code&gt;?http://blog.tommyku.com&lt;/code&gt;) to the URL and have the worker save the counts by page.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-javascript"&gt;addEventListener('fetch', event =&amp;gt; {
+  event.respondWith(handleRequest(event.request))
+})
+
+/**
+ * Respond to the request
+ * @param {Request} request
+ */
+async function handleRequest(request) {
+  const page = decodeURIComponent(new URL(request.url).search.replace(/^\?/, ''));
+  if (page &amp;amp;&amp;amp; page.substr(0, 4) === 'http') {
+    let views = parseInt(await BLOG_VIEW.get(page));
+    if (Number.isNaN(views)) {
+        views = 0;
+    }
+    views++;
+    await BLOG_VIEW.put(page, views);
+  }
+  return Response.redirect('https://blog.tommyku.com/assets/images/pixel.png', 301);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;small&gt;&lt;center&gt;&lt;i&gt;Terribly written code that works ok&lt;/i&gt;&lt;/center&gt;&lt;/small&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2021-01-03:/blog/2020-was-like/</id>
+    <title type="html">2020 was like</title>
+    <published>2021-01-03T09:01:40Z</published>
+    <updated>2021-01-03T09:01:40Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/2020-was-like/" type="text/html"/>
+    <content type="html">&lt;h2 id="in-bullet-points"&gt;In bullet points&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Worked from home&lt;/li&gt;
+  &lt;li&gt;Ran twice a week, swam while had chance&lt;/li&gt;
+  &lt;li&gt;Did more work outside BAU&lt;/li&gt;
+  &lt;li&gt;Organized a few photowalks among friends&lt;/li&gt;
+  &lt;li&gt;Wrote more unit tests and regression tests&lt;/li&gt;
+  &lt;li&gt;Saw a few friends left for another company&lt;/li&gt;
+  &lt;li&gt;Missed my cousin’s wedding due to travel restriction&lt;/li&gt;
+  &lt;li&gt;Became Certified ScrumMaster&lt;/li&gt;
+  &lt;li&gt;Began film photography and got several friends started&lt;/li&gt;
+  &lt;li&gt;Began posting to Instagram &lt;a href="https://www.instagram.com/tommy_ku/"&gt;@tommy_ku&lt;/a&gt; daily&lt;/li&gt;
+  &lt;li&gt;Experimented taking color photos with black and white film&lt;/li&gt;
+  &lt;li&gt;Resumed building plastic models&lt;/li&gt;
+  &lt;li&gt;Spent the most money on eating outside&lt;/li&gt;
+  &lt;li&gt;Set up FreeNAS at home&lt;/li&gt;
+  &lt;li&gt;Hoarded books and old film cameras&lt;/li&gt;
+  &lt;li&gt;Tried to form habits with todo reminders&lt;/li&gt;
+  &lt;li&gt;Spent a bit more time with friends and family&lt;/li&gt;
+  &lt;li&gt;Did a health screening&lt;/li&gt;
+  &lt;li&gt;Read a few books, did a sharing&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id="in-short-tips"&gt;In short tips&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;It is possible to commit no mistakes and still lose. That is not a weakness. That is life. — Jean-Luc Picard (Star Trek: TNG)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;We suffer more in imagination than in reality. — Seneca&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Will I get over it? Mmm…No. But life goes on. — Dwight Schrute (The Office)’s quote cut short to mean differently&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Life is short and full of pain. — Me&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Why not? Life is short, life is dull, life is full of pain - and this is a chance for something special. — Woody Allen&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Everyone has something that makes them adorable and everyone has their fears. Everyone is vulnerable inside no matter how tough they look from the outside. — Somewhere online or Me&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;You do not rise to the level of your goals. You fall to the level of your systems.
+&lt;br&gt;
+Your goal is your desired outcome. Your system is the collection of daily habits that will get you there.
+&lt;br&gt;
+This year, spend less time focusing on outcomes and more time focusing on the habits that precede the results. — James Clear in Atomic Habits&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I came to that a long time ago.
+I have a olympic swimming pool of hatred inside me.
+&lt;br&gt;
+But it’s usually behind a closed door.
+That’s why I’m calm and peaceful, because I don’t deny what I think and feel.
+&lt;br&gt;
+Doesn’t mean I swim in it all day long — Somewhere online or Me&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id="in-photos"&gt;In photos&lt;/h2&gt;
+
+&lt;style&gt;
+    #photogrid {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        grid-template-rows: auto;
+        align-items: stretch;
+        column-gap: 4px;
+        row-gap: 4px;
+    }
+    #photogrid img {
+        margin: 0;
+    }
+    
+    @media screen and (max-width: 30em) {
+        #photogrid {
+            grid-template-columns: 100%;
+        }
+    }
+&lt;/style&gt;
+
+&lt;section id="photogrid"&gt;
+    &lt;img src="./5ff1795f7369601.jpg" alt="01.jpg"&gt;
+    &lt;img src="./5ff1795fb2aa102.jpg" alt="02.jpg"&gt;
+    &lt;img src="./5ff179600620c03.jpg" alt="03.jpg"&gt;
+    &lt;img src="./5ff179604e43404.jpg" alt="04.jpg"&gt;
+    &lt;img src="./5ff179608f6f905.jpg" alt="05.jpg"&gt;
+    &lt;img src="./5ff17960c151806.jpg" alt="06.jpg"&gt;
+    &lt;img src="./5ff1796101c3907.jpg" alt="07.jpg"&gt;
+    &lt;img src="./5ff179612accb08.jpg" alt="08.jpg"&gt;
+    &lt;img src="./5ff179616c47f09.jpg" alt="09.jpg"&gt;
+    &lt;img src="./5ff17961c1d1f10.jpg" alt="10.jpg"&gt;
+&lt;/section&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2020-12-30:/blog/website-analytics-for-lazy-people/</id>
+    <title type="html">Website analytics for lazy people</title>
+    <published>2020-12-30T01:35:58Z</published>
+    <updated>2020-12-30T01:35:58Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people/" type="text/html"/>
+    <content type="html">&lt;p&gt;Imagine shouting into the void where there’s absolutely no echo. This is what it’s like writing this blog after I have &lt;a href="../no-more-google-analytics/"&gt;removed Google Analytics&lt;/a&gt;. I got organic traffic from time to time back when Google Analytics was enabled, and now I have zero idea.&lt;/p&gt;
+
+&lt;p&gt;Pretty sure I am not going back to over-tracking my visitors—but I do want to have an idea at least view counts to my site. Knowing th view count motivates me to continue writing things that someone might find useful.&lt;/p&gt;
+
+&lt;p&gt;Being lazy and prefer doing things &lt;a href="../doing-things-the-layman-way/"&gt;as simply as possible&lt;/a&gt;, I know that most of the web traffic analytics services out there won’t fit. I want something I can drop in, and get out of at any time.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Building a program to automate and perform a computationally expensive task is one thing that all software engineers are more than prepared for. But doing things the layman way and achieve virtually the same result in lower cost is much much better.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id="solution-bitly--tracking-pixel"&gt;Solution: bit.ly + tracking pixel&lt;/h2&gt;
+
+&lt;figure&gt;
+  &lt;a href="./5feacee4935d9tracking.png" target="_blank"&gt;
+    &lt;img src="./5feacee4935d9tracking.png" style="max-width: 100%;" alt="bit.ly link click dashboard"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;bit.ly link click dashboard tracking a bit.ly link to a…pixel.png?&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The solution I opted for is easy to set up (took me 10 minutes to get first tracking in) without any configuration. I first created a transparent, 1x1 pixel PNG file. Then, I created a bit.ly link to the pixel.png’s supposed URL.&lt;/p&gt;
+
+&lt;p&gt;Then, I inserted the bit.ly link as an &lt;code class="language-"&gt;&amp;lt;img&amp;gt;&lt;/code&gt; to my homepage’s &lt;code class="language-"&gt;index.html&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-html"&gt;&amp;lt;!-- Tracking pixel --&amp;gt;
+&amp;lt;img src="https://bit.ly/3aP0xkp"
+     style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you have used bit.ly before, you’d have noticed that the URL translation from bit.ly URL to the original URL happens transparently to the user. This is done my a &lt;code class="language-"&gt;HTTP 301 Moved Permanently&lt;/code&gt; redirection returned by bit.ly, which most browser would automatically follow to the redirected URL.&lt;/p&gt;
+
+&lt;p&gt;Therefore, from the users perspective loading this 1x1 pixel, 564 bytes, invisible image won’t make any difference in terms of experience and load speed. To the browser, it’s equally transparent because it’s a &lt;code class="language-"&gt;HTTP 301&lt;/code&gt; redirection. Ad blockers usually don’t block frequently used link shortener such as bit.ly (my uBlock Origin didn’t block it), so I am more or less sure I am not missing any visitor counts.&lt;/p&gt;
+
+&lt;p&gt;The benefit I get from this extra tracking pixel is that every time the bit.ly link is hit, bit.ly would increase its counter and I am able to see the visitor counts to these pages from bit.ly. One caveat to this approach is that I am not able to distinguish repeating visitors, which is fine by me.&lt;/p&gt;
+
+&lt;p&gt;When the browser is making a request to the bit.ly URL, it includes a header entry &lt;code class="language-"&gt;referrer: https://tommyku.com&lt;/code&gt; &lt;s&gt;, which means for the same site you can reuse the same bit.ly URL across pages. On the bit.ly dashboard you are able to see the breakdown of requests by referrer page.&lt;/s&gt; &lt;i&gt;Edit: You cannot. Only the website’s domain, not full page URL, is included in referrer field (2020-12-30)&lt;/i&gt;&lt;/p&gt;
+
+&lt;p&gt;bit.ly doesn’t forget to sneak in a cookie, but it can be blocked if user disables third-party cookie.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./5ff306fe95e963rd_party_cookie.jpg" target="_blank"&gt;
+    &lt;img src="./5ff306fe95e963rd_party_cookie.jpg" style="max-width: 100%;" alt="Cookie from bit.ly getting blocked"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;bit.ly, don’t&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;If you want strict segregation between tracking URLs, you can create one bit.ly per page, and link to the same image file. However bit.ly would give you the same bit.ly URL if you’re linking to the same URL, so you need to add an extra query parameter (&lt;code class="language-"&gt;?now&lt;/code&gt;) to make them look different (bit still resolve to the same image file).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-text"&gt;https://bit.ly/urlTokenA =&amp;gt; https://tommyku.com/assets/pixel.png
+https://bit.ly/urlTokenB =&amp;gt; https://tommyku.com/assets/pixel.png?now
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;bit.ly please don’t block me &lt;s&gt;even though I misused you&lt;/s&gt;.&lt;/p&gt;
+
+&lt;h2 id="user-friendliness"&gt;User-friendliness&lt;/h2&gt;
+
+&lt;p&gt;Just to sweeten it a bit for the users to &lt;s&gt;swallow&lt;/s&gt; accept this visitor counting approach, I have added an event listener to the tracking pixel &lt;code class="language-"&gt;&amp;lt;img&amp;gt;&lt;/code&gt; tag which changes from a 🙈 (see no evil monkey) to 👀 (eyes) emoji after the tracking pixel has finished loading.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./5feb2b0f3aaaetracking-eye-eye.png" target="_blank"&gt;
+    &lt;img src="./5feb2b0f3aaaetracking-eye-eye.png" style="max-width: 100%;" alt="Eyes emoji after tracking pixel is loaded"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;“I see you” (on bit.ly)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Clicking on the icon leads users to this article. Visitors will then realize that their visit is being counted.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-html"&gt;&amp;lt;style&amp;gt;
+  a#tracking-status {
+    display: block;
+    width: 0;
+    line-height: 0;
+    margin: 0 auto;
+    padding: 0;
+    text-decoration: none;
+  }
+
+  a#tracking-status.unloaded::before {
+    content: "\1F648";
+  }
+
+  a#tracking-status.loaded::before {
+    content: "\1F440";
+  }
+&amp;lt;/style&amp;gt;
+&amp;lt;!-- Tracking pixel --&amp;gt;
+&amp;lt;a href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" class="unloaded" title="Tracking Indicator"&amp;gt;&amp;lt;/a&amp;gt;
+&amp;lt;img src="https://bit.ly/3aP0xkp"
+     style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;"
+     onload="javascript: document.querySelector('#tracking-status').classList.replace('unloaded', 'loaded')" /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="why-not-self-hostuse-other-analytics-services"&gt;Why not self-host/use other analytics services&lt;/h2&gt;
+
+&lt;p&gt;The market is saturated with web analytics services, most of them have free tier, many available for self-hosting. I could have used any of them instead of going through this approach.&lt;/p&gt;
+
+&lt;p&gt;Aside from ordinary web analytics solutions, I could have also analyzed the web server’s &lt;code class="language-"&gt;access.log&lt;/code&gt; for page view counts.&lt;/p&gt;
+
+&lt;p&gt;The reason I didn’t take the &lt;code class="language-"&gt;access.log&lt;/code&gt; analysis approach is because the site is hosted on GitHub Pages. Despite the middle layer Cloudflare provides analytics service, it comes with a cost. Visit count needs to happen on client side somehow.&lt;/p&gt;
+
+&lt;p&gt;As for self-hosted analytics service, I simply don’t want to pay/setup a service on cloud simply for analytics which I need to maintain over the years. At such a small scale I like to do things &lt;a href="../doing-things-the-layman-way/"&gt;the layman way&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Lastly, the reason I am not using other hosted analytics service is because this approach is so simple I can easily swap out bit.ly to something else later if I want to.&lt;/p&gt;
+
+&lt;h2 id="bonus-reactions"&gt;Bonus: reactions&lt;/h2&gt;
+
+&lt;p&gt;Loading an image means adding a count to the tracking. If image loading can be controlled by JavaScript, users can selectively load images to record their reactions to the page, such as leaving “Like” on the page.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2020-12-28:/blog/not-looking-for-a-laptop-anymore/</id>
+    <title type="html">Not looking for a laptop anymore</title>
+    <published>2020-12-28T14:55:38Z</published>
+    <updated>2020-12-28T14:55:38Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/not-looking-for-a-laptop-anymore/" type="text/html"/>
+    <content type="html">&lt;figure&gt;
+  &lt;a href="./5fe9e6c747276thinkpadx230.jpeg" target="_blank"&gt;
+    &lt;img src="./5fe9e6c747276thinkpadx230.jpeg" style="max-width: 100%; max-height: 600px;" alt=""&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;This is my ThinkPad X230. There are many like it, but this one is mine&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;On September 2012 I bought my first laptop after relentlessly comparing the several educational offerings at my university. It was a ThinkPad X230. In the following 8 years it has been my primary laptop for study, leisure and work.&lt;/p&gt;
+
+&lt;p&gt;I bought my ThinkPad X230 for HK$6,180 in 2012, which is HK$ 7,005 in 2020’s money. For the same price, it is easy to buy a laptop with way superior spec today but impossible to sell this for anywhere higher than HKD$1,000.&lt;/p&gt;
+
+&lt;p&gt;Despite I have ranted about &lt;a href="../do-i-need-a-new-laptop/"&gt;this laptop growing old&lt;/a&gt;, and &lt;a href="../looking-for-a-laptop/"&gt;looking for a new laptop&lt;/a&gt;, this laptop stays on my desk. I did switch to a Razer Blade 14 2015 for some time before spilling a glass of water over its keyboard, causing it to sometimes refuse to charge the battery. For serious work though, it’s always been the ThinkPad X230.&lt;/p&gt;
+
+&lt;p&gt;This laptop was built like a tank. Its magnesium alloy case cracked and &lt;a href="../remapping-insert-to-delete-key-on-ubuntu-20-04"&gt;Delete key&lt;/a&gt; chipped away. I left a cut on the screen with a screw driver (which recovered on its own over the years) and partially submerged it in rain water. All the while it worked flawlessly and reliably for me.&lt;/p&gt;
+
+&lt;p&gt;These days I kept hearing complaines about poor laptop build-qualities from my peer, made worse by non-serviceable or service-unfriendly design. Planned obsolescence plus the drive to pack more powerful hardware in smaller package causes laptops these days to break even before warranty ends and beyond self-repair more easily. I cannot reasonably expect a shiny expensive laptop I buy today last more than say, 3 years without developing any annoying glitch which I cannot repair by myself or costing almost as much as a new laptop to fix!&lt;/p&gt;
+
+&lt;p&gt;When I stumbled upon a post on LOW-TECH MAGAZINE &lt;a href="https://www.lowtechmagazine.com/2020/12/how-and-why-i-stopped-buying-new-laptops.html"&gt;about buying and using old laptops&lt;/a&gt; from the days when they were built to last, I could instantly sympathize with the author. Instead of having half-working digital junk piling up at my house when the older ones work but glitch irritatingly, I want working laptops that I can repair for cheap.&lt;/p&gt;
+
+&lt;p&gt;While a laptop from the 2000s may seem too old for my need, something from the ThinkPad X 200 series seem like a good fit for me. They are portable, sufficiently performant and come with replaceable battery so battery life is less of a concern. I could upgrade them with an SSD or an extra stick of RAM, and they’ll work just fine.&lt;/p&gt;
+
+&lt;p&gt;I can’t imagine how my ThinkPad X230 kicks the bucket in the foreseeable future, or how it becomes so unusable I have to switch to another laptop. So for the time being I am staying with it, not looking for a laptop anymore.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2020-12-24:/blog/a-silent-night-in-the-indieweb-district-of-the-web-town/</id>
+    <title type="html">A silent night in the IndieWeb district of the Web town</title>
+    <published>2020-12-24T16:53:29Z</published>
+    <updated>2020-12-24T16:53:29Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/a-silent-night-in-the-indieweb-district-of-the-web-town/" type="text/html"/>
+    <content type="html">&lt;p&gt;In a corner of the populous Web town lies the IndieWeb district. A small district which lives the people who still remember a time when Web town were the wild west—when new buildings is built every minute in the maze like, almost chaotic town where the only map were manually populated indexes.&lt;/p&gt;
+
+&lt;p&gt;Next to the IndieWeb district, an once vibrant community of the past now largely abandoned, with a small part of it preserved for visiting only. Nothing new is being made in that corner of the town. A majority of it, however, were demolished, forgotten, and never see the sunlight again.&lt;/p&gt;
+
+&lt;p&gt;Against the backdrop of the monolithic constructions, these little districts are almost invisible. People mostly gather in the squares, the bars, the concert halls, the theatres, the markets and the malls where they no longer have control over how their own places are designed or how they work. A lot of what they do is to create content that fits into a limited length, or a square frame, or a tape which all could get censored by the place’s owner, or taken down, or demonetized for an arbitrary “terms of service” the moment they entered the place.&lt;/p&gt;
+
+&lt;p&gt;Oh yeah, there’s no window to peek inside, the bouncer ensures you sign the lengthy “term of service” before you could even enter. Most of them are free to enter, but all content you create stays with the house, even if it changes hand or become “for view only” or they decide to show you ads based on your behavior in the house.&lt;/p&gt;
+
+&lt;p&gt;Ads are ubiquitous, and the houses could have sold all information about you without you noticing it. They know where you’ve been and what you’ve consumed from the dozen wristbands they put on you when you visit. Removing them is troublesome and denying them sometimes means no entry. And you can’t just hit a delete button to remove this profile of yourself.&lt;/p&gt;
+
+&lt;p&gt;On the day of Christmas Eve I moved into the IndieWeb district, or at least tried to. I have a little house of my own. (where you are reading this is called the “blog” room)&lt;/p&gt;
+
+&lt;p&gt;I made a few changes, added signs here and there to make it fit into the community. Most of which pretty hidden, such as linking my place in those big “social places” and my house using “rel=me”. I made sure everyone (even robots) knows who I am using a “h-card”. I ensure everyone, human or robot, understands exactly every piece of decoration in my house, be they a “h-feed” or “h-entry”, suitably supplemented with “e-content” and “dt-published”.&lt;/p&gt;
+
+&lt;p&gt;After moving my cozy little place into the IndieWeb district of the Web town, it’s almost dusk of the Christmas Eve. So I sat by the fireplace, and began writing articles, whilst waiting for visitors to come.&lt;/p&gt;
+
+&lt;p&gt;Nobody came. And I couldn’t finish the bottle of red wine myself.&lt;/p&gt;
+
+&lt;p&gt;The festive decorations and activities of the big social communities in town reminded me. How could someone know about what I put up in my house, if all they see is inside their own communities? Sure, organic traffic sometimes bring lost souls here for a quick glance, before moving on to the popular forums and Q&amp;amp;A boards for the answers they want.&lt;/p&gt;
+
+&lt;p&gt;I still occupy a small corner of the social communities, so I made sure to put up a copy of whatever I have at my house, and include a “permalink”—a map to my house. This is still a manual proces to date, before I can build a robot to do it for me.&lt;/p&gt;
+
+&lt;p&gt;Some folks in the IndieWeb district seem to embrace the work of rebuilding the wheel, in many different ways, shapes or forms and feel proud of their work. I do too, sometimes.&lt;/p&gt;
+
+&lt;p&gt;Oh, a community hall was burned to the ground, gone with it all the creations people have spent countless hours creating and posting there. If one day such thing happens to the community building I frequent, at least I am going to have a golden copy at home. What if my home gots burned down? Boy, go read the &amp;lt;Zen and the Art of IT Backup&amp;gt;.&lt;/p&gt;
+
+&lt;p&gt;The Fediverse? I was there for a while. But it’s still a community hall people gather, not a place they all own and control like my very own house.&lt;/p&gt;
+
+&lt;p&gt;Sipping the last drop of wine in my wineglass, I stood up and stretched my back, knowing that this place, and the district, will remain largely quiet and neglected tonight. But the people of our kind will remain, moving from one place to another, yet staying true to the old days, the old ways when the possibilities and creativities were limitless.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2020-12-24:/blog/remapping-insert-to-delete-key-on-ubuntu-20-04/</id>
+    <title type="html">Remapping Insert to Delete key on Ubuntu 20.04</title>
+    <published>2020-12-24T10:51:19Z</published>
+    <updated>2020-12-24T10:51:19Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/remapping-insert-to-delete-key-on-ubuntu-20-04/" type="text/html"/>
+    <content type="html">&lt;figure&gt;
+  &lt;a href="./5fe46042198abdelete_key_null.jpg" target="_blank"&gt;
+    &lt;img src="./5fe46042198abdelete_key_null.jpg" style="max-width: 100%; max-height: 500px;" alt="Delete key has lot a keycap, replaced by tape"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Filmsy keycap of Lenovo ThinkPad’s Delete key has broken&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;I tried a few out-dated methods using &lt;code class="language-"&gt;xmodmap&lt;/code&gt; and getting &lt;code class="language-"&gt;~/.xinitrc&lt;/code&gt; to run on startup but even if &lt;code class="language-"&gt;.xinitrc&lt;/code&gt; is executed, the key is still not mapped.&lt;/p&gt;
+
+&lt;p&gt;At the end I stumbled upon &lt;a href="https://askubuntu.com/questions/325272/permanent-xmodmap-in-ubuntu-13-04/347382"&gt;this answer&lt;/a&gt; when I was about to give up, and it worked.&lt;/p&gt;
+
+&lt;p&gt;I needed to change &lt;code class="language-"&gt;/usr/share/X11/xkb/symbols/pc&lt;/code&gt; with as root to modify the behavior of Insert key to Delete. Saved the file, reboot and it worked like a charm.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-diff"&gt;-    key  &amp;lt;INS&amp;gt; {	[  Insert		]	};
++    key  &amp;lt;INS&amp;gt; {	[  Delete		]	};
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2020-12-23:/blog/how-the-agat-18k-turns-out/</id>
+    <title type="html">How the AGAT 18K turns out</title>
+    <published>2020-12-23T15:33:40Z</published>
+    <updated>2020-12-23T15:33:40Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/how-the-agat-18k-turns-out/" type="text/html"/>
+    <content type="html">&lt;p&gt;Sometime in November I bought an AGAT 18K on eBay. This camera was produced in Soviet Union by BelOMO (not LOMO) in 1988-1991. AGAT 18K has an unusual vertical configuration like the Yashica Rapide, with viewfinder on one corner. Therefore,  Unlike most other half-frame cameras, photo taken with AGAT 18K is in landscape instead of portrait.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="5fe34b185322f48420029.jpg" target="_blank"&gt;
+    &lt;img src="5fe34b185322f48420029.jpg" style="max-width: 100%; max-height: 750px;" alt="The Chinese University of Hong Kong"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;The Chinese University of Hong Kong (Fuji C200, ISO 200, AGAT 18K)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;a href="5fe34b17d79dc48420015.jpg" target="_blank"&gt;
+    &lt;img src="5fe34b17d79dc48420015.jpg" style="max-width: 100%; max-height: 750px;" alt="Above: red flowers; Below: selfie on a bike's rear-view mirror"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Flowers and selfie how (Fuji C200, ISO 200, AGAT 18K)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Given its samll size and mostly rectangular design, with a reliable lens cap protecting both the lens and the shutter release, AGAT 18K is extremely portable. I can slide it into my pocket without feeling or looking awkward.&lt;/p&gt;
+
+&lt;p&gt;In contrast to the all-plastic body, the Industar-104 f/2.8 28mm (a half-frame is cropped to ~40mm) lens is surprisingly sharp. Though I don’t have much to compare this with except for a few 60+ years old Solina’s Color Apotar or a similarly aged plastic lens of the Isoly 100.&lt;/p&gt;
+
+&lt;p&gt;AGAT 18K isn’t targeted to film photography beginners because it has limited control over the exposure. User can only select the film speed and aperture by rotating the 2 rings around the lens. There is no shutter speed control. According to the manual, the shutter speed is selected automatically by the combination of film speed and aperture setting, which is supposed to match the light condition symbols opposite to the aperture numbers.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="5fdc6b0d1170eagat-18k.jpg" target="_blank"&gt;
+    &lt;img src="5fdc6b0d1170eagat-18k.jpg" style="max-width: 100%; max-height: 500px;" alt="AGAT 18K in hand"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;AGAT 18K fits right into my palm&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;No, AGAT 18K isn’t for beginner, it’s for the &lt;em&gt;noobs&lt;/em&gt; who doesn’t even know about the exposure triangle. You have little control over depth of field for a given light condition because compensating by shutter speed isn’t reliably available (available, though, by fiddling with the film speed ring). Just shoot and hope for the best.&lt;/p&gt;
+
+&lt;p&gt;Other than hoping the shot turns out well, another thing one can do is to bracket the shot by under- and overexposing by a stop. Out of the 3 shots you are likely to get at least a good one. For example, the 2 half-frames below show a correctly exposed and an underexposed shot—an Instagram poll showed that 90% of the people replied prefer the underexposed shot.&lt;/p&gt;
+
+&lt;p&gt;Well, who said shooting half-frame means you get 2 times the images of shooting full frame?&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="5fe34fd9be33548420032.jpg" target="_blank"&gt;
+    &lt;img src="5fe34fd9be33548420032.jpg" style="max-width: 100%; max-height: 750px;" alt="Above: properly exposed; Below: underexposed"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Different aperture setting resulting in different outcomes (Fuji C200, ISO 200, AGAT 18K)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Sometimes unrelated shots may seem related and create a story-telling opportunity out of nowhere, in Duane Michals style, but that’s rare unless you actively work towards it. Below is a almost-has-a-story-shot for example.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="5fe35f0b01f5548420017.jpg" target="_blank"&gt;
+    &lt;img src="5fe35f0b01f5548420017.jpg" style="max-width: 100%; max-height: 750px;" alt="Man holding his son over the fence"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Kid, there won’t be a witness (Fuji C200, ISO 200, AGAT 18K)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;If you are doing panorama, make sure you take them right to left, with the camera rotated along the viewfinder counter-clockwise by 90° because the frames are by default landscape and films are winded right-to-left. Or at least that’s how my lab likes to process them.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="5fe35ccfa82b905940018_pano.jpg" target="_blank"&gt;
+    &lt;img src="5fe35ccfa82b905940018_pano.jpg" style="max-width: 100%; max-height: 750px;" alt="Panoramic shot in 4 half-frames"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Half-frames reordered to form a panoramic shot (Hitchcock 250D, ISO 250, AGAT 18K)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Framing is unreliable. The viewfinder of my AGAT 18K does have a barely visible set of framelines but is invisible 100% when I shoot from it. At some point someone may have opened it up and washed away paints with some weird chemicals, or maybe it degrades naturally.&lt;/p&gt;
+
+&lt;p&gt;Either case, trust your gut not framelines. My gut failed me only once out of 144 shots, and the framelines failed me all the time.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="5fe3603bed08aframeline.jpg" target="_blank"&gt;
+    &lt;img src="5fe3603bed08aframeline.jpg" style="max-width: 100%; max-height: 750px;" alt="Barely visible framelines"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Barely visible framelines, with inner frame for close shots&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Oh and light leaks. Lots of light leaks.&lt;/p&gt;
+
+&lt;p&gt;AGAT 18K’s predecessor AGAT 18 has the same problem and perhaps due to cost-saving BelOMO didn’t address this problem at all. The plastic behind the lens reflects light when the camera is pointing at a light source at some angles, leaving an unpleasant light spot on the frame or even another frame.&lt;/p&gt;
+
+&lt;p&gt;It is possible to apply non-reflective material to the interior of the chamber to eliminate this reflective light leaks, just as what &lt;a href="https://blog.xuite.net/liquormania/wretch/130594167-AGAT+18k+%E5%85%A7%E9%83%A8%E5%8F%8D%E5%B0%84%E9%98%B2%E6%AD%A2%E8%99%95%E7%90%86"&gt;someone has done before&lt;/a&gt;.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="5fe352caae09448420008.jpg" target="_blank"&gt;
+    &lt;img src="5fe352caae09448420008.jpg" style="max-width: 100%; max-height: 750px;" alt="Light leaks from the shot below affecting the image above"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Light leaking to another frame (Fuji C200, ISO 200, AGAT 18K)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;With all the shortcomings of AGAT 18K aside, I still think this little half-frame plastic box with a good glass lens to be a nice camera to carray in my pocket for scratching my film photography itch every day, as all other alternatives too bulky or too complex for a pleasant, impromptu, perhaps stealthy street shoot.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2020-11-21:/blog/some-more-tricks-on-kodak-funsaver/</id>
+    <title type="html">Some more tricks on Kodak FunSaver</title>
+    <published>2020-11-21T01:13:52Z</published>
+    <updated>2020-11-21T01:13:52Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/some-more-tricks-on-kodak-funsaver/" type="text/html"/>
+    <content type="html">&lt;p&gt;In a &lt;a href="../disposable-camera-for-budget-entry-level-film-photography/"&gt;previous post&lt;/a&gt; I have mentioned a disposable camera can be reloaded if you aren’t ready to commit to buying a more functional camera. I used to reload my Kodak FunSaver by rolling the film onto the spool under a bed sheet in the dark.&lt;/p&gt;
+
+&lt;p&gt;Like whatever dubious things teens do under a bed sheet, and in the dark.&lt;/p&gt;
+
+&lt;p&gt;And later when I was Googling on an irrelevent topic I bumped into a &lt;a href="https://www.lomography.com/magazine/248878-the-complete-guide-to-reloading-disposable-cameras"&gt;lomography blog post&lt;/a&gt; with instructions on how to reload a disposable camera in the light.&lt;/p&gt;
+
+&lt;p&gt;Since they’ve explained it that well. I am instead writing to share some tricks I tried knowing that now we can rewind the film without opening the camera.&lt;/p&gt;
+
+&lt;h2 id="reloading-without-a-dark-bag"&gt;Reloading without a dark bag&lt;/h2&gt;
+
+&lt;p&gt;Somebody has already done a detailed &lt;a href="https://www.lomography.com/magazine/248878-the-complete-guide-to-reloading-disposable-cameras"&gt;walkthrough of the how&lt;/a&gt;, so what else should I say about this?&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Open the camear up&lt;/li&gt;
+  &lt;li&gt;Roll only enough film for it to latch on the take-up spool&lt;/li&gt;
+  &lt;li&gt;Put the film in&lt;/li&gt;
+  &lt;li&gt;Close the camera (tight)&lt;/li&gt;
+  &lt;li&gt;Plunk a toothpick or something sharp to lift the arm stopping the wheel from turning backward&lt;/li&gt;
+  &lt;li&gt;Use a flat head screwdriver to roll the film until you can’t&lt;/li&gt;
+  &lt;li&gt;Good to go&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;What’s different about this model of FunSaver is that the gear which is lifting the shutter mechanism up (the gear along the film guide rail) is free to move to and fro. Therefore the only thing stopping our film from moving freely is the arm at the film advance wheel, which we use a toothpick to bypass.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./5fb7dcbe600b4funsaver_wheel.jpg" target="_blank"&gt;
+    &lt;img src="./5fb7dcbe600b4funsaver_wheel.jpg" style="max-width: 100%; max-height: 500px;" alt="FunSaver internal with emphasis on the film advance wheel"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;There is an arm that only allows the film advance wheel to turn in one direction&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;If you are interested in how a simple camera works, pop open the front panel as well. Make sure you’ve fired the flash and taken the battery out though, it might get scary when you accidentally discharge the capacitor with your finger tip.&lt;/p&gt;
+
+&lt;p&gt;But once opened, voila is it simple. Just a couple of springs and gears, no battery or electronics. Those are only for the flash.&lt;/p&gt;
+
+&lt;h2 id="double-exposure-using-kodak-funsaver"&gt;Double exposure using Kodak FunSaver&lt;/h2&gt;
+
+&lt;p&gt;It’s always possible to double expose on any sort of camera. Because it’s essential to rewind after finishing a roll, you could take some shots, rewind, and continue to take shots. New exposures on already exposed films. The overlapping has to be right though, or you end up with overlapping frames.&lt;/p&gt;
+
+&lt;p&gt;On Kodak FunSaver it’s no different except the rolling order is reversed. You can take a couple shots first, then rewind using the trick mentioned above and if you’re lucky, shots are going to line up and you can do some double exposures. Hope they are good.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./5fb7d0d0e1da8funsaver_double_exp.jpg" target="_blank"&gt;
+    &lt;img src="./5fb7d0d0e1da8funsaver_double_exp.jpg" style="max-width: 100%; max-height: 500px;" alt="Double exposed shot on a FunSaver featuring me, psyduck and slowpoke"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;If the two shots line up well&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id="pushing-is-not-always-required"&gt;Pushing is not always required&lt;/h2&gt;
+
+&lt;p&gt;Kodak FunSaver originally comes with a ISO 800 film, which is unusually fast compared to the ISO 200 ColorPlus or ISO 400 UltraMax that I often use. This makes sense because FunSaver has fixed aperture and shutter speed. A layperson wouldn’t know under what lighting condition would the camera under/over expose.&lt;/p&gt;
+
+&lt;p&gt;I think this is a fair design decision, as film is more tolerant to overexposure than under. You may overexpose a few stops without affecting the quality of image much. But when you underexpose, you lose shadow details almost immediately. Using film with faster speed as default means there’s less underexposure, and more salvagable photos out of that roll.&lt;/p&gt;
+
+&lt;p&gt;I used to push an ISO 400 UltraMax to ISO 800 on a FunSaver, until when the lab refused to push and digitally brightened the image instead, they came out ok. In fact, pushing probably won’t add anything to your already overexposed daylight shots, but instead increase grain on an already unsharp plastic lens.&lt;/p&gt;
+
+&lt;p&gt;Pushing isn’t always required unless you know you definitly underexposed most of the shots.&lt;/p&gt;
+
+&lt;h2 id="you-might-use-it-as-a-very-cheap-flash"&gt;You &lt;em&gt;might&lt;/em&gt; use it as a very cheap flash&lt;/h2&gt;
+
+&lt;p&gt;Thought no a FunSaver, &lt;a href="https://www.instructables.com/DIY-Hot-shoe-Triggered-Off-Camera-Flash-Out-of-a-D/"&gt;someone&lt;/a&gt; did take a disposable camera and hook the wires to a hotshoe and got the flash it to fire. If you come from an electronic engineering background or don’t mind getting your hands dirty tinkering with it, you could make yourself a flash from a salvaged disposable camera body.&lt;/p&gt;
+
+&lt;p&gt;For me, I have only gotten as far as triggering the flash by touching the two contacts. I simply don’t have the time and knowledge to do this properly without the risk of damaging the triggering camera’s hotshoe.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="5fb7cc0317e0dfunsaver_flash_switch.jpg" target="_blank"&gt;
+    &lt;img src="5fb7cc0317e0dfunsaver_flash_switch.jpg" style="width: 100%; max-width: 500px;" alt="Front of FunSaver, circuit board, switch contacts"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Two ends of FunSaver’s flash switch that can be triggered by the leaf shutter’s movement&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;a href="5fb7cc02c88d7funsaver_flash_fire.jpg" target="_blank"&gt;
+    &lt;img src="5fb7cc02c88d7funsaver_flash_fire.jpg" style="width: 100%; max-width: 500px;" alt="Front of FunSaver, circuit board, flash switch closed by shutter movement"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;The shutter leaf handle moves, closing the switch and fire the flash&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id="pass-it-on-to-someone"&gt;Pass it on to someone&lt;/h2&gt;
+
+&lt;p&gt;I started out with nothing but a Fuji Simple Ace disposable film camera, then reloaded Kodar FunSaver for quite some time (I’ve reloaded the same &lt;em&gt;disposable&lt;/em&gt; FunSaver at least 8 times).&lt;/p&gt;
+
+&lt;p&gt;Now my collection has grown to 5 AGFA viewfinders, with an AGAT 18K being shipped my way, a FunSaver can no longer satisfy my daily film photography need. I still reload a second FunSaver which I share with my sister and bring it with me when I simply want something to throw into my pocket, though much less often than before.&lt;/p&gt;
+
+&lt;p&gt;That doesn’t mean the FunSaver can be thrown away or stashed somewhere waiting to be forgotten. Instead, it should be passed on. Clean it up (those sticker gunk…), decorate it thoughtfully and make it a special &lt;s&gt;cheap&lt;/s&gt; present to a friend who may also be interested. Or even better donate it to kids with instruction how to reload!&lt;/p&gt;
+
+&lt;p&gt;Even a mass-produced, cheap and simple camera deserves to live on. I believe only then, people can truly appreciate its predecessors and protect the legacy of a century of photographic ingenuities — simple point-and-shoot and feature-rich SLRs alike.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2020-07-12:/blog/no-more-google-analytics/</id>
+    <title type="html">No more Google Analytics</title>
+    <published>2020-07-12T11:58:01Z</published>
+    <updated>2020-07-12T11:58:01Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/no-more-google-analytics/" type="text/html"/>
+    <content type="html">&lt;p&gt;It was done in commit &lt;a href="https://github.com/tommyku/blog3/commit/781edb5e523d5a6e08339d58035806f073a4a131"&gt;781edb5e523d5a6e08339d58035806f073a4a131&lt;/a&gt;. I don’t need it anymore.&lt;/p&gt;
+
+&lt;p&gt;Still keeping disqus as some people did ask my questions or gave me feedbacks.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2020-07-04:/blog/7-additional-tips-on-using-disposable-camera/</id>
+    <title type="html">7 additional tips on using disposable camera</title>
+    <published>2020-07-04T16:00:00Z</published>
+    <updated>2020-07-04T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/7-additional-tips-on-using-disposable-camera/" type="text/html"/>
+    <content type="html">&lt;p&gt;In my previous post &lt;a href="../disposable-camera-for-budget-entry-level-film-photography/"&gt;Disposable camera for budget entry-level film photography&lt;/a&gt; I have advocated the use of disposable cameras as the starting point of film photography.&lt;/p&gt;
+
+&lt;p&gt;Fast-forward 3 months, I had reloaded the same Kodak FunSaver 4 times and is currently on my 5th roll of Kodak UltraMax 400. The camera works perfectly fine despite branded to be “single-use” and “disposable”.&lt;/p&gt;
+
+&lt;p&gt;In this post I am going to share some tips I gathered after 3 months of usage. A disposable camera can serve as a portable secondary camera in addition to the your main camera once you have passed the entry-level stage. Before moving onto the tips, below are some pictures I have taken using my reloaded FunSaver.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./5f01cd0fb58185f0096bded0faIMG_0003.jpg" target="_blank"&gt;
+    &lt;img src="./5f01cd0fb58185f0096bded0faIMG_0003.jpg" style="width: 100%; max-width: 480px;" alt="Cloth hangers"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Taken with reloaded Kodak FunSaver (UltraMax 400 pushed+1, ISO 800, f/11, 1/100, 30mm)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;a href="./5f01cd110ac435f0096f0b0c4e000043180022.jpg" target="_blank"&gt;
+    &lt;img src="./5f01cd110ac435f0096f0b0c4e000043180022.jpg" style="width: 100%; max-width: 480px;" alt="Street of Mong Kok"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Taken with reloaded Kodak FunSaver (UltraMax 400, ISO 400, f/11, 1/100, 30mm)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;a href="./5f01cd10b0c8f5f00971beae0503660034.jpg" target="_blank"&gt;
+    &lt;img src="./5f01cd10b0c8f5f00971beae0503660034.jpg" style="width: 100%; max-width: 480px;" alt="Chinese restaurant"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Taken with reloaded Kodak FunSaver (UltraMax 400 pushed+1, ISO 800, f/11, 1/100, 30mm)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;I hope these photos are enough to persuade you to read on — they aren’t as good as what I took using my main camera, but they are good enough.&lt;/p&gt;
+
+&lt;h2 id="tip-1-detatch-the-hidden-latch"&gt;Tip 1: Detatch the hidden latch&lt;/h2&gt;
+
+&lt;p&gt;When opening up the FunSaver, it is obvious that latches on the sides should be detatched first, right after removing the film roll and battery caps.&lt;/p&gt;
+
+&lt;p&gt;This can easily be done by sliding something thin into the gap and push the back plate off.&lt;/p&gt;
+
+&lt;p&gt;And it may be tempting to now pull the back plate off by forcing the top latch off. This is difficult and the top latch was perhaps added to deceive people.&lt;/p&gt;
+
+&lt;!-- photo of the bottom latch --&gt;
+
+&lt;p&gt;Because if one detatches the hidden latch within the battery compartment instead, the top latch can easily be detatched by rotating the now mostly free back plate.&lt;/p&gt;
+
+&lt;h2 id="tip-2-cock-the-shutter-first"&gt;Tip 2: Cock the shutter first&lt;/h2&gt;
+
+&lt;p&gt;Unlike conventional film camera where films are rolled out from the film canister as photos are taken, on FunSaver the entire roll of film is unrolled onto the spool, and rolled back into the canister as photos are taken.&lt;/p&gt;
+
+&lt;!-- photo with which gear to turn --&gt;
+
+&lt;p&gt;This means that your last few shots may be shot on already exposed film segment. Every shot right after reloading counts up until the last 2-3 shots. To not waste any shot, make sure you turn the gear to cock the shutter before closing the case.&lt;/p&gt;
+
+&lt;p&gt;Otherwise, you’ll need to advance the film to cock the shutter and end up with one shot of unused film.&lt;/p&gt;
+
+&lt;h2 id="tip-3-ensure-the-film-can-be-advanced"&gt;Tip 3: Ensure the film can be advanced&lt;/h2&gt;
+
+&lt;p&gt;Before closing the case run your finger along the top square holes of the film. Feel with your finger tip that the film advance gear is properly going through the square holes on the film.&lt;/p&gt;
+
+&lt;p&gt;If this is not done properly, no matter how many times your turn the film advance wheel you won’t be able to advance the film and prime for the next shot. In such case, repoen the camera (in the dark, of course) and check again.&lt;/p&gt;
+
+&lt;h2 id="tip-4-keep-the-tension-on-the-spool"&gt;Tip 4: Keep the tension on the spool&lt;/h2&gt;
+
+&lt;p&gt;The compartment of most disposable cameras are designed to house a roll of film with 27 shots, while most of the 135 film available have 36 shots. This means if your film is only loosely rolled onto the spool it won’t fit back into the compartment.&lt;/p&gt;
+
+&lt;p&gt;As you pull the film out of the film canister and onto the spool, it is important to keep the tension on the spool by pressing on the film on spool and pull routinely to keep the tension on the spool.&lt;/p&gt;
+
+&lt;p&gt;Just make sure you don’t tear the film strip when applying tension.&lt;/p&gt;
+
+&lt;h2 id="tip-5-wash-hands-before-loading-film"&gt;Tip 5: Wash hands before loading film&lt;/h2&gt;
+
+&lt;p&gt;I used to wear some rubber finger cots while rolling the film onto the spool until I found out that if the reloading is done properly my fingers wouldn’t even touch the center of the film.&lt;/p&gt;
+
+&lt;p&gt;However, I’ve always washed my hands before touching the film. Oil and dirt on finger could accidentally get onto the light sensitive side of the film and ruin your next million-dollar shot. Better safe than sorry.&lt;/p&gt;
+
+&lt;h2 id="tip-6-make-conscious-choice-about-pushing"&gt;Tip 6: Make conscious choice about pushing&lt;/h2&gt;
+
+&lt;p&gt;In a previous lab I’ve always asked them to push my UltraMax 400 by 1 stop, so I get ISO 800, the same as FunSaver’s original film. However they refused to do it one time, rather impolitely I might add, and the scans still turned out somewhat ok.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./5f01cd1062d725f0175149e619000043180009.jpg" target="_blank"&gt;
+    &lt;img src="./5f01cd1062d725f0175149e619000043180009.jpg" style="width: 100%; max-width: 480px;" alt="Sai Wan pier"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Taken with reloaded Kodak FunSaver (UltraMax 400, ISO 400, f/11, 1/100, 30mm)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;It was because they digitally brightened the scans and cranked the saturation all the way up. I could have done the same post-processing myself if my photos ended up overexposed, which is rare. In other words, it’s ok not to push, and it should remain an option. A lab that impolitely refuse to push is one I will never go again.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./5f01cd10121315f01754f8313803660030.jpg" target="_blank"&gt;
+    &lt;img src="./5f01cd10121315f01754f8313803660030.jpg" style="width: 100%; max-width: 480px;" alt="Chinese restaurant"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Taken with reloaded Kodak FunSaver (UltraMax 400 pushed+1, ISO 800, f/11, 1/100, 30mm)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The takeaway I got is that film is surprisingly tolerant to different exposure conditions. Under/overexposing the film by 1 stop is probably salvageable. And one doesn’t have to match the ISO speed of the original film coming with the disposable camera.&lt;/p&gt;
+
+&lt;p&gt;This is important because labs generally charge extra for pushing films. Pushing film could also introduces color shift and increased grains. If you are comfortable with not pushing, go ahead, take photo at your film’s box speed and save the bucks.&lt;/p&gt;
+
+&lt;h2 id="tip-7-fuji-simpleace-may-kill-you"&gt;Tip 7: Fuji SimpleAce may kill you&lt;/h2&gt;
+
+&lt;p&gt;One day when buying a spare FunSaver I came cross a box of used Fuji SimpleAce. Their films have been taken out for development and without reloading they either go back to Fuji for recycling or to the landfill.&lt;/p&gt;
+
+&lt;p&gt;I got one of those for free. Popping up the front plate was easy. But unlike FunSaver where opening up the camera doesn’t reveal the electronics under the hood, SimpleAce simply (ahem) gives you access to the circuit board.&lt;/p&gt;
+
+&lt;p&gt;Since the flash was charged, I thought it was a good idea (spoiler alert: it wasn’t) to discharge the capacitor holding charge for the next flash by shorting the two pins connecting the capacitor to the board.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./5f01addb656d7IMG_20200703_223215_626.jpg" target="_blank"&gt;
+    &lt;img src="./5f01addb656d7IMG_20200703_223215_626.jpg" style="width: 100%; max-width: 480px;" alt="Fuji SimpleAce with front plate removed"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Look at the size of that capacitor and what kind of evil designed to expose it once opened&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;There was a loud and bright spark, and stunned people in the living room. See, if someone accidentally touches the two pins with bare hand, it is electric shock ensued.&lt;/p&gt;
+
+&lt;p&gt;Just don’t risk it reloading a SimpleAce. It is not simple ┐( ˘_˘)┌ whereas FunSaver is easier and safer.&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;If several SimpleAce flashes are connected in serial does that make a make-shift stun gun? Let me know in the comment…&lt;/small&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2020-04-25:/blog/disposable-camera-for-budget-entry-level-film-photography/</id>
+    <title type="html">Disposable camera for budget entry-level film photography</title>
+    <published>2020-04-25T16:00:00Z</published>
+    <updated>2020-04-25T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/disposable-camera-for-budget-entry-level-film-photography/" type="text/html"/>
+    <content type="html">&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;p&gt;Film photography—is it the forgotten art of the older generation? Most
+people who have a mobile phone nowadays also have a digital camera in their
+pocket, making film feel troublesome, inferior and obsolete.&lt;/p&gt;
+
+&lt;p&gt;I don’t think so that film photography is out of fashion. One of the most
+popular app on smartphones is Instagram which allows for mimicking the look
+and feel of a film photo by applying filters.&lt;/p&gt;
+
+&lt;p&gt;For those who are interested in film the old-fashioned way, I think the easiest
+and cheapest mean to experience film photography is to buy a disposable camera,
+also branded as “film with a lens”. To the manufacturers, they are selling you
+a roll of film with a camera body that you can take photo without any up-front
+investment.&lt;/p&gt;
+
+&lt;p&gt;I am going to share my experience of using disposable camera as a starting
+point to film photography. Everyone’s journey is different and I don’t mean
+to make this post a perscribed way of beginning film photography. I simply
+hope disposable camera could open a door for you like it did for me.&lt;/p&gt;
+
+&lt;p&gt;Nowadays I shoot both digital (Fujifilm XT-20/OnePlus 7T) and film (Agfa
+Solina/Reloaded Kodak FunSaver) photography.&lt;/p&gt;
+
+&lt;h2 id="disposable-cameras-are-cheap"&gt;Disposable cameras are cheap&lt;/h2&gt;
+
+&lt;p&gt;There is a wide variety of disposable camera in the market: Fujifilm QuickSnap,
+Kodak FunSaver and Ilford HP5 to name a few. They are cheap. you can easily get
+one for less than HKD$100 (I got my QuickSnap for $85 and FunSaver for $90). If
+the camera is priced over $100 try other shops. A $138 QuickSnap is absurd
+(talking about you, LOG-ON).&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./simpleace.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./simpleace.jpg" alt="Fujifilm QuickSnap Simple Ace"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Fujifilm QuickSnap Simple Ace (HKD$85, 27 shots)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;a href="./funsaver.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./funsaver.jpg" alt="Kodak FunSaver"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Kodak FunSaver (HKD$90, 27 shots)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;h2 id="disposable-cameras-are-for-friends"&gt;Disposable cameras are for friends&lt;/h2&gt;
+
+&lt;p&gt;Disposable cameras are surprisingly popular. Searching on Instagram for
+&lt;code&gt;#simpleace&lt;/code&gt; or &lt;code&gt;#kodakfunsaver&lt;/code&gt; yields over 10,000 posts for each tag.&lt;/p&gt;
+
+&lt;p&gt;Given its popularity, low price and ease of use, it is easy to invite a friend
+to go shooting with you. Or you can just buy a brunch of them and distribute to
+your friends when you guys are going out.&lt;/p&gt;
+
+&lt;p&gt;It will be a fun experience. You will discuss composition, lighting condition
+and instructions written in Japanese that nobody really understands.&lt;/p&gt;
+
+&lt;p&gt;Instead of frustrating yourself by reading long online tutorial and articles
+on how the aperture, shutter speed and ISO make up the exposure triangle, you
+go out, point and shoot, and generally having a good time with friends. This
+helps kickstarting a positive feedback loop for more film photography down
+the line.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./lured.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 960px;" src="./lured.jpg" alt="Friends lured"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Friends who I went out shooting with, note the Simple Ace modified with wide-angle lens in the middle&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;h2 id="disposable-camera-may-be-tricky-to-use"&gt;Disposable camera may be tricky to use&lt;/h2&gt;
+
+&lt;p&gt;With a low price tag, it is conceivable that the image quality you get out of
+the plastic disposable camera lens is inferior to coated glass lens of a
+rangefinder/SLR camera. However you can reasoanbly expect to at least recognize
+whatever you are trying to take photo of, sometimes even amazed by the outcome.&lt;/p&gt;
+
+&lt;h3 id="comparing-disposable-camera-with-smartphone-camera"&gt;Comparing disposable camera with smartphone camera&lt;/h3&gt;
+
+&lt;p&gt;What makes disposable cameras tricky to use is it’s fixed aperture size (how
+much light goes through the lens), shutter speed (how long a film is exposed to
+light) and focal length (angle of view in the resultant photo). To better
+illustrate this find below two photos taken under the same lighting condition
+using a Kodak FunSaver and a OnePlus 7T respectively.&lt;/p&gt;
+
+&lt;p&gt;You may click on the images for an enlarged view.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./sunset_funsaver800.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./sunset_funsaver800.jpg" alt="Sunset taken using Kodak FunSaver 800"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Sunset at Tsing Yi, Kodak FunSaver (ISO 800, f/11, 1/100, 30mm)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;a href="./sunset_op7t.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./sunset_op7t.jpg" alt="Sunset taken using OnePlus 7T"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Sunset at Tsing Yi, OnePlus 7T (ISO 125, f/2.2, 1/1475, 2.25mm)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;p&gt;Let’s analyze the photos with respect to their settings:&lt;/p&gt;
+
+&lt;h4 id="kodak-funsaver"&gt;Kodak FunSaver&lt;/h4&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style="text-align: left"&gt;Category&lt;/th&gt;
+      &lt;th style="text-align: left"&gt;Analysis&lt;/th&gt;
+      &lt;th style="text-align: left"&gt;Reason&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style="text-align: left"&gt;&lt;strong&gt;Brightness&lt;/strong&gt;&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;Overexposed, sky details lost&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;High ISO (higher sensitivity) and slower shutter speed (longer exposure) despite small aperture (less light)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style="text-align: left"&gt;&lt;strong&gt;Viewing angle&lt;/strong&gt;&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;Narrower, little distortion compared to human eyes&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;30mm focal length&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style="text-align: left"&gt;&lt;strong&gt;Color&lt;/strong&gt;&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;Bluish, orange sunset is barely recognizable&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;Kodak film less sensitive to blue&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style="text-align: left"&gt;&lt;strong&gt;Sharpness&lt;/strong&gt;&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;Grainy, unsharp&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;35mm film size, film chemistry, plastic lens&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;hr&gt;
+
+&lt;h4 id="oneplus-7t"&gt;OnePlus 7T&lt;/h4&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style="text-align: left"&gt;Category&lt;/th&gt;
+      &lt;th style="text-align: left"&gt;Analysis&lt;/th&gt;
+      &lt;th style="text-align: left"&gt;Reason&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style="text-align: left"&gt;&lt;strong&gt;Brightness&lt;/strong&gt;&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;Slightly underexposed, sky details retained at the cost of boat details&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;Low ISO (low sensitivity) and high shutter speed (shorter exposure) despite large apterture (more light)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style="text-align: left"&gt;&lt;strong&gt;Viewing angle&lt;/strong&gt;&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;Very wide, distortion visible near the edges&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;2.25mm focal length, more optical distortion&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style="text-align: left"&gt;&lt;strong&gt;Color&lt;/strong&gt;&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;Yellowish, more saturated, some color details lost at low-light portion&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;Underexposure preserves highlight details and color&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style="text-align: left"&gt;&lt;strong&gt;Sharpness&lt;/strong&gt;&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;Sharp&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;Digital image sensor, glass lens&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;If I were to take the film photo again, I would have used a faster shutter
+speed and smaller focal length so it preserves that grainy, slightly
+color-shifted film feel while not looking so washed out due to overexposure.
+The problem is that you have no such choice with disposable camera. Everything
+is fixed: ISO 800 light sensitivity, f/11 aperture, 1/100 shutter speed, 30mm
+focal length.&lt;/p&gt;
+
+&lt;p&gt;Disposable cameras are designed for the inexperienced, so the manufacturer
+tend not to add any configurability that confuses the users. Plus this design
+drives the cost down as there are less moving parts.&lt;/p&gt;
+
+&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;h3 id="disposable-cameras-are-designed-for-simplicity-thus-tricky"&gt;Disposable cameras are designed for simplicity, thus tricky&lt;/h3&gt;
+
+&lt;p&gt;With disposable camera you have two choices:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;What to include in the shot&lt;/li&gt;
+  &lt;li&gt;Whether to take the shot or not&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Everything else has been taken care of. You don’t need to fiddle with camera
+setting or have any knowledge in the technical know-how, just point at your
+subject and press the shutter. Disposable camerais configured to a sweet-spot
+that shots taken by a layperson would look OK under most conditions. They may
+look a bit bright/dark, but rarely totally disastrous.&lt;/p&gt;
+
+&lt;p&gt;Even for a severely underexposed shot like below (indoor without flash), I
+still managed to get a photo with all intended subjects still visible and
+recognizable.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./donki_qs400.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./donki_qs400.jpg" alt="Very dark indoor photo"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Don Don Donki, Fujifilm QuickSnap Simple Ace (ISO 400, f/10, 1/140, 32mm)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Sometimes you might just hit the sweet spot where the camera setting
+preconfigured in your disposable camera &lt;em&gt;happens to be&lt;/em&gt; the perfect camera
+setting for the scene like below. Unfortunately, I didn’t take a light meter
+reading to tell whether this scene is actually &lt;em&gt;perfect&lt;/em&gt; for a Kodak FunSaver,
+but judging by the high saturation, properly preserved highlight &amp;amp; shadow
+details and that everything is in focus, I believe this shot hits fairly close
+to the sweet spot.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./sunset_people_funsaver800.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./sunset_people_funsaver800.jpg" alt="Colorful, properly exposed shot"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Tsing Yi People, Kodak FunSaver (ISO 800, f/11, 1/100, 30mm)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;After getting some terribly underexposed shots using a QuickSnap Simple Ace, I
+ended up creating a “preview” of how the shot would look like given the light
+condition. My OnePlus 7T comes with a pro mode where I can set the ISO and
+shutter speed given a fixed aperture.&lt;/p&gt;
+
+&lt;p&gt;Using some online calculator I calculated the explosure value (EV) of my 
+FunSaver. After that I created a ISO-shutter speed combination on my phone to
+obtain the same EV on my OnePlus 7T. Essentially, given the same scene both
+camera will yield the same exposure result.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style="text-align: left"&gt;Camera&lt;/th&gt;
+      &lt;th style="text-align: left"&gt;ISO&lt;/th&gt;
+      &lt;th style="text-align: left"&gt;Aperture&lt;/th&gt;
+      &lt;th style="text-align: left"&gt;Shutter Speed&lt;/th&gt;
+      &lt;th style="text-align: left"&gt;EV&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style="text-align: left"&gt;Kodak FunSaver&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;⚓ISO 800&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;⚓f/11&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;⚓1/100&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;❓10.6&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style="text-align: left"&gt;OnePlus 7T&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;⚓ISO 400&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;⚓f/2.2&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;❓1/1250&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;⚓10.6&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;center&gt;
+&lt;small&gt;
+⚓ Fixed
+❓ Calculated
+&lt;/small&gt;
+&lt;/center&gt;
+
+&lt;p&gt;Initially, I mistook the specification of a FunSaver so my calculation came
+using wrong parameters caused the OnePlus 7T setting I used for previewing to
+be&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style="text-align: left"&gt;Camera&lt;/th&gt;
+      &lt;th style="text-align: left"&gt;ISO&lt;/th&gt;
+      &lt;th style="text-align: left"&gt;Aperture&lt;/th&gt;
+      &lt;th style="text-align: left"&gt;Shutter Speed&lt;/th&gt;
+      &lt;th style="text-align: left"&gt;EV&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style="text-align: left"&gt;OnePlus 7T&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;⚓ISO 800&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;⚓f/4.5&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;⚓1/4000&lt;/td&gt;
+      &lt;td style="text-align: left"&gt;❓13.3&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;center&gt;
+&lt;small&gt;
+⚓ Fixed
+❓ Calculated
+&lt;/small&gt;
+&lt;/center&gt;
+
+&lt;p&gt;Therefore, when I thought a photo is properly exposed through my OnePlus 7T,
+the image is actually overexposed on the FunSaver. Most photos I took in the
+same roll were overexposed.&lt;/p&gt;
+
+&lt;p&gt;With experience you could more or less guess whether the lighting condition
+at the moment is suitable for your disposable camera, and you may be off by
+a stop or two. Don’t worry, there’s a chance to fix it afterwards.&lt;/p&gt;
+
+&lt;h3 id="remedies-to-overunderexposure"&gt;Remedies to over/underexposure&lt;/h3&gt;
+
+&lt;p&gt;Not all scene would have the perfect lighting condition, or something happens
+so quickly that you have no time to meter/preview the scene properly beforehand:
+at that moment you had to just press the shutter, and hope for the best.&lt;/p&gt;
+
+&lt;p&gt;And most of the time you’ll end up with over/underexposed photos. With
+disposable camera you actually have &lt;s&gt;two&lt;/s&gt; three choices:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;What to include in the shot&lt;/li&gt;
+  &lt;li&gt;Whether to take the shot or not&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;How to improve the shot in post-processing&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;figure&gt;
+  &lt;a href="./sunset_funsaver800_pre_post.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./sunset_funsaver800_pre_post.jpg" alt="Sunset taken using Kodak FunSaver 800, after edit the yellow is more apparent"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Sunset at Tsing Yi, before and after post-processing&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;If the original film shot isn’t giving you the feel/color that you like, you may
+edit the photo digitally after scanning the film. However, your mileage may vary
+because unlike a digital photo RAW file, film contains limited information and
+not all the information was digitized when you scanned the film.&lt;/p&gt;
+
+&lt;p&gt;Lost shadow or lost highlight are forever lost despite you may salvage them to
+a certain degree until color banding or some other unpleasant effects starts
+happening (you may observe some color banding near to the sun in the above
+image).&lt;/p&gt;
+
+&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;h2 id="disposable-camera-is-single-useright"&gt;Disposable camera is single-use…right?&lt;/h2&gt;
+
+&lt;p&gt;The general advice for developing the films in a disposable camera is
+give the whole thing to the lab where the film is developed. This is not
+because the process of taking the film out requires any expertise, but that
+the lab can send the camera body back for the manufacturer to reuse the parts.&lt;/p&gt;
+
+&lt;p&gt;Seriously, &lt;a href="https://youtu.be/OhCdPCyG7x4?t=24"&gt;you can do it with anything having a long, sharp edge&lt;/a&gt;.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./funsaver_film_cap.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./funsaver_film_cap.jpg" alt="Kodak FunSaver with film cap opened"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Considering that I once used a table knife to pop this cap in a restaurant, anyone can do the same&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;After taking out the film roll, you are left with a “film-less” camera body.
+You can use it as a prop for your next photoshoot, or reload it to give it
+another go. The manufacturer is doing exactly that, so there must be a way
+for you to do the same.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./simpleface.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./simpleface.jpg" alt="Me using Quicksnap"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Me using SimpleAce as a prop&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Disposable camera are single-use for most people because they ar designed to be
+troublesome and difficult to reuse for those who don’t care enough.&lt;/p&gt;
+
+&lt;p&gt;In normal film cameras, films are unrolled one by one from the film canister as photos are taken, and rewinded back into the canister at the end of the roll.
+Throughout the entire process the film is protected in complete darkness inside
+the camera body, except for the brief moment when the shutter is open for a
+glimpse of light to burn the scene onto the film.&lt;/p&gt;
+
+&lt;p&gt;On a disposable camera, however, films are first unrolled out of the canister,
+then as you take the photos they are rolled back into the canister. After using
+up the whole roll, you don’t need to rewind, just take the canister out for 
+development.&lt;/p&gt;
+
+&lt;p&gt;If you casually open up a disposable camera and begin unrolling the
+film out of the canister in a attempt to “reload” the camear, you’re simplely 
+exposing every bit of the film to external light before any of your picture is
+taken, and you’ll end up with a blank roll. Unlike conventional film camera, 
+disposable camera must be reloaded in the dark.&lt;/p&gt;
+
+&lt;p&gt;Manufacturer designed disposable cameras this way knowing not many people would
+go through this trouble to reuse camera. They also brand them as “disposable”,
+“single-use” so people are willing to come back to buy another camera. Remember,
+your lab sends the camera body back to manufacturer for recycling, so you’re
+playing their game that’s rigged to their advantage in the first place.&lt;/p&gt;
+
+&lt;p&gt;And thus I searched online how to reload a disposable camera. Luckily
+there is a &lt;a href="https://www.youtube.com/watch?v=k7rfWtm5R5s"&gt;detailed tutorial on YouTube by David Allen&lt;/a&gt;.
+I did exactly that.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./funsaver_reloaded.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./funsaver_reloaded.jpg" alt="A FunSaver taped together"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;David Allen: “Just tape the whole…freaking thing up” (to prevent light leak)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;a href="./funsaver_reloaded2.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./funsaver_reloaded2.jpg" alt="Pokemon using the reloaded FunSaver"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;A reloaded Kodak FunSaver can be used the same way as before&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Reloading film may be risky and dangerous. Accidental light leak ruins the
+entire roll if you take the camera out of the dark before it is properly sealed.
+You may break the film in the middle of loading. You may also get electric shock
+from the capacitor that powers the flash light. Remember to discharge it first 
+by taking a shot with the flash after opening the camera body (you can turn the 
+internal gear to prime for a shot even without any film).&lt;/p&gt;
+
+&lt;p&gt;While I don’t recommend this, you can also get a Lomography Simple Use that can
+be reloaded like a normal camera in the light, thus avoiding the said trouble.
+Well then…how is it disposable and single-use?&lt;/p&gt;
+
+&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;h2 id="disposable-cameras-accept-different-films"&gt;Disposable cameras accept different films&lt;/h2&gt;
+
+&lt;p&gt;Even though you’ll have no control over the exposure triangle once the film is
+loaded onto a disposable camera, there are surprisingly many things you could
+experiment with just using a disposable camera.&lt;/p&gt;
+
+&lt;p&gt;It was a necessity for me to reload my Kodak FunSaver with different film
+because originally it comes with a ISO 800 film, which is more expensive and
+harder to come by than say, a Kodak UltraMax 400 or Kodak ColorPlus 200.&lt;/p&gt;
+
+&lt;p&gt;However, how can you possible load a film with different ISO? Will the shots
+be exposed properly and generate acceptable result?&lt;/p&gt;
+
+&lt;p&gt;Film is surprisingly tolerant to over/underexposure. Consider the box ISO speed
+a suggested speed. You can shoot a film marked ISO 400 at ISO 800 and still
+get decent though underexposed result.&lt;/p&gt;
+
+&lt;p&gt;When you shoot a ISO 400 (less sensitive) film at ISO 800 setting, you are
+assuming the film is more sensitive that it really is and thus underexposing
+the film. To remedy this, when developing the film you tell the lab people
+to “push” the film by “1 stop”. The film strip will remain in the chemical bath
+for a longer time during development to lighten the image, increase contrast
+and introduce more grains.&lt;/p&gt;
+
+&lt;p&gt;See below for photos taken before and after reloading. UltraMax 400 performs
+well when pushed to ISO 800, showing that pushing by a stop doesn’t drastically
+degrade the image quality of the film.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;a href="./funsaver800.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./funsaver800.jpg" alt="FunSaver photo using ISO 800 film"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Jimmy bridge, Kodak FunSaver (ISO 800, f/11, 1/100, 30mm)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;a href="./funsaver400.jpg" target="_blank"&gt;
+    &lt;img style="width: 100%; max-width: 480px;" src="./funsaver400.jpg" alt="FunSaver photo using ISO 400 film"&gt;
+  &lt;/a&gt;
+&lt;figcaption&gt;Kwai Shing, Kodak FunSaver &lt;b&gt;UltraMax 400&lt;/b&gt; pushed (ISO 400→800, f/11, 1/100, 30mm)&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Regardless of the technical jargon of “push/pulling” by “n stop”, the key is that
+you &lt;em&gt;can&lt;/em&gt; use film at different speed to reload your disposable camera. With such
+a cheap camera you can try out black and white or different kinds of film until
+you have decided invest in better gears.&lt;/p&gt;
+
+&lt;p&gt;By the way, &lt;a href="https://petapixel.com/2018/03/14/spent-year-refilling-disposable-cameras-premium-film/"&gt;there is at least one other person who does this&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id="disposable-cameras-are-portable"&gt;Disposable cameras are portable&lt;/h2&gt;
+
+&lt;p&gt;Disposable cameras are light and compact compared to SLR and rangefinder due to
+it’s small and embedded front element.&lt;/p&gt;
+
+&lt;p&gt;An SLR or rangefinder aren’t as rectangular as a disposable and requires an
+extra bag to carry them around safely. With a disposable I simply slide it into
+my back pocket or the side pocket of my backpack wherever I go.&lt;/p&gt;
+
+&lt;p&gt;Extra caution is required to keep those vintage lenses clean and free from scratches
+too, while you can cheaply replace an entire disposable camera should the lens
+be scratched or become dirty.&lt;/p&gt;
+
+&lt;p&gt;You get the similar benefits from an automatic point-and-shoot film camera, but
+those are more expensive than a disposable and I’d rather save the money for
+better gear and lenses in the long term.&lt;/p&gt;
+
+&lt;h2 id="closing"&gt;Closing&lt;/h2&gt;
+
+&lt;p&gt;I have had a lot of fun reloading disposable cameras and studying about the
+different theories and techniques to make the most out of them. If you have
+decided to embark on the same journey, I hope my experience shared here can
+be of some use, and wish you have a great time doing film photography!&lt;/p&gt;
+
+&lt;h2 id="references"&gt;References&lt;/h2&gt;
+
+&lt;h3 id="camera-specifications"&gt;Camera specifications&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="http://www.meteor.com.hk/shop/en/other-camera/5110-fujifilm-simple-ace-disposable-camera-400-27exp.html"&gt;Fujifilm Simple Ace Disposable Camera 400 27exp - meteor&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://photo.stackexchange.com/questions/35720/what-is-the-shutter-speed-aperture-and-focal-length-of-the-kodak-funsaver-disp"&gt;exposure - What is the shutter speed, aperture, and focal length of the Kodak Funsaver disposable camera? - Photography Stack Exchange&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id="exposure-value-calculator"&gt;Exposure value calculator&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="https://www.scantips.com/lights/exposurecalc.html"&gt;Exposure Calculator to Compare Any Two Camera Exposures&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://play.google.com/store/apps/details?id=com.willblaschko.android.lightmeterv2.free"&gt;Light Meter - Free - Apps on Google Play&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2020-03-14:/blog/deploying-komga-on-freenas-jail/</id>
+    <title type="html">Deploying Komga on FreeNAS jail</title>
+    <published>2020-03-14T16:00:00Z</published>
+    <updated>2020-03-14T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/deploying-komga-on-freenas-jail/" type="text/html"/>
+    <content type="html">&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;p&gt;I’ve built myself a NAS using old parts and FreeNAS. Then I realized I can host
+a variety of services on my NAS such as Emby, Syncthing and duplicati with
+FreeNAS plugins out-of-the-box.&lt;/p&gt;
+
+&lt;p&gt;Compared to the wealth of containers available on Docker Hub, plugins on FreeNAS
+are somewhat lacking. However that doesn’t mean docker is the to-go option for
+running isolated services. Instead, jail came out of the box in FreeNAS while
+docker didn’t. Plus I couldn’t get RancherOS (a host-OS for docker) to run on
+a FreeNAS VM, so I gave up.&lt;/p&gt;
+
+&lt;p&gt;In this post I am going to walk you through how I deployed a manga-reading
+application Komga to my FreeNAS jail.&lt;/p&gt;
+
+&lt;h2 id="creating-a-jail"&gt;Creating a Jail&lt;/h2&gt;
+
+&lt;p&gt;First locate the Jails section on the side menu of FreeNAS dashboard, then
+click ADD on the top right corner. Here fill in the Name, and choose a Release
+from the dropdown menu, then click NEXT.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%" src="./image2.png" alt="Creating a Jail"&gt;
+&lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;There are 3 ways to set the IP addresses of the jail - VNET/NAT, DHCP or
+static IP.&lt;/p&gt;
+
+&lt;p&gt;With VNET/NAT you access your service via the same IP as your FreeNAS and some
+unused port.&lt;/p&gt;
+
+&lt;p&gt;With DHCP, you still access your services from unused ports but via an IP
+distributed by the DHCP server.&lt;/p&gt;
+
+&lt;p&gt;With static IP like below, I specify an IP address, subnet mask and default
+router to my home network router. If you find the default router field
+disabled, clicking some of the checkboxes will re-enable it. You can then
+edit the default router before unchecking the checkboxes.&lt;/p&gt;
+
+&lt;p&gt;Oh, feel free to check the Auto-start checkbox at the bottom as well.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%" src="./image4.png" alt="Editing Jail properties"&gt;
+&lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;After saving and starting the jail, you will have a working jail with
+its own IP address and isolation. At this point it is not running service
+for you, so in the next part we will mount a ZFS folder to it and install
+Komga for you to read comics.&lt;/p&gt;
+
+&lt;h2 id="deploying-komga-to-a-jail"&gt;Deploying Komga to a jail&lt;/h2&gt;
+
+&lt;p&gt;From the Jails page click on the arrow on the right of our Komga jail, then
+click Mount Points in the expanded panel. Here you can configure where in your
+pools do you want to make visible to the jail by mounting. Otherwise, the jail
+will see only files inside its own iocage dataset.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%" src="./image3.png" alt="Komga jail in Jails page"&gt;
+&lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%" src="./image6.png" alt="Mounting folder to the jail"&gt;
+&lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Komga requires Java to run which is not available. To install Java 11, start
+the jail and click Shell from the Jails page. In the resultant shell screen
+you have logged in to the jail’s shell, not to your FreeNAS host shell.
+Installing Java in the shell doesn’t make it available to the host OS.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;# Jail Shell
+# Developer of Komga recommends using openjdk11 over openjdk8 for better performance
+pkg install openjdk11
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%" src="./image1.png" alt="Screen shown after installing java"&gt;
+&lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;As shown in the screenshot there are some post-installation steps required for
+Java. However we need to do them on the host-OS’s shell instead of inside the
+jail. Open the host OS shell from the left menu, then run the following
+commands.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;# Host Shell
+mount -t fdescfs null /mnt/{POOL NAME}/iocage/jails/Komga/root/dev/fd
+mount -t procfs null /mnt/{POOL NAME}/iocage/jails/Komga/root/proc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next return to the jail’s shell, and from &lt;code&gt;/root&lt;/code&gt; download the latest
+version of Komga using fetch. Alternatively, you may download the file
+elsewhere and drop it into jail’s own dataset.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;# Jail Shell
+fetch https://github.com/gotson/komga/releases/download/v0.27.7/komga-0.27.7.jar
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To quickly test whether Komga is working, start the Komga server from
+&lt;code&gt;/root&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;# Jail Shell
+/usr/local/bin/java -jar ./komga-0.27.7.jar
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Navigating to the webpage at port 8080 of your jail’s IP, you will see
+Komga’s login screen.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 250px" src="./image5.png" alt="Komga login screen"&gt;
+&lt;figcaption&gt;&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;You won’t be able to login at the moment because no account is created
+yet. Follow &lt;a href="https://komga.org/installation/user-accounts.html#automatic-mode-default"&gt;Komga’s installation instruction&lt;/a&gt;
+to get it up and running.&lt;/p&gt;
+
+&lt;p&gt;If you want to change some of the default config options, Komga’s
+configuration is stored in a file &lt;code&gt;application.yml&lt;/code&gt; alongside the jar.
+A sample configuration file can be found in &lt;a href="https://komga.org/configuration/#sample-configuration-file"&gt;Komga’s documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The last bit of this deployment is to make Komga start every time the jail
+is started. Navigate to &lt;code&gt;/etc&lt;/code&gt; and create a file &lt;code&gt;rc.local&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;#!/bin/sh
+
+exec 2&amp;gt; /tmp/rc.local.log
+exec 1&amp;gt;&amp;amp;2
+set -x
+
+cd /root
+nohup /usr/local/bin/java -jar /root/komga-0.27.7.jar
+
+exit 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lastly, make &lt;code&gt;rc.local&lt;/code&gt; executable.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;# Jail Shell
+chmod +x /etc/rc.local
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This way next time when you start the jail, Komga will automatically be started too.&lt;/p&gt;
+
+&lt;h2 id="more-information"&gt;More Information&lt;/h2&gt;
+
+&lt;p&gt;This post was created with the help of the following pages:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="https://unix.stackexchange.com/questions/127001/linux-lxc-vs-freebsd-jail"&gt;Linux LXC vs FreeBSD jail - Unix &amp;amp; Linux Stack Exchange&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://www.ixsystems.com/community/threads/ubooquity.59244/#post-422437"&gt;Ubooquity | iXsystems Community&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://www.reddit.com/r/freenas/comments/9r1bky/a_guide_on_how_to_install_ubooquity_in_a_freenas/"&gt;A guide on how to install Ubooquity in a FreeNAS jail and how to get it to run on jail start : freenas&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2020-02-14:/blog/follow-wordpress-blogs-using-rss-reader/</id>
+    <title type="html">Follow WordPress blogs using RSS reader</title>
+    <published>2020-02-14T16:00:00Z</published>
+    <updated>2020-02-14T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/follow-wordpress-blogs-using-rss-reader/" type="text/html"/>
+    <content type="html">&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;p&gt;I use a RSS feed reader to follow websites I care about. First it was Feedly for
+6 years until ads began to annoy me. Then I moved to Feeder for around 2 years.&lt;/p&gt;
+
+&lt;p&gt;Being an open standard it means nobody but the content creator controls exactly
+what content users can see and whether ads is included.&lt;/p&gt;
+
+&lt;p&gt;RSS has seen a gradual decline over the years in favor of social media such as
+Facebook, Instagram and Twitter. Email newsletter, content curation sites and
+apps also serve as other preferred avenues for feed-based content.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img src="./rss_trend.jpg" alt="RSS trend on Google Trend"&gt;
+&lt;figcaption&gt;RSS interest over time declining since 2004&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;While RSS is designed to show the same content to all users alike, content
+platforms generate feeds based on user preference shown from previous
+interactions with the site. This is an power imbalance between content and
+platform owners over what content and when to show them to consumers.&lt;/p&gt;
+
+&lt;p&gt;I prefer RSS over dynamically generated feeds because I want all the content
+I am following. I don’t mind scrolling through them to find what I am truly
+interesting in because I can be sure that I am not missing anything or
+manipulated by the algorithm generating the feed.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img src="./rss32x32.png" alt="RSS feed icon"&gt;
+&lt;figcaption&gt;RSS feed icon&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Whenever I see some content that I like from a site, I began looking for this
+RSS feed icon. In fact, this site also has one on top called
+&lt;a href="../../atom.xml"&gt;Atom Feed&lt;/a&gt;, which works like RSS and is widely suppported by
+feed readers.&lt;/p&gt;
+
+&lt;p&gt;35.8% of all websites are powered by WordPress according to
+&lt;a href="https://w3techs.com/technologies/overview/content_management"&gt;W3Techs&lt;/a&gt;.
+However not all of them show the RSS icon even though it comes &lt;a href="https://wordpress.org/support/article/wordpress-feeds/#finding-your-feed-url"&gt;out of the
+box with WordPress&lt;/a&gt;.
+Have no worries, though. Because while the link to RSS icon may be hidden,
+the URL itself is usually still available. People don’t bother disabling
+that.&lt;/p&gt;
+
+&lt;p&gt;Try appending &lt;code&gt;/feed&lt;/code&gt;, &lt;code&gt;/feed/rss&lt;/code&gt; or &lt;code&gt;/?feed=rss&lt;/code&gt; to the end of the
+WordPress site’s URL.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;https://wylin.tw/feed
+https://wylin.tw/feed/rss
+https://wylin.tw/?feed=rss
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If they work you’ll see some XMLs being printed. That’s the URL you want
+to save into your RSS feed reader. Later when the site is updated, you
+&lt;em&gt;will&lt;/em&gt; see the update from the feed reader. Algorithm doesn’t get to
+determine what you see, the site owner does.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2019-08-05:/blog/fixing-wireguard-windows-unable-to-start-as-service/</id>
+    <title type="html">Fixing Wireguard Windows unable to start as service</title>
+    <published>2019-08-05T16:00:00Z</published>
+    <updated>2019-08-05T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/fixing-wireguard-windows-unable-to-start-as-service/" type="text/html"/>
+    <content type="html">&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;p&gt;Wireguard is cool. I happen to be hosting some private web services on a VPS
+instance,some without authentication. To secure them I installed Wireguard and
+restricted access from public Internet. Only traffic coming from Wireguard’s
+interface can go into my hosted service. It’s secure (I hope…), and
+hassle-free.&lt;/p&gt;
+
+&lt;p&gt;Now it’s finally the time to have Wireguard set up on my Windows 10 machine
+because I have gotten to use it more often lately. There is an official
+Wireguard client on &lt;a href="https://www.wireguard.com/install/"&gt;their website&lt;/a&gt; so I
+went on to install it.&lt;/p&gt;
+
+&lt;p&gt;Everything went well on my admin user. I was able to add and activate the
+interface.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 440px" src="./interface.jpg" alt="Interface properties screen
+of Wireguard"&gt;
+&lt;figcaption&gt;And my ethernet connection goes up to 1Gbps, connecting to a crappy
+100Mbps router&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;I set it up such that only traffic going from/to the &lt;code&gt;10.0.0.0/24&lt;/code&gt; subnet is
+using Wireguard’s interface. The rest goes through &lt;code&gt;eth0&lt;/code&gt; as before. The
+purpose of using Wireguard is to gain access to services on the VPS, not using
+the VPS as a VPN host.&lt;/p&gt;
+
+&lt;p&gt;This setup seemed working until I rebooted the machine and logged into a
+non-admin user as I usually do. This time, there’s a problem. Wireguard isn’t
+connected. When opening the Wireguard client GUI, I was greeted by this message
+box.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%" src="./wireguard-message.jpg" alt="Error message:
+Manager already installed and running"&gt;
+&lt;figcaption&gt;Yeah I know, not helpful&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;I cannot control the Wireguard as non-admin user. Worse, it doesn’t start
+automatically. I know that Wireguard manager and the Wireguard tunnel I set up
+are running as services and start automatically on boot. Somehow, the tunnel
+cannot be started properly when I boot into non-admin user.&lt;/p&gt;
+
+&lt;p&gt;From the &lt;code&gt;services&lt;/code&gt; tool of Windows I found this line of log:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-plaintext"&gt;WireGuardTunnel$Wireguard 服務因下列服務特定錯誤而終止: 
+系統找不到指定的路徑。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In English it means Wireguard couldn’t read a particular file. Either it doesn’t
+exist, or Wireguard wasn’t able to read it.&lt;/p&gt;
+
+&lt;p&gt;When manually start the &lt;code&gt;WireGuardTunnel$Wireguard&lt;/code&gt; service, it works. The
+interface comes back. However, this isn’t good enough for my lazy soul. So I
+went to look at the config file Wireguard was trying to access.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;WireGuardTunnel$Wireguard&lt;/code&gt; starts by reading configurations from this file
+inside the system directory &lt;code&gt;C:\WINDOWS&lt;/code&gt;. Apparently, whichever user Windows
+was trying to start this service with, had not the permission to this file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-plaintext"&gt;"C:\Program Files\WireGuard\wireguard.exe" /tunnelservice C:\WINDOWS\system32\config\systemprofile\AppData\Local\WireGuard\Configurations\Wireguard.conf.dpapi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Well, at this point the fix has became obvious. I granted my non-admin user
+the read permission to this configuration file and rebooted.&lt;/p&gt;
+
+&lt;p&gt;It works!!!!!&lt;/p&gt;
+
+&lt;h2 id="discussion"&gt;Discussion&lt;/h2&gt;
+
+&lt;p&gt;At this point I have gotten Wireguard to automatically start when loggin
+in as non-admin user. However there’s a caveat: I granted a non-admin user
+access to the DPAPI-encrypted config file which contains the private key of
+my Wireguard client. Any application can read (but not write to) that file.&lt;/p&gt;
+
+&lt;p&gt;Granted, it’s encrypted and the non-admin user has no write permission to
+the folder containing this config file, yet is it possible for malicious
+actors to obtain this file via an exploit in Windows and pretend to be me?&lt;/p&gt;
+
+&lt;p&gt;According to Microsoft, DPAPI uses a “pseudo-random 512-bit number named
+a master key” that is “protected using a value that is derived from the
+user’s password”. Who’s the user in this case? The admin group user setting
+up Wireguard? The LocalSystem? Or the non-admin user who requires this
+file to be readable in order make Wireguard service start successfully?&lt;/p&gt;
+
+&lt;p&gt;Inexperienced in software development in Windows, I have no answer to this
+question. I am however aware that on the other side of the Wireguard network,
+I can set a static endpoint for my particular machine.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-plaintext"&gt;[Peer]
+PublicKey = dmVyeSByYW5kb20K...
+AllowedIPs = 20.0.0.4/32
+Endpoint = 1.2.3.4:1234 # host:port of my Windows PC
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This may be one way to secure my setup because the VPS will verify that
+the traffic came from this particular IP. Malicious have to ues my IP
+address to access the network even though they may have my private key.&lt;/p&gt;
+
+&lt;p&gt;This is an ugly workaround, especially if my PC’s public IP changes
+frequently. What would you do? Any better way to deal with this issue?&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2019-07-26:/blog/controlling-my-home-server-with-syncthing/</id>
+    <title type="html">Controlling my home server with Syncthing</title>
+    <published>2019-07-26T16:00:00Z</published>
+    <updated>2019-07-26T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/controlling-my-home-server-with-syncthing/" type="text/html"/>
+    <content type="html">&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;p&gt;At home I run a Windows 10 Home on Thinkpad E540 as a home server. It sites
+nicely inside the TV closet drawer quietly doing its thing. With Emby, SMB and
+some web services I am able to make use of the home server as much as I want to.&lt;/p&gt;
+
+&lt;p&gt;However there is one thing that Windows 10 Home cannot do: remote desktop.
+Microsoft locked up the feature for Home edition and even though people got it
+working with RDP wrapper in the past, it no longer works on my machine in 2019.&lt;/p&gt;
+
+&lt;p&gt;The reason I need to remotely connect to my laptop is such that I can put it to 
+sleep, wake up and shutdown using only my phone. This is obvious - just throw in
+a web server that can run shell commands. Say IIS + PHP.&lt;/p&gt;
+
+&lt;p&gt;Going down this path will inevitably lead us to stuff like handling
+authentication, opening an extra port in the firewall and setting up PHP on
+IIS. That’s too much work for my lazy self.&lt;/p&gt;
+
+&lt;p&gt;So I turned to the unobvious - I’ve already had an SMB and a Syncthing server
+running. SMB is for sharing storage to other machines and Syncthing is similar
+but running on my phone. What if the server polls for commands updatable by
+these services? SMB and Syncthing each has their own authentication layer, and
+I only need to work out the logic. A logic like this:&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%;" src="./Controlling%20my%20home%20server%20with%20Syncthing.png" alt="Finite state machine showing states of the laptop"&gt;
+&lt;figcaption&gt;State diagram of the laptop, with transition triggered by file change&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Because the state itself can easily be represented by what file is in the &lt;code&gt;is&lt;/code&gt;
+and &lt;code&gt;should&lt;/code&gt; folder, I only need to use SMB/Syncthing to move around files in
+order to update the states. The state is maintained by folders and files
+inside a control folder accessible via SMB and Syncthing.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-plaintext"&gt;Control
+├── is/
+├── should/
+├── running.txt
+├── shutdown.txt
+├── sleep.txt
+├── will_shutdown.txt
+├── will_sleep.txt
+└── Control.cmd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A scheduled task will run every 1 minute to scan for any change in state and
+perform some actions while moving to the next state. Best part? Most of it
+comes for free.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%;" src="./Control%20power%20state%20using%20Syncthing.png" alt="Data flow"&gt;
+&lt;figcaption&gt;Components and data flow&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Everything here is already in place except for the scheduled task that reads
+the latest state and perform actions (sleep/shutdown) accordingly. I created
+a &lt;code&gt;.cmd&lt;/code&gt; file is pretty simple. For each of the states above that has a
+transition marked by &lt;code&gt;1 min&lt;/code&gt;, I define an if statement to check the state,
+then perform the action and state change. With such a simple finite state
+machine it didn’t take long to debug.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-cmd"&gt;IF EXIST ".\should\sleep.txt" (
+  DEL ".\is\*.txt"
+  DEL ".\should\*.txt"
+  COPY ".\will_sleep.txt" ".\is"
+  curl -s -X POST https://api.telegram.org/bot&amp;lt;BOT TOKEN&amp;gt;/sendMessage -d chat_id=&amp;lt;CHAT ID&amp;gt; -d text="HOMESERVER will sleep soon"
+  EXIT 1
+)
+
+IF EXIST ".\is\will_sleep.txt" (
+  DEL ".\is\*.txt"
+  DEL ".\should\*.txt"
+  COPY ".\sleep.txt" ".\is"
+  curl -s -X POST https://api.telegram.org/bot&amp;lt;BOT TOKEN&amp;gt;/sendMessage -d chat_id=&amp;lt;CHAT ID&amp;gt; -d text="HOMESERVER sleeps now"
+  %windir%\System32\rundll32.exe powrprof.dll,SetSuspendState 0,1,0
+  EXIT 2
+)
+
+IF EXIST ".\should\shutdown.txt" (
+  DEL ".\is\*.txt"
+  DEL ".\should\*.txt"
+  curl -s -X POST https://api.telegram.org/bot&amp;lt;BOT TOKEN&amp;gt;/sendMessage -d chat_id=&amp;lt;CHAT ID&amp;gt; -d text="HOMESERVER will shutdown soon"
+  COPY ".\will_shutdown.txt" ".\is"
+  EXIT 3
+)
+
+IF EXIST ".\is\will_shutdown.txt" (
+  DEL ".\is\*.txt"
+  DEL ".\should\*.txt"
+  COPY ".\shutdown.txt" ".\is"
+  curl -s -X POST https://api.telegram.org/bot&amp;lt;BOT TOKEN&amp;gt;/sendMessage -d chat_id=&amp;lt;CHAT ID&amp;gt; -d text="HOMESERVER shutdowns now"
+  shutdown.exe -s
+  EXIT 4
+)
+
+DEL ".\is\*.txt"
+DEL ".\should\*.txt"
+EXIT 5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;p&gt;I’ve included a &lt;code&gt;curl&lt;/code&gt; command to send out Telegram notification notifying
+a state change. For more information regarding using Telegram as a notification
+service, look at my &lt;a href="../send-telegram-notification-on-ssh-login/"&gt;previous post&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;What is left is a trigger that runs this &lt;code&gt;cmd&lt;/code&gt; file every 1 minute. It took me
+awhile to figure it all out because of how strange Windows’s task scheduler
+works while the *nix master race who’ve been using the awesome CRON wouldn’t
+understand.&lt;/p&gt;
+
+&lt;p&gt;In a nutshell, we want to run this script:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;every minute after start up&lt;/li&gt;
+  &lt;li&gt;even if waking from sleep&lt;/li&gt;
+  &lt;li&gt;regardless of power source (AC/battery)&lt;/li&gt;
+  &lt;li&gt;regardless of whether the user has logged in or not&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I have exported the task into an .xml file such that you can just import it,
+change some necessary parameters and off you go.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;?xml version="1.0" encoding="UTF-16"?&amp;gt;
+&amp;lt;Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task"&amp;gt;
+  &amp;lt;RegistrationInfo&amp;gt;
+    &amp;lt;Date&amp;gt;2019-06-15T16:20:14.7976916&amp;lt;/Date&amp;gt;
+    &amp;lt;Author&amp;gt;HOMESERVER\user&amp;lt;/Author&amp;gt;
+    &amp;lt;Description&amp;gt;HOMESERVER Control&amp;lt;/Description&amp;gt;
+    &amp;lt;URI&amp;gt;\HOMESERVER Auto Control&amp;lt;/URI&amp;gt;
+  &amp;lt;/RegistrationInfo&amp;gt;
+  &amp;lt;Triggers&amp;gt;
+    &amp;lt;TimeTrigger&amp;gt;
+      &amp;lt;Repetition&amp;gt;
+        &amp;lt;Interval&amp;gt;PT1M&amp;lt;/Interval&amp;gt;
+        &amp;lt;StopAtDurationEnd&amp;gt;false&amp;lt;/StopAtDurationEnd&amp;gt;
+      &amp;lt;/Repetition&amp;gt;
+      &amp;lt;StartBoundary&amp;gt;2019-07-10T00:00:00&amp;lt;/StartBoundary&amp;gt;
+      &amp;lt;Enabled&amp;gt;true&amp;lt;/Enabled&amp;gt;
+    &amp;lt;/TimeTrigger&amp;gt;
+  &amp;lt;/Triggers&amp;gt;
+  &amp;lt;Principals&amp;gt;
+    &amp;lt;Principal id="Author"&amp;gt;
+      &amp;lt;UserId&amp;gt;UserId&amp;lt;/UserId&amp;gt;
+      &amp;lt;LogonType&amp;gt;Password&amp;lt;/LogonType&amp;gt;
+      &amp;lt;RunLevel&amp;gt;LeastPrivilege&amp;lt;/RunLevel&amp;gt;
+    &amp;lt;/Principal&amp;gt;
+  &amp;lt;/Principals&amp;gt;
+  &amp;lt;Settings&amp;gt;
+    &amp;lt;MultipleInstancesPolicy&amp;gt;StopExisting&amp;lt;/MultipleInstancesPolicy&amp;gt;
+    &amp;lt;DisallowStartIfOnBatteries&amp;gt;false&amp;lt;/DisallowStartIfOnBatteries&amp;gt;
+    &amp;lt;StopIfGoingOnBatteries&amp;gt;false&amp;lt;/StopIfGoingOnBatteries&amp;gt;
+    &amp;lt;AllowHardTerminate&amp;gt;true&amp;lt;/AllowHardTerminate&amp;gt;
+    &amp;lt;StartWhenAvailable&amp;gt;true&amp;lt;/StartWhenAvailable&amp;gt;
+    &amp;lt;RunOnlyIfNetworkAvailable&amp;gt;false&amp;lt;/RunOnlyIfNetworkAvailable&amp;gt;
+    &amp;lt;IdleSettings&amp;gt;
+      &amp;lt;StopOnIdleEnd&amp;gt;true&amp;lt;/StopOnIdleEnd&amp;gt;
+      &amp;lt;RestartOnIdle&amp;gt;false&amp;lt;/RestartOnIdle&amp;gt;
+    &amp;lt;/IdleSettings&amp;gt;
+    &amp;lt;AllowStartOnDemand&amp;gt;true&amp;lt;/AllowStartOnDemand&amp;gt;
+    &amp;lt;Enabled&amp;gt;true&amp;lt;/Enabled&amp;gt;
+    &amp;lt;Hidden&amp;gt;false&amp;lt;/Hidden&amp;gt;
+    &amp;lt;RunOnlyIfIdle&amp;gt;false&amp;lt;/RunOnlyIfIdle&amp;gt;
+    &amp;lt;WakeToRun&amp;gt;false&amp;lt;/WakeToRun&amp;gt;
+    &amp;lt;ExecutionTimeLimit&amp;gt;PT0S&amp;lt;/ExecutionTimeLimit&amp;gt;
+    &amp;lt;Priority&amp;gt;7&amp;lt;/Priority&amp;gt;
+  &amp;lt;/Settings&amp;gt;
+  &amp;lt;Actions Context="Author"&amp;gt;
+    &amp;lt;Exec&amp;gt;
+      &amp;lt;Command&amp;gt;C:\Data\Control\control.cmd&amp;lt;/Command&amp;gt;
+      &amp;lt;WorkingDirectory&amp;gt;C:\Data\Control&amp;lt;/WorkingDirectory&amp;gt;
+    &amp;lt;/Exec&amp;gt;
+  &amp;lt;/Actions&amp;gt;
+&amp;lt;/Task&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From task scheduler, click “Import Task…” and select the downloaded file.
+Change the user and location to the script to wherever the control script is
+located. Now we have got the logic covered. What’s left is some simple wiring
+to allow syncing files between the control folder and the phone’s internal
+storage using Syncthing.&lt;/p&gt;
+
+&lt;p&gt;For download/setup of Syncthing, refer to Syncthing’s
+&lt;a href="https://syncthing.net/"&gt;website&lt;/a&gt; which pretty much explained it all. Just
+make sure you can sync files between your phone and the PC.&lt;/p&gt;
+
+&lt;p&gt;To move the PC into a sleep state, first copy and paste &lt;code&gt;sleep.txt&lt;/code&gt; into
+&lt;code&gt;./should&lt;/code&gt; folder, then instruct Syncthing on the phone to perform a folder
+rescan.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 350px;" src="./Screenshot_20190720-121043.png" alt="Syncthing UI on mobile"&gt;
+&lt;figcaption&gt;Syncthing UI on mobile&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The default rescan interval is 1 hour. Reducing it to say 1 minute could
+avoid manually triggering a rescan at the cost of battery life. As we’ll
+always trigger a rescan when we need it, it’s probably ok making the
+rescan interval 1 day or even longer.&lt;/p&gt;
+
+&lt;p&gt;In a minute or so, the home server should have picked up the file change
+and sent out a Telegram message notifying that it’s going to sleep and
+then in another minute’s time, the server goes to sleep.&lt;/p&gt;
+
+&lt;p&gt;Next time when I want to wake the server, I can either go pressing its
+power button directly, or use Emby for Android’s “Wake server” feature.
+Thus at this point, we’ve connected all the dots and established a
+control mechanism for the home server without adding additional web
+service.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%;" src="./Controlling%20my%20home%20server%20with%20Syncthing.png" alt="Finite state machine showing states of the laptop"&gt;
+&lt;figcaption&gt;Nothing but a scheduled job and Syncthing&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Some may say I am just asking for trouble by adding artificial
+constraints to myself. That is true. I could have set up a simple PHP
+script or build a bot to long-poll Telegram’s API and act accordingly.
+I was too lazy to set those up, or play around with cmd’s syntax trying
+to parse Telegram’s API response. Being limited helped me come up with
+creative solutions like this, and it worked!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2019-07-06:/blog/send-telegram-notification-on-ssh-login/</id>
+    <title type="html">Send Telegram notification on SSH login via PAM</title>
+    <published>2019-07-06T16:00:00Z</published>
+    <updated>2019-07-06T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/send-telegram-notification-on-ssh-login/" type="text/html"/>
+    <content type="html">&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;p&gt;Every time I logon to my bank’s website, there’s a helpful and annoying
+notification sent to my email and phone via SMS. I want my VPS to behave the
+same when I logon via SSH because I have never had an idea if somebody else is
+using my key to logon (it shouldn’t be…) when I wasn’t looking. Having my
+phone with me most of the time, I can receive push notification via a Telegram
+bot.&lt;/p&gt;
+
+&lt;p&gt;The following steps have been experimented on an Ubuntu 18.04 VPS hosted on
+Digital Ocean.&lt;/p&gt;
+
+&lt;h2 id="step-1-create-a-bot"&gt;Step 1: Create a bot&lt;/h2&gt;
+
+&lt;p&gt;You need to talk to @BotFather of Telegram about it.&lt;/p&gt;
+
+&lt;p&gt;For a detailed walkthrough, refer to the documentation of my &lt;a href="https://github.com/tommyku/telegram-bot-starter#step-1-register-your-bot"&gt;Telegram starter
+bot repo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;At the end of it, you should receive a bot token like the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;987654321:ABCDEFGHIJKLMNopqrstUVWXYZ123456789
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="step-2-add-a-script-to-etcssh"&gt;Step 2: Add a script to /etc/ssh&lt;/h2&gt;
+
+&lt;p&gt;Create a script to be ran by PAM when user logs in. While it’s fine to place
+it anywhere, I chose to put it inside /etc/ssh.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;sudo touch /etc/ssh/login_notify.sh
+sudo chmod +x /etc/ssh/login_notify.sh
+sudo editor /etc/ssh/login_notify.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Content of the script looks like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;#!/usr/bin/env bash
+# Content of /etc/ssh/login_notify.sh
+TELEGRAM_TOKEN="987654321:ABCDEFGHIJKLMNopqrstUVWXYZ123456789"
+CHAT_ID=""
+
+if [ ${PAM_TYPE} = "open_session" ]; then
+  MESSAGE="$PAM_USER@$PAM_RHOST: knock knock via $PAM_SERVICE"
+  curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage" -d chat_id="$CHAT_ID" -d text="$MESSAGE" &amp;gt; /dev/null 2&amp;gt;&amp;amp;1
+fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you run &lt;code&gt;login_notify.sh&lt;/code&gt; now, you are likely to not receive anything
+because inside the script &lt;code&gt;$CHAT_ID&lt;/code&gt; hasn’t been set, and Telegram does not
+know who to send this message to.&lt;/p&gt;
+
+&lt;p&gt;To obtain your chat ID, first text your bot with a &lt;code&gt;/start&lt;/code&gt; message.
+Then from terminal:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;curl https://api.telegram.org/bot&amp;lt;BOT TOKEN&amp;gt;/getUpdates
+# { ..."chat": { "id": 12345, ... }... }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let’s fill in the chat ID we found into &lt;code&gt;login_notify.sh&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-diff"&gt;--- a/etc/ssh/login_notify.sh
++++ b/etc/ssh/login_notify.sh
+- CHAT_ID=""
++ CHAT_ID="12345"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let’s try this our by running the script with the least amount of
+environmental variables set.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;PAM_TYPE="open_session" /etc/ssh/login_notify.sh
+# Telegram &amp;gt; "@: knock knock via"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The script works. Now we need it to be triggered.&lt;/p&gt;
+
+&lt;h2 id="step-3-modify-pam-configuration-to-trigger-the-script"&gt;Step 3: Modify PAM configuration to trigger the script&lt;/h2&gt;
+
+&lt;p&gt;PAM configurations for each service are located in &lt;code&gt;/etc/pam.d&lt;/code&gt;. In
+particular, we are interested in &lt;code&gt;/etc/pam.d/sshd&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;sudo editor /etc/pam.d/sshd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Add to the end:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;# Login Telegram Notification
+session optional pam_exec.so /etc/ssh/login_notify.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="step-4-test-it"&gt;Step 4: Test it&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;ssh -l username hostname -P port
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;figure&gt;
+&lt;img src="./it-works.png"&gt;
+&lt;figcaption&gt;Good. It works.&lt;/figcaption&gt;
+&lt;/figure&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2019-06-01:/blog/5-reasons-every-web-developer-should-make-a-startpage/</id>
+    <title type="html">5 reasons every web developer should make a startpage</title>
+    <published>2019-06-01T16:00:00Z</published>
+    <updated>2019-06-01T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/5-reasons-every-web-developer-should-make-a-startpage/" type="text/html"/>
+    <content type="html">&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;p&gt;Before I talk about “startpage” let’s look at the word “homepage”. What is a
+homepage? A homepage shows up when you open your web browser. In Firefox, the
+starting page users first see when they open up the browser is referred to as
+“homepage”.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%;" src="./homepage-firefox.png" alt="Setting page of Firefox, with item referring to homepage"&gt;
+&lt;figcaption&gt;Firefox refers to the page on browser start as homepage&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;In the early 2000s people make the “homepage” of their browser Yahoo! (Is it
+still a thing now?). At least I did until Google became popular.&lt;/p&gt;
+
+&lt;p&gt;Now back to the term “startpag”, it can be the page when your browser first
+starts, or the new tab page.&lt;/p&gt;
+
+&lt;p&gt;As a web developer, whether experienced or not, you may wonder why does a
+startpage matter? The default page looks good and is fine! Here are 5 reasons
+that maybe you should build your own instead of sticking to the default.&lt;/p&gt;
+
+&lt;h2 id="reason-1-you-own-your-browser-start-page"&gt;Reason 1: You own your browser start page&lt;/h2&gt;
+
+&lt;p&gt;No matter which browser you use, nowadays all major browsers have an option
+to set the homepage. You may not want to diverge from the default, but the
+freedom of choice is always yours.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%;" src="./firefox.png" alt="Default startpage of firefox"&gt;
+&lt;figcaption&gt;Firefox’s startpage right out of the box&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Do you like your browser’s default? All of it? Is there nothing you wish
+to add or remove from this page?&lt;/p&gt;
+
+&lt;p&gt;You can change it if you want! As technologists we love to tinker with our
+tools such that they work better for us. A browser start page is no exception!&lt;/p&gt;
+
+&lt;h2 id="reason-2-you-can-do-anything-you-want"&gt;Reason 2: You can do anything you want&lt;/h2&gt;
+
+&lt;p&gt;In an earlier post I’ve detailed &lt;a href="../have-fun-building-browser-start-page/"&gt;how to set up a basic start page&lt;/a&gt;
+and you can do the same.&lt;/p&gt;
+
+&lt;p&gt;Regardless of your level of sophistication as a web developer, there are always
+things that you could do to improve the existing start page of your browser. From as
+simple as changing the greeting message to as elaborated as fetching RSS feed from
+a upstream API proxy or your own server.&lt;/p&gt;
+
+&lt;p&gt;On the online community where people share their startpages, you can easily find
+people having their “waifu” on their startpage.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Waifu is a term for a fictional character, usually in anime or related media, that someone has great, and sometimes romantic, affection for
+— &lt;a href="https://www.dictionary.com/e/fictional-characters/waifu/"&gt;Urban Dictionary&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Yes, you can do that. Nobody’s gonna judge because it’s your personal computer.
+Will your boss frown on it when he/she walks past your desk? I don’t know.&lt;/p&gt;
+
+&lt;p&gt;There are productive things you can add to your startpage, say a calendar, weather
+forecast, RSS feed, alarm, current time in another country and more.&lt;/p&gt;
+
+&lt;p&gt;It’s your startpage, you can add whatever you want to it. (Just try saving
+yourself the embarrassment of somebody seeing what you actually put on it)&lt;/p&gt;
+
+&lt;h2 id="reason-3-a-transition-project-from-a-hello-world-to-a-todo-mvc"&gt;Reason 3: A transition project from a hello world to a Todo MVC&lt;/h2&gt;
+
+&lt;p&gt;For those who’ve just begun building websites by typing something into a
+text editor, a hello world webpage is simple.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-html"&gt;&amp;lt;h1&amp;gt;Hello World&amp;lt;/h1&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For a seasoned web developer though, you may be familiar with bundling tool
+like webpack which bundles, transpile and optimize code from hundreds of
+node modules to turn some framework-powered JavaScript code sprinkled with
+syntactic sugar into a 6MB &lt;code&gt;main.js&lt;/code&gt;. (OK I may be exaggerating and ignoring
+techniques that reduce bundle size such as tree shaking, but you get the
+point)&lt;/p&gt;
+
+&lt;p&gt;I mean, how can you go from hello world to a Todo MVC?&lt;/p&gt;
+
+&lt;p&gt;You can start from something simple like a start page. Developers can be
+employ some intermediate techniques one at a time. How can you absolutely
+center something? Use flexbox/CSS grid. How can you add content to the page
+dynamically? You could use DOM API/jquery first, and slowly work up to
+something like virtual DOM.&lt;/p&gt;
+
+&lt;p&gt;Nobody is gonna judge. You can try out new things to progressively improve
+your startpage at your own pace.&lt;/p&gt;
+
+&lt;h2 id="reason-4-become-part-of-a-community"&gt;Reason 4: Become part of a community&lt;/h2&gt;
+
+&lt;p&gt;There is a community on Reddit &lt;a href="http://reddit.com/r/startpages"&gt;/r/startpages&lt;/a&gt;
+where people showcase their creation. Sometimes, you may find interesting
+pieces of craft that would inspire your next creation, or techniques you’ve
+never thought would be possible.&lt;/p&gt;
+
+&lt;p&gt;You could throw your work out there and as far as I see, it’s a supportive
+and encouraging community.&lt;/p&gt;
+
+&lt;h2 id="reason-5-it-might-come-in-handy"&gt;Reason 5: It might come in handy&lt;/h2&gt;
+
+&lt;p&gt;I have a laptop-converted home server sharing files with SMB, hosting download
+service with Aria2 and streaming media with Plex. I’m not particularly good
+at remembering port numbers which each of these service is using. So a
+startpage on my browser or served at port 80 of the server helps.&lt;/p&gt;
+
+&lt;p&gt;I also hide a bunch of services inside a VPN with its own list of
+IP/hostnames-port combinations to remember. I simply can’t remember them.
+Now with a startpage, I don’t have to.&lt;/p&gt;
+
+&lt;p&gt;Of course, usually I just need to remember the first few characters of my most
+used sites because browsers nowadays have good autocomplete feature. The
+bookmarking feature also helps remembering links on different servers without
+requiring a startpage. A startpage isn’t strictly necessary, but it’s fun,
+so why not?&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2019-04-05:/blog/easy-access-to-docker-containers-inside-vpn/</id>
+    <title type="html">Easy access to Docker containers inside VPN</title>
+    <published>2019-04-05T16:00:00Z</published>
+    <updated>2019-04-05T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/easy-access-to-docker-containers-inside-vpn/" type="text/html"/>
+    <content type="html">&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;p&gt;In the post &lt;a href="../hide-docker-containers-behind-a-docker-vpn/"&gt;Hide Docker containers behind a Docker VPN&lt;/a&gt;
+I described how to set up an isolated Docker network to house and add
+authentication to Docker containers that comes without it. As far as
+authentication goes, it’s secure from between your machine to the subnet where
+the VPN and other containers reside.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%;" src="./no-dns.png" alt="Diagram showing the VPN with containers inside"&gt;
+&lt;figcaption&gt;Existing setup from last time&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;However, we were only able to access containers within the VPN using their IPs
+because no external DNS service has knowledge of what is inside the VPN. This is
+counter-intuitive and troublesome for us who’ve grown used to accessing websites
+by their fully qualified domain names. Therefore this time I am introducing how
+to host a domain name service (DNS) inside the VPN to provide name resolution
+automatically when new containers are started.&lt;/p&gt;
+
+&lt;p&gt;Before showing you how it’s done, though, I should go through how this DNS-based
+approach compares to it’s alternative, a Nginx reverse proxy with HTTPS inside
+the VPN.&lt;/p&gt;
+
+&lt;h2 id="why-a-domain-name-server-why-not-a-nginx-reverse-proxy"&gt;Why a domain name server? Why not a Nginx reverse proxy?&lt;/h2&gt;
+
+&lt;p&gt;You may ask — why a DNS? You could have used a Nginx reverse proxy to
+redirect traffic by the domain names requested, and then point the domains
+you want to use for internal containers at the Nginx reverse proxy in a
+publicly accessible DNS. Even though visitors can see the IP of your
+Nginx server, they can only access the Nginx server when connected to the VPN
+— which you are supposed to be the only person having access.&lt;/p&gt;
+
+&lt;p&gt;You may even get HTTPS working this way by passing the DNS challenge, or
+provision a separate server just to pass the HTTP challenge, and then change
+the DNS entry to point to your real, internal container.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%;" src="./nginx-proxy.png" alt="Diagram showing the VPN with containers, with Nginx reverse proxy to redirect traffic"&gt;
+&lt;figcaption&gt;Setup using Nginx reverse proxy&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;People are lazy — I am lazy.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Frankly speaking using a Nginx reverse proxy is probably the most proper
+way to do it because one gets the security benefit from both VPN and HTTPS.
+However, I was lazy and I’d rather sacrifice the security within my VPN as
+I am the only one using it. However if you share access to the VPN with
+somebody else, I’ll strongly recommand using HTTPS even inside the VPN.&lt;/p&gt;
+
+&lt;p&gt;But if it’s only you, then security inside the VPN network isn’t that
+important, even if credentials may be logged and escape the containment
+of the VPN via external log aggregation services/docker volume.&lt;/p&gt;
+
+&lt;h2 id="server-setup"&gt;Server setup&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A Linode instance with 1GB RAM&lt;/li&gt;
+  &lt;li&gt;Ubuntu 18.04&lt;/li&gt;
+  &lt;li&gt;Docker 18.06.1-ce&lt;/li&gt;
+  &lt;li&gt;Docker image
+    &lt;ul&gt;
+      &lt;li&gt;VPN: &lt;a href="https://hub.docker.com/r/hwdsl2/ipsec-vpn-server/"&gt;hwdsl2/ipsec-vpn-server&lt;/a&gt;
+&lt;/li&gt;
+      &lt;li&gt;DNS: &lt;a href="https://hub.docker.com/r/defreitas/dns-proxy-server/"&gt;defreitas/dns-proxy-server&lt;/a&gt;
+&lt;/li&gt;
+      &lt;li&gt;Web service: &lt;a href="https://hub.docker.com/_/nginx"&gt;nginx:1.13.8-alpine&lt;/a&gt;
+&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id="how-it-works"&gt;How it works?&lt;/h2&gt;
+
+&lt;p&gt;Assuming you’ve read and followed the &lt;a href="../hide-docker-containers-behind-a-docker-vpn/"&gt;last post&lt;/a&gt;,
+you should already be having a setup that reassembles this.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%;" src="./no-dns.png" alt="Diagram showing the VPN with containers inside"&gt;
+&lt;figcaption&gt;Existing setup from last time&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Our goal is add an DNS to the VPN that can resolve hostnames of services
+within the VPN, and be able to automatically add/remove DNS entries as
+the containers start/stop. VPN user should use this internal DNS as
+the primary DNS, and external DNS such as 1.1.1.1 or 8.8.8.8 for secondary
+and tertiary DNS.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%;" src="./dns-only.png" alt="Diagram showing the VPN with an DNS and containers inside"&gt;
+&lt;figcaption&gt;Existing setup from last time plus an DNS&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id="creating-the-internal-dns"&gt;Creating the internal DNS&lt;/h2&gt;
+
+&lt;p&gt;Assuming there exists a Docker bridge network &lt;code&gt;172.20.0.0/16&lt;/code&gt; called
+&lt;code&gt;vpn&lt;/code&gt;, let’s start a container with a fixed IP &lt;code&gt;172.20.0.4&lt;/code&gt;. We will
+use this DNS to resolve hostnames of containers inside the VPN.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;docker run --name dns \
+  --restart=always \
+  --net vpn \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /etc/resolv.conf:/etc/resolv.conf \
+  --hostname dns.lan \
+  --ip 172.20.0.4 \
+  -d defreitas/dns-proxy-server
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;One good thing about this DNS is there’s nothing we need to do
+except spinning it up. The service will listen to start/stop of
+containers and reconfigure itself to resolve hostnames of those
+services.&lt;/p&gt;
+
+&lt;h2 id="configure-the-vpn-to-use-internal-dns"&gt;Configure the VPN to use internal DNS&lt;/h2&gt;
+
+&lt;p&gt;Recall the &lt;code&gt;vpn.env&lt;/code&gt; file in the previous post. We added some
+environmental variables to configure the VPN.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;# vpn.env
+VPN_IPSEC_PSK=your_ipsec_pre_shared_key
+VPN_USER=your_vpn_username
+VPN_PASSWORD=your_vpn_password
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now with the new VPN, we should configure the VPN such that
+it uses the internal DNS instead of the system’s default DNS
+for domain name resolution.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;# vpn.env
+VPN_IPSEC_PSK=your_ipsec_pre_shared_key
+VPN_USER=your_vpn_username
+VPN_PASSWORD=your_vpn_password
+
+VPN_DNS_SRV1=172.20.0.4
+VPN_DNS_SRV2=1.1.1.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let’s recreate the container.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;docker stop ipsec-vpn-server
+docker rm ipsec-vpn-server
+
+docker run \
+    --name ipsec-vpn-server \
+    --env-file ./vpn.env \
+    --restart=always \
+    --network vpn \
+    -p 500:500/udp \
+    -p 4500:4500/udp \
+    -v /lib/modules:/lib/modules:ro \
+    -d --privileged \
+    hwdsl2/ipsec-vpn-server
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="give-our-web-service-a-hostname"&gt;Give our web service a hostname&lt;/h2&gt;
+
+&lt;p&gt;Our lizard people site from last time needs to be recreated
+to add a hostname to it. This time, no IP is specified because
+once we resolve hostname through the DNS, what IP the container
+has doesn’t matter anymore.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class="language-bash"&gt;docker stop test-web
+docker rm test-web
+
+docker run \
+    --name test-web \
+    -v `pwd`:/usr/share/nginx/html:ro \
+    --network vpn \
+    --hostname test.lan \
+    --restart=always \
+    -d nginx:1.13.8-alpine
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="accessing-the-web-service-using-hostname"&gt;Accessing the web service using hostname&lt;/h2&gt;
+
+&lt;p&gt;You can refer to &lt;a href="https://github.com/hwdsl2/setup-ipsec-vpn"&gt;this guide&lt;/a&gt;
+for connecting to the VPN from your PC or mobile device.&lt;/p&gt;
+
+&lt;p&gt;On Android you can select to use &lt;code&gt;172.20.0.4&lt;/code&gt; as your DNS.
+Even if you don’t, the VPN itself will use our internal
+DNS service as the primary DNS.&lt;/p&gt;
+
+&lt;p&gt;After connecting to the VPN and navigating to &lt;code&gt;http://test.lan&lt;/code&gt;,
+the IP to the web server will be resolved through the
+internal DNS.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 350px;" src="./test-lan.png" alt="Screenshot of Firefox on Android conneted to test.lan"&gt;
+&lt;figcaption&gt;We can access test.lan after connecting to the VPN&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;As I said earlier, with this approach you can only access the
+containers using HTTP. You could go the extra mile to get a
+self-signed cert or spoofing Let’s encrypt in HTTP/DNS challenge
+to get a legitimate cert. I have never tried that before, so
+there’s no guarantee that it works.&lt;/p&gt;
+
+&lt;p&gt;Even though the browser is talking to the web server by HTTP,
+the traffic is actually tunneled through VPN and thus it’s safe
+from sniffing between my PC and the server. The traffic goes
+out from the VPN server to containers in the same subnet, meaning
+the traffic never needed to leave the machine hosting these
+services. In my book, this is safe enough for the convenience.&lt;/p&gt;
+
+&lt;h2 id="how-do-i-remember-all-the-hostnames-and-port-numbers"&gt;How do I remember all the hostnames and port numbers?&lt;/h2&gt;
+
+&lt;p&gt;One thing that happened to me was that many services tend to use
+ports other than 80 port. The most famous are 3000 and 8080, and
+there are some more magic numbers the service’s developer decided
+to listen on.&lt;/p&gt;
+
+&lt;p&gt;Even though I can remember, say, the hostname &lt;code&gt;vcs.lan&lt;/code&gt; for
+my Git server, it is difficult for me to remember the port number
+6003.&lt;/p&gt;
+
+&lt;p&gt;On an VPN+DNS setup one possible way to solve this is to run
+and internal link shortener service. For example, you can go to
+a site by navigating to &lt;code&gt;g/vcs&lt;/code&gt; that redirects you to the
+version control site inside the network &lt;code&gt;vcs.lan:6003&lt;/code&gt;, in which
+&lt;code&gt;g&lt;/code&gt; is the hostname of your link shortener service.&lt;/p&gt;
+
+&lt;p&gt;In fact, you can run this whole thing off a single, static
+HTML file given that your mapping rarely changes.
+Alternatively, you can run a small link shortener service others
+have made.&lt;/p&gt;
+
+&lt;p&gt;Me? I use &lt;a href="http://github.com/tommyku/golk"&gt;tommyku/golk&lt;/a&gt; which
+as of writing is still in its infancy. Well, it gets the job done
+so why not?&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2019-03-07:/blog/editing-my-blog-online/</id>
+    <title type="html">Editing my blog online</title>
+    <published>2019-03-07T16:00:00Z</published>
+    <updated>2019-03-07T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/editing-my-blog-online/" type="text/html"/>
+    <content type="html">&lt;!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+--&gt;
+
+&lt;p&gt;Since my blog was first created and even after multiple revamps, there is no
+online-editing capability, until today as I am writing this post on the web.
+The solution is surprisingly simple that I couldn’t believe why I haven’t done
+this earlier.&lt;/p&gt;
+
+&lt;p&gt;I use a static site generator called &lt;a href="https://nanoc.ws/"&gt;Nanoc&lt;/a&gt; to convert
+posts written in markdown into HTML. One property of a static site generator
+is that I cannot edit my blog online unlike CMS such as WordPress, I couldn’t
+edit my blog online.&lt;/p&gt;
+
+&lt;p&gt;After an infrastructure change, I am now able to logon to a file editor on
+PC or mobile and see immediately the change I made on a clone of my blog in
+DEV environment.&lt;/p&gt;
+
+&lt;h2 id="before"&gt;Before&lt;/h2&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%;" src="./before.png" alt="Date flow before this change"&gt;
+&lt;figcaption&gt;Originally, local machine is required to perform any change&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Before this infrastructure change has been made, I needed to&lt;/p&gt;
+
+&lt;p&gt;In order to make any change blog content, I have to open
+the posts, written markdown, using text editor, save it, and push it to GitHub
+such that the CI can compile and deploy the updated pages.&lt;/p&gt;
+
+&lt;p&gt;There is no need to change any of the existing flow. The issue that troubles
+me so far has only been the part where I cannot edit online. Being a lazy, I
+don’t want to migrate my blog to a headless CMS either — that’ll be an
+overkill and I don’t like my data being tied to one specific platform.&lt;/p&gt;
+
+&lt;p&gt;Therefore, I cloned the existing setup and added online content editing,
+hopefully together they work as planned.&lt;/p&gt;
+
+&lt;h2 id="after"&gt;After&lt;/h2&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%;" src="./after.png" alt="Date flow after this change"&gt;
+&lt;figcaption&gt;Cloned the whole setup with online file editing, less CI and deployment target&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The Dev server I have been using came with Nanoc. Nanoc itself doesn’t listen
+to file change unless you couple it with Guard, which has been bundled into
+the release of Nanoc I am running on.&lt;/p&gt;
+
+&lt;p&gt;Basically, I run &lt;code&gt;nanoc live&lt;/code&gt; and it recompiles the diff every time I save a
+file. The site sits behind a Nginx reverse proxy with basic auth
+&lt;a href="../hide-docker-containers-behind-nginx-proxy/"&gt;just like how I did for many things else&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I spent a hour searching online for something I can just easily hook onto a
+folder so that I can edit the folder content on a web page, ideally with Docker.
+So far, only &lt;a href="https://filebrowser.xyz/"&gt;File Browser&lt;/a&gt; fits the bill, and man it
+looks and works great.&lt;/p&gt;
+
+&lt;p&gt;Isn’t this super obvious? I was surprised when I wrote this setup down on paper,
+wondering why haven’t I figured it out earlier, and even wasting an afternoon
+looking at some headless CMS offerings.&lt;/p&gt;
+
+&lt;p&gt;The purpose of running my own server and a few web services is so that I can learn
+to be lazy. And with this zero-migration setup, lazy I am.&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img style="max-width: 100%;" src="./editing-online.png" alt="How editing online looks like on my laptop"&gt;
+&lt;figcaption&gt;How it looks like when I write on my laptop&lt;/figcaption&gt;
+&lt;/figure&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog.tommyku.com,2019-02-22:/blog/debugging-by-testing-assumptions/</id>
+    <title type="html">Debugging by testing assumptions</title>
+    <published>2019-02-22T16:00:00Z</published>
+    <updated>2019-02-22T16:00:00Z</updated>
+    <link rel="alternate" href="https://blog.tommyku.com/blog/debugging-by-testing-assumptions/" type="text/html"/>
+    <content type="html">&lt;p&gt;When troubleshooting an issue introduced not by a simple and apparent
+cause, it could take from from 10 minutes all the way to hours and days,
+leaving ourselves scratching our heads and nearly suffering an emotional
+breakdown. However, it needs not be the case had we had a healthy mindset when
+troubleshooting the issue.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;It works on my machine
+— most common excuse used by programmers&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;At the beginning of troubleshooting, be an error message or something
+not working the way we expect it does, we can take this assumption, and
+start from here.&lt;/p&gt;
+
+&lt;p&gt;Ask yourself one question: What are the key differences between my
+system and the system I am troubleshooting on?&lt;/p&gt;
+
+&lt;p&gt;As we know, computer systems nowadays are constructed as layers upon
+layers of abstractions, so to troubleshoot we need to focus on each
+layers as if we are peeling an onion.&lt;/p&gt;
+
+&lt;p&gt;Starting from runtime level, the key differences may be:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;versions of the runtime&lt;/li&gt;
+  &lt;li&gt;versions of the dependencies&lt;/li&gt;
+  &lt;li&gt;application state (e.g. uninitialized database, config files)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;On layers below the application there are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;external dependencies (e.g. database, library, network and external
+APIs)&lt;/li&gt;
+  &lt;li&gt;system level restrictions/configuration (e.g. firewall, RAM/CPU
+limitation, user permissions)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Then there are hardware, which is rather difficult to troubleshoot
+unless we have replacement parts to see which is working/not working.&lt;/p&gt;
+
+&lt;p&gt;We should test our assumptions that every layers of the system works,
+until we figured out which doesn’t. To test the assumptions, we
+perform test on separate layers to ensure that they work, and move on
+to the next layer.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;We should test our assumptions that every layers of the system works,
+until we figured out which doesn’t.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Here comes a real-world example of me trying to trouble a mysterious issue
+in my program — not a bug because the issue ended up to be non-code
+related.&lt;/p&gt;
+
+&lt;p&gt;I upgraded my OS from Ubuntu 16.04 to Ubuntu 18.04. With it comes PHP
+7.2 which is incompatible with the framework Laravel 5.5 that my
+application depended on. Luckily, there is an PPA &lt;code&gt;ppa:ondrej/php&lt;/code&gt; that
+adds &lt;code&gt;php7.0&lt;/code&gt; and related packages to Ubuntu 18.&lt;/p&gt;
+
+&lt;p&gt;Now here comes a problem. My application looks at some &lt;code&gt;.lock&lt;/code&gt; files
+stored in system &lt;code&gt;/tmp&lt;/code&gt; folder to determine it’s state. That worked on
+my Ubuntu 16.04 setup and my development environment on Docker. However,
+it stopped working after the OS upgrade.&lt;/p&gt;
+
+&lt;p&gt;What gives?&lt;/p&gt;
+
+&lt;p&gt;My original thought was that the view cache was not updated, so I
+cleared the caches in Laravel by running &lt;code&gt;php artisan cache:clear&lt;/code&gt;. Nope
+that doesn’t work. What about actually running the code? I fired up a
+PHP command prompt with &lt;code&gt;php artisan tinker&lt;/code&gt; and ran my line
+&lt;code&gt;var_dump(file_exists('/tmp/something.lock'))&lt;/code&gt; and sure enough I got
+&lt;code&gt;bool(true)&lt;/code&gt;. By that time I realized that I was stepping into the
+WTF land of troubleshooting.&lt;/p&gt;
+
+&lt;p&gt;It was supposed to be an one-hour deployment, now it has passed the
+1.5 hour mark and I still hasn’t figured out what happened. One
+signature sign of you’re looking into the wrong problem is that there
+aren’t many StackOverflow questions about the topic because that means
+nobody was unfortunate enought to stumble upon the same problem.&lt;/p&gt;
+
+&lt;p&gt;Here is where we begin testing our assumptions. We have tested using
+the PHP interpreter to see that &lt;code&gt;file_exists&lt;/code&gt; works. Now we need to move
+one layer up (or down depending on which way you look): Apache.&lt;/p&gt;
+
+&lt;p&gt;I will skip the dirty details and jump right to the conclusion. I did
+something similar with that &lt;code&gt;php artisan tinker&lt;/code&gt; step by creating a
+separate PHP script inside my &lt;code&gt;/var/www/html&lt;/code&gt; where my PHP pages reside.&lt;/p&gt;
+
+&lt;p&gt;Thing is, whenever I run &lt;code&gt;file_exists&lt;/code&gt; by invoking a script from Apache,
+it fails to recognize the file inside &lt;code&gt;/tmp&lt;/code&gt;, so I can tell that
+something is wrong with Apache. Further investigation by running
+&lt;code&gt;scandir&lt;/code&gt; tells me that from Apache’s prespective, &lt;code&gt;/tmp&lt;/code&gt; is an empty
+folder.&lt;/p&gt;
+
+&lt;p&gt;But why? &lt;a href="https://unix.stackexchange.com/questions/345122/why-php-can-not-see-tmp-files"&gt;systemd - why php can not see /tmp files - Unix &amp;amp; Linux Stack Exchange&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;When you ask the right question, it’s often easier to find the answer.
+And that’s why I believe troubleshooting requires testing the
+assumptions. By testing assumptions you can drill down layer by layer
+until you located where the culprit is. Once the defect has been
+identified, it’s much easier to figure out a solution.&lt;/p&gt;
+
+&lt;p&gt;Consider this approach a linear search — obviously there exists
+the binary search variant called
+&lt;a href="https://en.wikipedia.org/wiki/Troubleshooting#Half-splitting"&gt;half-splitting&lt;/a&gt;,
+which I eventually had to employ on another issue that was closely
+related to two pieces of hardware talking to each other.&lt;/p&gt;
+</content>
+  </entry>
+</feed>
+
+

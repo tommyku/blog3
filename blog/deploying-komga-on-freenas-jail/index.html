@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Deploying Komga on FreeNAS jail - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Deploying Komga on FreeNAS jail - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Deploying Komga on FreeNAS jail - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Deploying Komga on FreeNAS jail</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2020-03-15T00:00:00+08:00">March 15, 2020</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i></section><section class="e-content" id="content"><!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+-->
+
+<p>I’ve built myself a NAS using old parts and FreeNAS. Then I realized I can host
+a variety of services on my NAS such as Emby, Syncthing and duplicati with
+FreeNAS plugins out-of-the-box.</p>
+
+<p>Compared to the wealth of containers available on Docker Hub, plugins on FreeNAS
+are somewhat lacking. However that doesn’t mean docker is the to-go option for
+running isolated services. Instead, jail came out of the box in FreeNAS while
+docker didn’t. Plus I couldn’t get RancherOS (a host-OS for docker) to run on
+a FreeNAS VM, so I gave up.</p>
+
+<p>In this post I am going to walk you through how I deployed a manga-reading
+application Komga to my FreeNAS jail.</p>
+
+<h2 id="creating-a-jail">Creating a Jail</h2>
+
+<p>First locate the Jails section on the side menu of FreeNAS dashboard, then
+click ADD on the top right corner. Here fill in the Name, and choose a Release
+from the dropdown menu, then click NEXT.</p>
+
+<figure>
+<img style="max-width: 100%" src="./image2.png" alt="Creating a Jail">
+<figcaption></figcaption>
+</figure>
+
+<p>There are 3 ways to set the IP addresses of the jail - VNET/NAT, DHCP or
+static IP.</p>
+
+<p>With VNET/NAT you access your service via the same IP as your FreeNAS and some
+unused port.</p>
+
+<p>With DHCP, you still access your services from unused ports but via an IP
+distributed by the DHCP server.</p>
+
+<p>With static IP like below, I specify an IP address, subnet mask and default
+router to my home network router. If you find the default router field
+disabled, clicking some of the checkboxes will re-enable it. You can then
+edit the default router before unchecking the checkboxes.</p>
+
+<p>Oh, feel free to check the Auto-start checkbox at the bottom as well.</p>
+
+<figure>
+<img style="max-width: 100%" src="./image4.png" alt="Editing Jail properties">
+<figcaption></figcaption>
+</figure>
+
+<p>After saving and starting the jail, you will have a working jail with
+its own IP address and isolation. At this point it is not running service
+for you, so in the next part we will mount a ZFS folder to it and install
+Komga for you to read comics.</p>
+
+<h2 id="deploying-komga-to-a-jail">Deploying Komga to a jail</h2>
+
+<p>From the Jails page click on the arrow on the right of our Komga jail, then
+click Mount Points in the expanded panel. Here you can configure where in your
+pools do you want to make visible to the jail by mounting. Otherwise, the jail
+will see only files inside its own iocage dataset.</p>
+
+<figure>
+<img style="max-width: 100%" src="./image3.png" alt="Komga jail in Jails page">
+<figcaption></figcaption>
+</figure>
+
+<figure>
+<img style="max-width: 100%" src="./image6.png" alt="Mounting folder to the jail">
+<figcaption></figcaption>
+</figure>
+
+<p>Komga requires Java to run which is not available. To install Java 11, start
+the jail and click Shell from the Jails page. In the resultant shell screen
+you have logged in to the jail’s shell, not to your FreeNAS host shell.
+Installing Java in the shell doesn’t make it available to the host OS.</p>
+
+<pre><code class="language-bash"># Jail Shell
+# Developer of Komga recommends using openjdk11 over openjdk8 for better performance
+pkg install openjdk11
+</code></pre>
+
+<figure>
+<img style="max-width: 100%" src="./image1.png" alt="Screen shown after installing java">
+<figcaption></figcaption>
+</figure>
+
+<p>As shown in the screenshot there are some post-installation steps required for
+Java. However we need to do them on the host-OS’s shell instead of inside the
+jail. Open the host OS shell from the left menu, then run the following
+commands.</p>
+
+<pre><code class="language-bash"># Host Shell
+mount -t fdescfs null /mnt/{POOL NAME}/iocage/jails/Komga/root/dev/fd
+mount -t procfs null /mnt/{POOL NAME}/iocage/jails/Komga/root/proc
+</code></pre>
+
+<p>Next return to the jail’s shell, and from <code>/root</code> download the latest
+version of Komga using fetch. Alternatively, you may download the file
+elsewhere and drop it into jail’s own dataset.</p>
+
+<pre><code class="language-bash"># Jail Shell
+fetch https://github.com/gotson/komga/releases/download/v0.27.7/komga-0.27.7.jar
+</code></pre>
+
+<p>To quickly test whether Komga is working, start the Komga server from
+<code>/root</code>.</p>
+
+<pre><code class="language-bash"># Jail Shell
+/usr/local/bin/java -jar ./komga-0.27.7.jar
+</code></pre>
+
+<p>Navigating to the webpage at port 8080 of your jail’s IP, you will see
+Komga’s login screen.</p>
+
+<figure>
+<img style="max-width: 250px" src="./image5.png" alt="Komga login screen">
+<figcaption></figcaption>
+</figure>
+
+<p>You won’t be able to login at the moment because no account is created
+yet. Follow <a href="https://komga.org/installation/user-accounts.html#automatic-mode-default">Komga’s installation instruction</a>
+to get it up and running.</p>
+
+<p>If you want to change some of the default config options, Komga’s
+configuration is stored in a file <code>application.yml</code> alongside the jar.
+A sample configuration file can be found in <a href="https://komga.org/configuration/#sample-configuration-file">Komga’s documentation</a>.</p>
+
+<p>The last bit of this deployment is to make Komga start every time the jail
+is started. Navigate to <code>/etc</code> and create a file <code>rc.local</code>.</p>
+
+<pre><code class="language-bash">#!/bin/sh
+
+exec 2&gt; /tmp/rc.local.log
+exec 1&gt;&amp;2
+set -x
+
+cd /root
+nohup /usr/local/bin/java -jar /root/komga-0.27.7.jar
+
+exit 0
+</code></pre>
+
+<p>Lastly, make <code>rc.local</code> executable.</p>
+
+<pre><code class="language-bash"># Jail Shell
+chmod +x /etc/rc.local
+</code></pre>
+
+<p>This way next time when you start the jail, Komga will automatically be started too.</p>
+
+<h2 id="more-information">More Information</h2>
+
+<p>This post was created with the help of the following pages:</p>
+
+<ul>
+  <li><a href="https://unix.stackexchange.com/questions/127001/linux-lxc-vs-freebsd-jail">Linux LXC vs FreeBSD jail - Unix &amp; Linux Stack Exchange</a></li>
+  <li><a href="https://www.ixsystems.com/community/threads/ubooquity.59244/#post-422437">Ubooquity | iXsystems Community</a></li>
+  <li><a href="https://www.reddit.com/r/freenas/comments/9r1bky/a_guide_on_how_to_install_ubooquity_in_a_freenas/">A guide on how to install Ubooquity in a FreeNAS jail and how to get it to run on jail start : freenas</a></li>
+</ul>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../hide-docker-containers-behind-a-docker-vpn/">Hide Docker containers behind a Docker VPN</a><p class="abstract">How I safe-guarded my personal web services (many of which have no auth layer at all) without having to integrate authentication to every single of my services</p></li><li><a href="../easy-access-to-docker-containers-inside-vpn/">Easy access to Docker containers inside VPN</a><p class="abstract">A follow-up to my previous post about hiding docker containers behind VPN, with an DNS for resolving internal hostnames</p></li><li><a href="../a-self-hosting-lifecycle/">A self-hosting lifecycle</a><p class="abstract">How is it like to self-host something? This post describes the process of self-hosting from the initial thought process, to patching and housekeeping, all the way to the end-of-life of a self-hosted service</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/deploying-komga-on-freenas-jail/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/deploying-komga-on-freenas-jail/" id="permalink">https://blog.tommyku.com/blog/deploying-komga-on-freenas-jail/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/deploying-komga-on-freenas-jail/";
+  this.page.identifier = "deploying-komga-on-freenas-jail";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/deploying-komga-on-freenas-jail/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

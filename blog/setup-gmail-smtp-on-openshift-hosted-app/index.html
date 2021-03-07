@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Setup Gmail SMTP on Openshift hosted app - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Setup Gmail SMTP on Openshift hosted app - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Setup Gmail SMTP on Openshift hosted app - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Setup Gmail SMTP on Openshift hosted app</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2014-07-26T00:00:00+08:00">July 26, 2014</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>Sending email on the PasS Openshift may be a bit troublesome because you cannot install sendmail. By default, mail function of php is not installed as well. You will need to connect to external POP/IMAP/SMTP servers to send and receive email on Openshift. In this post I am showing you how I send verificaiton email from Openshift.</p>
+
+<p>It happens that a project I am working on demands to send verification email upon user registration. <a href="https://www.openshift.com/blogs/enabling-transactional-email-on-paas-with-sendgrid">At first I tried SendGrid with no avail</a> because their terms restrict email types to</p>
+
+<ul>
+  <li>Trigger based email notifications and alerts</li>
+  <li>Purchase confirmations</li>
+  <li>Password reminders</li>
+  <li>Marketing email newsletters</li>
+</ul>
+
+<p>where verification email is not in the list.</p>
+
+<h4 id="the-silver-lining">The silver lining</h4>
+
+<p>For someone like me who do want to send email but does not have a SMTP server, remember Google. For one Gmail account <a href="https://support.google.com/a/answer/166852?hl=en">you can send up to 99 email via Google’s SMTP server every day</a>, and you can have as many Gmail account as you want.</p>
+
+<p>Openshift opened <a href="https://www.openshift.com/blogs/outbound-mail-ports-are-now-open-for-business-on-openshift">the ports we use to send/receive email</a>, too!</p>
+
+<ul>
+  <li>SMTP/submission (25, 465, 587)</li>
+  <li>IMAP (143, 220, 993)</li>
+  <li>POP (109, 110, 995)</li>
+</ul>
+
+<p>Whatever library you use, the protocol is standard, in my project I chose Swift Mailer.</p>
+
+<h4 id="show-me-the-code">Show me the code</h4>
+
+<pre><code class="language-php">&lt;?php
+
+// ...
+
+// make sure you get these SMTP settings right
+$transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, "ssl") 
+    -&gt;setUsername('yourgmailusername@gmail.com')
+    -&gt;setPassword('yourgmailpassword');
+
+$mailer = Swift_Mailer::newInstance($transport);
+// the message itself
+$message = Swift_Message::newInstance('email subject')
+    -&gt;setFrom(array('noreply@example.com' =&gt; 'no reply'))
+    -&gt;setTo(array('recipient@example.com'))
+    -&gt;setBody("email body");
+
+$result = $mailer-&gt;send($message);
+
+// ...
+</code></pre>
+
+<p>You are not restricted to using only Gmail’s server, if you own or have rent a mail server supporting these protocols, it is not hard to set it up to use your own mail server.</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../setup-gmail-smtp-on-openshift-hosted-laravel-app/">Setup Gmail SMTP on Openshift hosted Laravel app</a><p class="abstract">Instead of sending email through the server's own mailing server, you can use Gmail to send email, but you need to deal with Gmail's security policy first</p></li><li><a href="../the-hidden-cost-of-self-hosting/">The hidden cost of self-hosting</a><p class="abstract">The hidden costs behind self-hosting a note-taking service and why you should consider twice before self-hosting anything</p></li><li><a href="../dead-tutorials/">Dead Tutorials</a><p class="abstract">In the frontier of web development, new frameworks rise and fall, upgrade to keep up with the trend and fade into obsolescence, yet there always have been those rusty old tutorials lurking around</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/setup-gmail-smtp-on-openshift-hosted-app/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/setup-gmail-smtp-on-openshift-hosted-app/" id="permalink">https://blog.tommyku.com/blog/setup-gmail-smtp-on-openshift-hosted-app/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/setup-gmail-smtp-on-openshift-hosted-app/";
+  this.page.identifier = "setup-gmail-smtp-on-openshift-hosted-app";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/setup-gmail-smtp-on-openshift-hosted-app/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

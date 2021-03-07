@@ -1,0 +1,237 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Controlling my home server with Syncthing - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Controlling my home server with Syncthing - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Controlling my home server with Syncthing - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Controlling my home server with Syncthing</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2019-07-27T00:00:00+08:00">July 27, 2019</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i></section><section class="e-content" id="content"><!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+-->
+
+<p>At home I run a Windows 10 Home on Thinkpad E540 as a home server. It sites
+nicely inside the TV closet drawer quietly doing its thing. With Emby, SMB and
+some web services I am able to make use of the home server as much as I want to.</p>
+
+<p>However there is one thing that Windows 10 Home cannot do: remote desktop.
+Microsoft locked up the feature for Home edition and even though people got it
+working with RDP wrapper in the past, it no longer works on my machine in 2019.</p>
+
+<p>The reason I need to remotely connect to my laptop is such that I can put it to 
+sleep, wake up and shutdown using only my phone. This is obvious - just throw in
+a web server that can run shell commands. Say IIS + PHP.</p>
+
+<p>Going down this path will inevitably lead us to stuff like handling
+authentication, opening an extra port in the firewall and setting up PHP on
+IIS. That’s too much work for my lazy self.</p>
+
+<p>So I turned to the unobvious - I’ve already had an SMB and a Syncthing server
+running. SMB is for sharing storage to other machines and Syncthing is similar
+but running on my phone. What if the server polls for commands updatable by
+these services? SMB and Syncthing each has their own authentication layer, and
+I only need to work out the logic. A logic like this:</p>
+
+<figure>
+<img style="max-width: 100%;" src="./Controlling%20my%20home%20server%20with%20Syncthing.png" alt="Finite state machine showing states of the laptop">
+<figcaption>State diagram of the laptop, with transition triggered by file change</figcaption>
+</figure>
+
+<p>Because the state itself can easily be represented by what file is in the <code>is</code>
+and <code>should</code> folder, I only need to use SMB/Syncthing to move around files in
+order to update the states. The state is maintained by folders and files
+inside a control folder accessible via SMB and Syncthing.</p>
+
+<pre><code class="language-plaintext">Control
+├── is/
+├── should/
+├── running.txt
+├── shutdown.txt
+├── sleep.txt
+├── will_shutdown.txt
+├── will_sleep.txt
+└── Control.cmd
+</code></pre>
+
+<p>A scheduled task will run every 1 minute to scan for any change in state and
+perform some actions while moving to the next state. Best part? Most of it
+comes for free.</p>
+
+<figure>
+<img style="max-width: 100%;" src="./Control%20power%20state%20using%20Syncthing.png" alt="Data flow">
+<figcaption>Components and data flow</figcaption>
+</figure>
+
+<p>Everything here is already in place except for the scheduled task that reads
+the latest state and perform actions (sleep/shutdown) accordingly. I created
+a <code>.cmd</code> file is pretty simple. For each of the states above that has a
+transition marked by <code>1 min</code>, I define an if statement to check the state,
+then perform the action and state change. With such a simple finite state
+machine it didn’t take long to debug.</p>
+
+<pre><code class="language-cmd">IF EXIST ".\should\sleep.txt" (
+  DEL ".\is\*.txt"
+  DEL ".\should\*.txt"
+  COPY ".\will_sleep.txt" ".\is"
+  curl -s -X POST https://api.telegram.org/bot&lt;BOT TOKEN&gt;/sendMessage -d chat_id=&lt;CHAT ID&gt; -d text="HOMESERVER will sleep soon"
+  EXIT 1
+)
+
+IF EXIST ".\is\will_sleep.txt" (
+  DEL ".\is\*.txt"
+  DEL ".\should\*.txt"
+  COPY ".\sleep.txt" ".\is"
+  curl -s -X POST https://api.telegram.org/bot&lt;BOT TOKEN&gt;/sendMessage -d chat_id=&lt;CHAT ID&gt; -d text="HOMESERVER sleeps now"
+  %windir%\System32\rundll32.exe powrprof.dll,SetSuspendState 0,1,0
+  EXIT 2
+)
+
+IF EXIST ".\should\shutdown.txt" (
+  DEL ".\is\*.txt"
+  DEL ".\should\*.txt"
+  curl -s -X POST https://api.telegram.org/bot&lt;BOT TOKEN&gt;/sendMessage -d chat_id=&lt;CHAT ID&gt; -d text="HOMESERVER will shutdown soon"
+  COPY ".\will_shutdown.txt" ".\is"
+  EXIT 3
+)
+
+IF EXIST ".\is\will_shutdown.txt" (
+  DEL ".\is\*.txt"
+  DEL ".\should\*.txt"
+  COPY ".\shutdown.txt" ".\is"
+  curl -s -X POST https://api.telegram.org/bot&lt;BOT TOKEN&gt;/sendMessage -d chat_id=&lt;CHAT ID&gt; -d text="HOMESERVER shutdowns now"
+  shutdown.exe -s
+  EXIT 4
+)
+
+DEL ".\is\*.txt"
+DEL ".\should\*.txt"
+EXIT 5
+</code></pre>
+<!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+-->
+
+<p>I’ve included a <code>curl</code> command to send out Telegram notification notifying
+a state change. For more information regarding using Telegram as a notification
+service, look at my <a href="../send-telegram-notification-on-ssh-login/">previous post</a>.</p>
+
+<p>What is left is a trigger that runs this <code>cmd</code> file every 1 minute. It took me
+awhile to figure it all out because of how strange Windows’s task scheduler
+works while the *nix master race who’ve been using the awesome CRON wouldn’t
+understand.</p>
+
+<p>In a nutshell, we want to run this script:</p>
+
+<ul>
+  <li>every minute after start up</li>
+  <li>even if waking from sleep</li>
+  <li>regardless of power source (AC/battery)</li>
+  <li>regardless of whether the user has logged in or not</li>
+</ul>
+
+<p>I have exported the task into an .xml file such that you can just import it,
+change some necessary parameters and off you go.</p>
+
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-16"?&gt;
+&lt;Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task"&gt;
+  &lt;RegistrationInfo&gt;
+    &lt;Date&gt;2019-06-15T16:20:14.7976916&lt;/Date&gt;
+    &lt;Author&gt;HOMESERVER\user&lt;/Author&gt;
+    &lt;Description&gt;HOMESERVER Control&lt;/Description&gt;
+    &lt;URI&gt;\HOMESERVER Auto Control&lt;/URI&gt;
+  &lt;/RegistrationInfo&gt;
+  &lt;Triggers&gt;
+    &lt;TimeTrigger&gt;
+      &lt;Repetition&gt;
+        &lt;Interval&gt;PT1M&lt;/Interval&gt;
+        &lt;StopAtDurationEnd&gt;false&lt;/StopAtDurationEnd&gt;
+      &lt;/Repetition&gt;
+      &lt;StartBoundary&gt;2019-07-10T00:00:00&lt;/StartBoundary&gt;
+      &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;/TimeTrigger&gt;
+  &lt;/Triggers&gt;
+  &lt;Principals&gt;
+    &lt;Principal id="Author"&gt;
+      &lt;UserId&gt;UserId&lt;/UserId&gt;
+      &lt;LogonType&gt;Password&lt;/LogonType&gt;
+      &lt;RunLevel&gt;LeastPrivilege&lt;/RunLevel&gt;
+    &lt;/Principal&gt;
+  &lt;/Principals&gt;
+  &lt;Settings&gt;
+    &lt;MultipleInstancesPolicy&gt;StopExisting&lt;/MultipleInstancesPolicy&gt;
+    &lt;DisallowStartIfOnBatteries&gt;false&lt;/DisallowStartIfOnBatteries&gt;
+    &lt;StopIfGoingOnBatteries&gt;false&lt;/StopIfGoingOnBatteries&gt;
+    &lt;AllowHardTerminate&gt;true&lt;/AllowHardTerminate&gt;
+    &lt;StartWhenAvailable&gt;true&lt;/StartWhenAvailable&gt;
+    &lt;RunOnlyIfNetworkAvailable&gt;false&lt;/RunOnlyIfNetworkAvailable&gt;
+    &lt;IdleSettings&gt;
+      &lt;StopOnIdleEnd&gt;true&lt;/StopOnIdleEnd&gt;
+      &lt;RestartOnIdle&gt;false&lt;/RestartOnIdle&gt;
+    &lt;/IdleSettings&gt;
+    &lt;AllowStartOnDemand&gt;true&lt;/AllowStartOnDemand&gt;
+    &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;Hidden&gt;false&lt;/Hidden&gt;
+    &lt;RunOnlyIfIdle&gt;false&lt;/RunOnlyIfIdle&gt;
+    &lt;WakeToRun&gt;false&lt;/WakeToRun&gt;
+    &lt;ExecutionTimeLimit&gt;PT0S&lt;/ExecutionTimeLimit&gt;
+    &lt;Priority&gt;7&lt;/Priority&gt;
+  &lt;/Settings&gt;
+  &lt;Actions Context="Author"&gt;
+    &lt;Exec&gt;
+      &lt;Command&gt;C:\Data\Control\control.cmd&lt;/Command&gt;
+      &lt;WorkingDirectory&gt;C:\Data\Control&lt;/WorkingDirectory&gt;
+    &lt;/Exec&gt;
+  &lt;/Actions&gt;
+&lt;/Task&gt;
+</code></pre>
+
+<p>From task scheduler, click “Import Task…” and select the downloaded file.
+Change the user and location to the script to wherever the control script is
+located. Now we have got the logic covered. What’s left is some simple wiring
+to allow syncing files between the control folder and the phone’s internal
+storage using Syncthing.</p>
+
+<p>For download/setup of Syncthing, refer to Syncthing’s
+<a href="https://syncthing.net/">website</a> which pretty much explained it all. Just
+make sure you can sync files between your phone and the PC.</p>
+
+<p>To move the PC into a sleep state, first copy and paste <code>sleep.txt</code> into
+<code>./should</code> folder, then instruct Syncthing on the phone to perform a folder
+rescan.</p>
+
+<figure>
+<img style="max-width: 350px;" src="./Screenshot_20190720-121043.png" alt="Syncthing UI on mobile">
+<figcaption>Syncthing UI on mobile</figcaption>
+</figure>
+
+<p>The default rescan interval is 1 hour. Reducing it to say 1 minute could
+avoid manually triggering a rescan at the cost of battery life. As we’ll
+always trigger a rescan when we need it, it’s probably ok making the
+rescan interval 1 day or even longer.</p>
+
+<p>In a minute or so, the home server should have picked up the file change
+and sent out a Telegram message notifying that it’s going to sleep and
+then in another minute’s time, the server goes to sleep.</p>
+
+<p>Next time when I want to wake the server, I can either go pressing its
+power button directly, or use Emby for Android’s “Wake server” feature.
+Thus at this point, we’ve connected all the dots and established a
+control mechanism for the home server without adding additional web
+service.</p>
+
+<figure>
+<img style="max-width: 100%;" src="./Controlling%20my%20home%20server%20with%20Syncthing.png" alt="Finite state machine showing states of the laptop">
+<figcaption>Nothing but a scheduled job and Syncthing</figcaption>
+</figure>
+
+<p>Some may say I am just asking for trouble by adding artificial
+constraints to myself. That is true. I could have set up a simple PHP
+script or build a bot to long-poll Telegram’s API and act accordingly.
+I was too lazy to set those up, or play around with cmd’s syntax trying
+to parse Telegram’s API response. Being limited helped me come up with
+creative solutions like this, and it worked!</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../send-telegram-notification-on-ssh-login/">Send Telegram notification on SSH login via PAM</a><p class="abstract">Every login to my VPS via SSH should now send out a Telegram message to notify me of a successful login. Not really bullet-proof, but good enough.</p></li><li><a href="../a-self-hosting-lifecycle/">A self-hosting lifecycle</a><p class="abstract">How is it like to self-host something? This post describes the process of self-hosting from the initial thought process, to patching and housekeeping, all the way to the end-of-life of a self-hosted service</p></li><li><a href="../using-google-form-to-track-my-life-a-lifelogging-primer/">Using Google Form to track my life: a lifelogging primer</a><p class="abstract">Not only Google can track your every move, now you can track your own life using what Google is offering for free, and for your own good</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/controlling-my-home-server-with-syncthing/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/controlling-my-home-server-with-syncthing/" id="permalink">https://blog.tommyku.com/blog/controlling-my-home-server-with-syncthing/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/controlling-my-home-server-with-syncthing/";
+  this.page.identifier = "controlling-my-home-server-with-syncthing";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/controlling-my-home-server-with-syncthing/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

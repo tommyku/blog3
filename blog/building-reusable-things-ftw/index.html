@@ -1,0 +1,69 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Building reusable things, FTW - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Building reusable things, FTW - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Building reusable things, FTW - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Building reusable things, FTW</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2015-03-23T00:00:00+08:00">March 23, 2015</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>I was working on an API wrapper for HKUST library room reservation system for my COMP4971F Independent Work. The nasty way I usually did was to hack the application out of a fresh Laravel build by putting all the parsing, booking and strange work-arounds inside the controllers. This time, I decided to build a composer package <code>tommyku/liba_lib</code> (<a href="https://github.com/tommyku/liba_lib">github</a>) instead.</p>
+
+<p>We have spent way too much time re-inventing the wheel for the web, only that they look slightly different from another. Popular front-end frameworks, toolkits and CMS/templates such as AngularJS, normalize.css and Wordpress did make people re-invent lesser of the wheel. Still, some reusable parts are mingled with the logics which may encourage reuse by copying instead of nice encapsulation.</p>
+
+<blockquote>
+  <p>Whenever something is reusable, separate them from the constants of your program.</p>
+</blockquote>
+
+<p>By constants I mean tailored codes that probably cannot be used elsewhere; while by reusable I mean methods or structures that may be plugged into another controller/app and still work fine by itself.</p>
+
+<p>My object-oriented class instructor Dekai once deducted me some 30% of my assignment score just because I put an inline function into one .cpp, while that function was called by two supposingly independent classes. Encapsulation and date hiding was strictly enforced for the remainder of the course.</p>
+
+<p>Looking back, I see the reason behind. Components with good encapsulation communicates with other parts of the program solely by an interface that has been designed and communicated to the other team members. This makes it reusable by default because it doesn’t depend on other components unless specified. You can grab the class/library and use it almost anywhere. Unit tests are simple by default because you will be just dealing with a set of function calls as defined by the class interface.</p>
+
+<blockquote>
+  <p>Encapsulated classes are reusable by default, and performing on a single class unit test much is less painful than a single class within a pool of other logics.</p>
+</blockquote>
+
+<p>Encapsulation is good, things are reusable. Are we done yet?</p>
+
+<p>Let’s dig deeper. Why is it better making some sets of functions a composer package instead ofusing a simple separate .php? The same 2 reasons: testing with convenience and code reusability.</p>
+
+<h4 id="being-smart-on-unit-testing">Being smart on unit testing</h4>
+
+<p>If you navigate to <a href="https://github.com/tommyku/liba_lib">liba_lib</a> you will see there is a <code>tests/</code> folder containing test cases which I use for phpunit tests. Unit test is made convenient this way because I can test directly the core library functionalities without having to call Laravel route and invoke many other logics that I don’t intend to test. Feel free to clone the repo and run <code>make test-all</code> to test it, given that you have a ITSC account to access the library system.</p>
+
+<blockquote>
+  <p>You can test the core functionalities of your library without invoking other logics you don’t intent to test.</p>
+</blockquote>
+
+<h4 id="automatically-reusable">Automatically reusable</h4>
+
+<p>In case you want to use my library to build your app, it is super easy. My code have been detailedly documented for better maintainability. To include it in your application, you will need to have these in your <code>composer.json</code></p>
+
+<pre><code class="language-json">{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/tommyku/liba_lib"
+        }
+    ],
+    "require": {
+        "tommyku/liba_lib": "dev-master"
+    }
+}
+</code></pre>
+
+<p>Then, <code>composer install</code> as usual.</p>
+
+<blockquote>
+  <p>You should really let your fellow devs use your awesome library.</p>
+</blockquote>
+
+<p>My project title is <em>Multi-device web applications suite for API-less online services</em> where I try to wrap around nasty web services which are not enthusiastic in opening up API for other developers to use their web services. It doesn’t make sense if I do the same thing as the evil I am fighting does, do it? Good code (not that mine are good, but ya know in general…) and services should be opened up for others to use. When others use your library, you won’t know how if -</p>
+
+<blockquote>
+  <p>The whole is greater than the sum of its parts. - Aristotle</p>
+</blockquote>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../create-simple-contact-list-application-with-laravel-and-openshift-integration-part-2/">Create simple contact list application with Laravel and Openshift integration: Part 2</a><p class="abstract">Part 2 of a 2-part tutorial about jump-starting a Laravel project on OpenShift, this part is about serving an API using Controller and talking to database using Model</p></li><li><a href="../a-self-hosting-lifecycle/">A self-hosting lifecycle</a><p class="abstract">How is it like to self-host something? This post describes the process of self-hosting from the initial thought process, to patching and housekeeping, all the way to the end-of-life of a self-hosted service</p></li><li><a href="../relocating-from-openshift-v2/">Relocating from OpenShift v2</a><p class="abstract">Documenting how I migrated my sites to other hosts at minimal cost as the free hosting platform OpenShift v2 I have been using will be closed down soon</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/building-reusable-things-ftw/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/building-reusable-things-ftw/" id="permalink">https://blog.tommyku.com/blog/building-reusable-things-ftw/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/building-reusable-things-ftw/";
+  this.page.identifier = "building-reusable-things-ftw";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/building-reusable-things-ftw/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

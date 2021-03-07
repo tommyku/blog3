@@ -1,0 +1,246 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Easy access to Docker containers inside VPN - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Easy access to Docker containers inside VPN - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Easy access to Docker containers inside VPN - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Easy access to Docker containers inside VPN</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2019-04-06T00:00:00+08:00">April 06, 2019</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i></section><section class="e-content" id="content"><!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+-->
+
+<p>In the post <a href="../hide-docker-containers-behind-a-docker-vpn/">Hide Docker containers behind a Docker VPN</a>
+I described how to set up an isolated Docker network to house and add
+authentication to Docker containers that comes without it. As far as
+authentication goes, it’s secure from between your machine to the subnet where
+the VPN and other containers reside.</p>
+
+<figure>
+<img style="max-width: 100%;" src="./no-dns.png" alt="Diagram showing the VPN with containers inside">
+<figcaption>Existing setup from last time</figcaption>
+</figure>
+
+<p>However, we were only able to access containers within the VPN using their IPs
+because no external DNS service has knowledge of what is inside the VPN. This is
+counter-intuitive and troublesome for us who’ve grown used to accessing websites
+by their fully qualified domain names. Therefore this time I am introducing how
+to host a domain name service (DNS) inside the VPN to provide name resolution
+automatically when new containers are started.</p>
+
+<p>Before showing you how it’s done, though, I should go through how this DNS-based
+approach compares to it’s alternative, a Nginx reverse proxy with HTTPS inside
+the VPN.</p>
+
+<h2 id="why-a-domain-name-server-why-not-a-nginx-reverse-proxy">Why a domain name server? Why not a Nginx reverse proxy?</h2>
+
+<p>You may ask — why a DNS? You could have used a Nginx reverse proxy to
+redirect traffic by the domain names requested, and then point the domains
+you want to use for internal containers at the Nginx reverse proxy in a
+publicly accessible DNS. Even though visitors can see the IP of your
+Nginx server, they can only access the Nginx server when connected to the VPN
+— which you are supposed to be the only person having access.</p>
+
+<p>You may even get HTTPS working this way by passing the DNS challenge, or
+provision a separate server just to pass the HTTP challenge, and then change
+the DNS entry to point to your real, internal container.</p>
+
+<figure>
+<img style="max-width: 100%;" src="./nginx-proxy.png" alt="Diagram showing the VPN with containers, with Nginx reverse proxy to redirect traffic">
+<figcaption>Setup using Nginx reverse proxy</figcaption>
+</figure>
+
+<blockquote>
+  <p>People are lazy — I am lazy.</p>
+</blockquote>
+
+<p>Frankly speaking using a Nginx reverse proxy is probably the most proper
+way to do it because one gets the security benefit from both VPN and HTTPS.
+However, I was lazy and I’d rather sacrifice the security within my VPN as
+I am the only one using it. However if you share access to the VPN with
+somebody else, I’ll strongly recommand using HTTPS even inside the VPN.</p>
+
+<p>But if it’s only you, then security inside the VPN network isn’t that
+important, even if credentials may be logged and escape the containment
+of the VPN via external log aggregation services/docker volume.</p>
+
+<h2 id="server-setup">Server setup</h2>
+
+<ul>
+  <li>A Linode instance with 1GB RAM</li>
+  <li>Ubuntu 18.04</li>
+  <li>Docker 18.06.1-ce</li>
+  <li>Docker image
+    <ul>
+      <li>VPN: <a href="https://hub.docker.com/r/hwdsl2/ipsec-vpn-server/">hwdsl2/ipsec-vpn-server</a>
+</li>
+      <li>DNS: <a href="https://hub.docker.com/r/defreitas/dns-proxy-server/">defreitas/dns-proxy-server</a>
+</li>
+      <li>Web service: <a href="https://hub.docker.com/_/nginx">nginx:1.13.8-alpine</a>
+</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="how-it-works">How it works?</h2>
+
+<p>Assuming you’ve read and followed the <a href="../hide-docker-containers-behind-a-docker-vpn/">last post</a>,
+you should already be having a setup that reassembles this.</p>
+
+<figure>
+<img style="max-width: 100%;" src="./no-dns.png" alt="Diagram showing the VPN with containers inside">
+<figcaption>Existing setup from last time</figcaption>
+</figure>
+
+<p>Our goal is add an DNS to the VPN that can resolve hostnames of services
+within the VPN, and be able to automatically add/remove DNS entries as
+the containers start/stop. VPN user should use this internal DNS as
+the primary DNS, and external DNS such as 1.1.1.1 or 8.8.8.8 for secondary
+and tertiary DNS.</p>
+
+<figure>
+<img style="max-width: 100%;" src="./dns-only.png" alt="Diagram showing the VPN with an DNS and containers inside">
+<figcaption>Existing setup from last time plus an DNS</figcaption>
+</figure>
+
+<h2 id="creating-the-internal-dns">Creating the internal DNS</h2>
+
+<p>Assuming there exists a Docker bridge network <code>172.20.0.0/16</code> called
+<code>vpn</code>, let’s start a container with a fixed IP <code>172.20.0.4</code>. We will
+use this DNS to resolve hostnames of containers inside the VPN.</p>
+
+<pre><code class="language-bash">docker run --name dns \
+  --restart=always \
+  --net vpn \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /etc/resolv.conf:/etc/resolv.conf \
+  --hostname dns.lan \
+  --ip 172.20.0.4 \
+  -d defreitas/dns-proxy-server
+</code></pre>
+
+<p>One good thing about this DNS is there’s nothing we need to do
+except spinning it up. The service will listen to start/stop of
+containers and reconfigure itself to resolve hostnames of those
+services.</p>
+
+<h2 id="configure-the-vpn-to-use-internal-dns">Configure the VPN to use internal DNS</h2>
+
+<p>Recall the <code>vpn.env</code> file in the previous post. We added some
+environmental variables to configure the VPN.</p>
+
+<pre><code class="language-bash"># vpn.env
+VPN_IPSEC_PSK=your_ipsec_pre_shared_key
+VPN_USER=your_vpn_username
+VPN_PASSWORD=your_vpn_password
+</code></pre>
+
+<p>Now with the new VPN, we should configure the VPN such that
+it uses the internal DNS instead of the system’s default DNS
+for domain name resolution.</p>
+
+<pre><code class="language-bash"># vpn.env
+VPN_IPSEC_PSK=your_ipsec_pre_shared_key
+VPN_USER=your_vpn_username
+VPN_PASSWORD=your_vpn_password
+
+VPN_DNS_SRV1=172.20.0.4
+VPN_DNS_SRV2=1.1.1.1
+</code></pre>
+
+<p>Let’s recreate the container.</p>
+
+<pre><code class="language-bash">docker stop ipsec-vpn-server
+docker rm ipsec-vpn-server
+
+docker run \
+    --name ipsec-vpn-server \
+    --env-file ./vpn.env \
+    --restart=always \
+    --network vpn \
+    -p 500:500/udp \
+    -p 4500:4500/udp \
+    -v /lib/modules:/lib/modules:ro \
+    -d --privileged \
+    hwdsl2/ipsec-vpn-server
+</code></pre>
+
+<h2 id="give-our-web-service-a-hostname">Give our web service a hostname</h2>
+
+<p>Our lizard people site from last time needs to be recreated
+to add a hostname to it. This time, no IP is specified because
+once we resolve hostname through the DNS, what IP the container
+has doesn’t matter anymore.</p>
+
+<pre><code class="language-bash">docker stop test-web
+docker rm test-web
+
+docker run \
+    --name test-web \
+    -v `pwd`:/usr/share/nginx/html:ro \
+    --network vpn \
+    --hostname test.lan \
+    --restart=always \
+    -d nginx:1.13.8-alpine
+</code></pre>
+
+<h2 id="accessing-the-web-service-using-hostname">Accessing the web service using hostname</h2>
+
+<p>You can refer to <a href="https://github.com/hwdsl2/setup-ipsec-vpn">this guide</a>
+for connecting to the VPN from your PC or mobile device.</p>
+
+<p>On Android you can select to use <code>172.20.0.4</code> as your DNS.
+Even if you don’t, the VPN itself will use our internal
+DNS service as the primary DNS.</p>
+
+<p>After connecting to the VPN and navigating to <code>http://test.lan</code>,
+the IP to the web server will be resolved through the
+internal DNS.</p>
+
+<figure>
+<img style="max-width: 350px;" src="./test-lan.png" alt="Screenshot of Firefox on Android conneted to test.lan">
+<figcaption>We can access test.lan after connecting to the VPN</figcaption>
+</figure>
+
+<p>As I said earlier, with this approach you can only access the
+containers using HTTP. You could go the extra mile to get a
+self-signed cert or spoofing Let’s encrypt in HTTP/DNS challenge
+to get a legitimate cert. I have never tried that before, so
+there’s no guarantee that it works.</p>
+
+<p>Even though the browser is talking to the web server by HTTP,
+the traffic is actually tunneled through VPN and thus it’s safe
+from sniffing between my PC and the server. The traffic goes
+out from the VPN server to containers in the same subnet, meaning
+the traffic never needed to leave the machine hosting these
+services. In my book, this is safe enough for the convenience.</p>
+
+<h2 id="how-do-i-remember-all-the-hostnames-and-port-numbers">How do I remember all the hostnames and port numbers?</h2>
+
+<p>One thing that happened to me was that many services tend to use
+ports other than 80 port. The most famous are 3000 and 8080, and
+there are some more magic numbers the service’s developer decided
+to listen on.</p>
+
+<p>Even though I can remember, say, the hostname <code>vcs.lan</code> for
+my Git server, it is difficult for me to remember the port number
+6003.</p>
+
+<p>On an VPN+DNS setup one possible way to solve this is to run
+and internal link shortener service. For example, you can go to
+a site by navigating to <code>g/vcs</code> that redirects you to the
+version control site inside the network <code>vcs.lan:6003</code>, in which
+<code>g</code> is the hostname of your link shortener service.</p>
+
+<p>In fact, you can run this whole thing off a single, static
+HTML file given that your mapping rarely changes.
+Alternatively, you can run a small link shortener service others
+have made.</p>
+
+<p>Me? I use <a href="http://github.com/tommyku/golk">tommyku/golk</a> which
+as of writing is still in its infancy. Well, it gets the job done
+so why not?</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../hide-docker-containers-behind-a-docker-vpn/">Hide Docker containers behind a Docker VPN</a><p class="abstract">How I safe-guarded my personal web services (many of which have no auth layer at all) without having to integrate authentication to every single of my services</p></li><li><a href="../hide-docker-containers-behind-nginx-proxy/">Hide Docker containers behind Nginx proxy</a><p class="abstract">How I ditched VPN and embrace basica HTTP authentication when I am too lazy to implement user authentication into individual app</p></li><li><a href="../a-self-hosting-lifecycle/">A self-hosting lifecycle</a><p class="abstract">How is it like to self-host something? This post describes the process of self-hosting from the initial thought process, to patching and housekeeping, all the way to the end-of-life of a self-hosted service</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/easy-access-to-docker-containers-inside-vpn/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/easy-access-to-docker-containers-inside-vpn/" id="permalink">https://blog.tommyku.com/blog/easy-access-to-docker-containers-inside-vpn/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/easy-access-to-docker-containers-inside-vpn/";
+  this.page.identifier = "easy-access-to-docker-containers-inside-vpn";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/easy-access-to-docker-containers-inside-vpn/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

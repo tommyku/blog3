@@ -1,8 +1,11 @@
 #!/bin/sh
 
-echo "Using config from nanoc.gh-pages.yaml to publish"
+DEFAULT_CONFIG=nanoc.gh-pages.yaml
+CONFIG=${1:-$DEFAULT_CONFIG}
+
+echo "Using config from $CONFIG to publish"
 mv nanoc.yaml nanoc.local.yaml
-mv nanoc.gh-pages.yaml nanoc.yaml
+mv $CONFIG nanoc.yaml
 
 echo "Using bundler"
 bundle config

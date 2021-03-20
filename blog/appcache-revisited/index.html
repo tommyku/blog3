@@ -1,0 +1,239 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="AppCache revisited - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="AppCache revisited - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>AppCache revisited - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">AppCache revisited</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2017-06-10T00:00:00+08:00">June 10, 2017</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>Two years ago, I wrote about the use of <em>Application Cache
+(AppCache)</em> in the post “<a href="https://blog.tommyku.com/blog/adding-html5-application-cache-to-speed-up-your-web-app-in-5-minutes/">Adding HTML5 application cache to speed up your web app in 5 minutes</a>”.</p>
+
+<p>The AppCache feature <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache">is deprecated as a web standard</a>, so newer
+version of browsers may not support it.</p>
+
+<p>In comparison to its alternative <em>Service Worker</em>, AppCache is more
+difficult to use because the web server has to serve the manifest files
+in <code>text/cache-manifest</code> type while service worker is an ordinary JavaScript file.
+No tinkering with the web server required except for
+the HTTPS. Service worker has a shortcoming of unable to
+run on browser with JavaScript disabled while AppCache doesn’t need
+JavaScript to run.</p>
+
+<p>The title of this post is “<strong>AppCache revisited</strong>”, but I am not going
+to implement it again. Instead, I am migrating an old app that has
+been sitting around since 2015 from AppCache to Service Worker.</p>
+
+<h2 id="removing-appcache-from-an-app">Removing AppCache from an app</h2>
+
+<h3 id="removing-manifest-mime-type">Removing manifest MIME type</h3>
+
+<p>The web server was set up to serve <code>*.manifest</code> files with MIME type
+<code>text/cache-manifest</code>. It is no longer needed as we are removing AppCache.</p>
+
+<pre><code class="language-apache"># .htaccess
+# ...
+# Remove this line from .htaccess file
+AddType text/cache-manifest .manifest
+# ...
+</code></pre>
+
+<h3 id="removing-references-to-manifest-files-from-source">Removing references to manifest files from source</h3>
+
+<p>Remove the <code>manifest</code> attribute from <code>&lt;html&gt;</code> tag.</p>
+
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html manifest="/manifest/app.cache.manifest"&gt;
+&lt;!-- ... --&gt;
+</code></pre>
+
+<p>The <code>app.cache.manifest</code> file should also be removed from the project,
+note that the file looks like this at the moment.</p>
+
+<p>(yes, this is the same app from that old AppCache post)</p>
+
+<pre><code>CACHE MANIFEST
+
+CACHE:
+/js/app.js
+/js/angular/angular.min.js
+/js/angular-resource/angular-resource.min.js
+/js/angular-sanitize/angular-sanitize.min.js
+/css/base.css
+/css/animate.css
+
+NETWORK:
+*
+</code></pre>
+
+<p>Later when we migrate to service worker, the list of files to be cached
+is useful because like AppCache, you can specifiy exactly what to cache
+in service worker.</p>
+
+<p>Now the app is free of the old deprecated AppCache. To achieve the same
+caching effect, we will have to use add service worker to the app.</p>
+
+<h2 id="adding-service-worker-to-an-app">Adding service worker to an app</h2>
+
+<h3 id="requirements-of-service-worker">Requirements of service worker</h3>
+
+<p>HTTPS is required to run service worker because service worker can serve
+modified responses to network request, increasing the risk of man in the
+middle attack. According to an <a href="https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API">MDN article</a>, Firefox disables service worker API while in private
+browsing mode.</p>
+
+<p>To enable HTTPS on your server, <a href="https://letsencrypt.org/">Let’s Encrypt</a>
+is a good source of free certificate. If your app is
+hosted on <a href="https://pages.github.com/">GitHub Pages</a>, it is already
+being served over HTTPS (and it’s free!). <a href="https://www.cloudflare.com/">Cloudflare</a>
+also provides HTTPS at free-tier if you are being lazy. (though the connection between
+Cloudflare and your server may not be private, see <a href="https://support.cloudflare.com/hc/en-us/articles/200170416-What-do-the-SSL-options-Off-Flexible-SSL-Full-SSL-Full-SSL-Strict-mean-">this article</a> for
+details).</p>
+
+<h3 id="the-service-workerjs">The service-worker.js</h3>
+
+<p>If you build your app with build tools such as <code>webpack</code> or <code>gulp</code>,
+<a href="https://workboxjs.org/#get-started">Workbox</a> is a great tool for
+integrating service worker into your app. The app I am maintaining
+wasn’t built with any build tool but plain CSS and JavaScript. Workbox provides
+options to manually select what kinds of file to cache.</p>
+
+<p>To show you how to add service worker to a project, I decided to write
+one up manually.</p>
+
+<pre><code class="language-javascript">// service-worker.js
+var cacheName, filesToCache;
+
+cacheName = 'link-201706101730';
+
+filesToCache = [
+  '/',
+  'index.html'
+  'js/app.js',
+  'js/angular/angular.min.js',
+  'js/angular-resource/angular-resource.min.js',
+  'js/angular-sanitize/angular-sanitize.min.js',
+  'css/base.css',
+  'css/animate.css',
+];
+</code></pre>
+
+<p>At the top of <code>service-worker.js</code>, the <code>cacheName</code> and <code>filesToCache</code>
+are specified. Caching each asset with individual cache name is
+possible and preferred. To keep the example simple, we use a single
+cache name for all files here.</p>
+
+<pre><code class="language-javascript">// service-worker.js
+var cacheName, filesToCache;
+
+cacheName = 'link-201706101730';
+
+filesToCache = [
+  '/',
+  'index.html'
+  'js/app.js',
+  'js/angular/angular.min.js',
+  'js/angular-resource/angular-resource.min.js',
+  'js/angular-sanitize/angular-sanitize.min.js',
+  'css/base.css',
+  'css/animate.css',
+];
+
+self.addEventListener('install', function(e) {
+  // [ServiceWorker] Install
+  return e.waitUntil(caches.open(cacheName).then(function(cache) {
+    console.log('[ServiceWorker] Caching app shell');
+    return cache.addAll(filesToCache);
+  }));
+});
+
+self.addEventListener('fetch', function(e) {
+  console.log('[ServiceWorker] Fetch', e.request.url);
+  return e.respondWith(
+    fetch(e.request).catch(function() {
+      return caches.match(e.request);
+    })
+  );
+});
+
+self.addEventListener('activate', function(e) {
+  console.log('[ServiceWorker] Activate');
+  return e.waitUntil(caches.keys().then(function(keyList) {
+    return Promise.all(keyList.map(function(key) {
+      if (key !== cacheName) {
+        console.log('[ServiceWorker] Removing old cache', key);
+        return caches["delete"](key);
+      }
+    }));
+  }));
+});
+</code></pre>
+
+<p>This service worker set up will install and activate itself to cache new
+assets. The <code>fetch</code> event uses network first instead of cache first
+approach when dealing with asset request, meaning that it always try to
+fetch through the network before falling back to using caches.</p>
+
+<p>The code in this service worker example was heavily influenced by
+<a href="https://developers.google.com/web/fundamentals/architecture/app-shell">this article</a>.</p>
+
+<h3 id="installing-and-updating-service-worker">Installing and updating service worker</h3>
+
+<p>Service worker doesn’t just work on its own, your app has to
+explicitly register the service worker for it to work.</p>
+
+<p>To achieve this, add the following code to the end of your app’s
+JavaScript file.</p>
+
+<pre><code class="language-javascript">// app.js
+// ...
+
+if(typeof navigator['serviceWorker'] != 'undefined') {
+  window.addEventListener('load', ()=&gt; {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then(()=&gt; {
+        console.log('Service Worker Registered')
+      });
+  });
+};
+</code></pre>
+
+<p>Lastly, deploy the app as usual. The app should load fast and work
+offline like how it was with AppCache. Of course, background
+sync and push notifications are also available thanks to service worker,
+but they are out of the scope of this post.</p>
+
+<h2 id="closing-thoughts">Closing thoughts</h2>
+
+<p>One important thing to note is that despite deprecated, AppCache is
+still supported by most of the major browsers (as of June 2017), while
+service worker is either under development or under consideration on
+Edge and Safari. The momentum of service worker is strong, with notable
+sites such as Aliexpress, Flipboard, Financial Timesm and <a href="https://pwa.rocks/">more</a> already
+using service worker to provide offline usability.</p>
+
+<figure>
+<img src="./caniuse-appcache.png">
+<figcaption>Browser support for AppCache (source: <a href="https://caniuse.com/#feat=offline-apps">caniuse.com</a>)</figcaption>
+</figure>
+
+<figure>
+<img src="./caniuse-sw.png">
+<figcaption>Browser support for service worker (source: <a href="https://caniuse.com/#feat=serviceworkers">caniuse.com</a>)</figcaption>
+</figure>
+
+<p>Of course, service worker isn’s just about caching, it enables for
+app-link features such as push notification, background sync and install
+to homescreen that will continue to fill the gap between native apps and
+web apps without the need for software like Cordova and
+PhoneGap.</p>
+
+<p>Looking back, not only AppCache, many browser APIs have been developed
+to empower the web. I am excited to see as the web continues to evolve,
+what will emerge to bridge the gap between native apps and web
+apps (Firefox OS was a bummer), or even better, how web can surpass
+native app in portability, availability and user experience.</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../adding-html5-application-cache-to-speed-up-your-web-app-in-5-minutes/">Adding HTML5 application cache to speed up your web app in 5 minutes</a><p class="abstract">Using AppCache API to cache your web app for faster loading and ability to run offline</p></li><li><a href="../using-laravel-resource-controller-with-angularjs-ngresource/">Using Laravel resource controller with AngularJS ngResource</a><p class="abstract">An example of a RESTful API-based web app using Laravel 4.2 resource controller and AngularJS 1.4 NgResource</p></li><li><a href="../create-simple-contact-list-application-with-laravel-and-openshift-integration-part-2/">Create simple contact list application with Laravel and Openshift integration: Part 2</a><p class="abstract">Part 2 of a 2-part tutorial about jump-starting a Laravel project on OpenShift, this part is about serving an API using Controller and talking to database using Model</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/appcache-revisited/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/appcache-revisited/" id="permalink">https://blog.tommyku.com/blog/appcache-revisited/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/appcache-revisited/";
+  this.page.identifier = "appcache-revisited";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/appcache-revisited/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

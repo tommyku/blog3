@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Website analytics for lazy people again, with Cloudflare Worker - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Website analytics for lazy people again, with Cloudflare Worker - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Website analytics for lazy people again, with Cloudflare Worker - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Website analytics for lazy people again, with Cloudflare Worker</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2021-01-15T23:15:28+08:00">January 15, 2021</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i></section><section class="e-content" id="content"><p>In <a href="../website-analytics-for-lazy-people">Website analytics for lazy people</a> I have shown that you can use bit.ly to load a tracking pixel from your page, and thus capture the view count of the page that works even when JavaScript is disabled, and can fly under your ad blocker’s radar.</p>
+
+<p>For those who finds the previous post on this topic TL;DR, basically I have added a tracking pixel to my site, which loads with the page like any image, and by using a middleman such as URL shortener to capture that request I am able to aggregate the view counts of my page.</p>
+
+<p>After some time I began using Cloudflare worker, which is a serverless service that has a free tier and key-value storage without extra cost. Using a serverless worker I am able to do tiny tasks and write the results back to the storage entirely for free and without the need of additional infrastructure.</p>
+
+<p>Then I thought, hey what if I ditch bit.ly and instead use Cloudflare worker to track my page view counts? Given a serverless function what I have more control over how the request sent to it is converted into page view record. I can even add hard-coded parameters to the worker URL in different page to get page-wise view counts.</p>
+
+<p>I have implemented a quick and dirty page view counter as a Cloudflare worker like below and replaced the bit.ly tracking pixel with this worker tracking pixel. They work exactly the same in high-level, but I am able to track per-page view counts by adding different page parameter (e.g. <code>?http://blog.tommyku.com</code>) to the URL and have the worker save the counts by page.</p>
+
+<pre><code class="language-javascript">addEventListener('fetch', event =&gt; {
+  event.respondWith(handleRequest(event.request))
+})
+
+/**
+ * Respond to the request
+ * @param {Request} request
+ */
+async function handleRequest(request) {
+  const page = decodeURIComponent(new URL(request.url).search.replace(/^\?/, ''));
+  if (page &amp;&amp; page.substr(0, 4) === 'http') {
+    let views = parseInt(await BLOG_VIEW.get(page));
+    if (Number.isNaN(views)) {
+        views = 0;
+    }
+    views++;
+    await BLOG_VIEW.put(page, views);
+  }
+  return Response.redirect('https://blog.tommyku.com/assets/images/pixel.png', 301);
+}
+</code></pre>
+<p><small><center><i>Terribly written code that works ok</i></center></small></p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../website-analytics-for-lazy-people/">Website analytics for lazy people</a><p class="abstract">Being lazy and against self-hosting public-facing services, I made others do it for me</p></li><li><a href="../appcache-revisited/">AppCache revisited</a><p class="abstract">AppCache has been deprecated in favor or Service Worker for caching assets to be served when the device is offline</p></li><li><a href="../using-google-form-to-track-my-life-a-lifelogging-primer/">Using Google Form to track my life: a lifelogging primer</a><p class="abstract">Not only Google can track your every move, now you can track your own life using what Google is offering for free, and for your own good</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people-again--with-cloudflare-worker/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people-again--with-cloudflare-worker/" id="permalink">https://blog.tommyku.com/blog/website-analytics-for-lazy-people-again--with-cloudflare-worker/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/website-analytics-for-lazy-people-again--with-cloudflare-worker/";
+  this.page.identifier = "website-analytics-for-lazy-people-again--with-cloudflare-worker";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/website-analytics-for-lazy-people-again--with-cloudflare-worker/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

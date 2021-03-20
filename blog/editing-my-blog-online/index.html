@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Editing my blog online - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Editing my blog online - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Editing my blog online - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Editing my blog online</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2019-03-08T00:00:00+08:00">March 08, 2019</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+-->
+
+<p>Since my blog was first created and even after multiple revamps, there is no
+online-editing capability, until today as I am writing this post on the web.
+The solution is surprisingly simple that I couldn’t believe why I haven’t done
+this earlier.</p>
+
+<p>I use a static site generator called <a href="https://nanoc.ws/">Nanoc</a> to convert
+posts written in markdown into HTML. One property of a static site generator
+is that I cannot edit my blog online unlike CMS such as WordPress, I couldn’t
+edit my blog online.</p>
+
+<p>After an infrastructure change, I am now able to logon to a file editor on
+PC or mobile and see immediately the change I made on a clone of my blog in
+DEV environment.</p>
+
+<h2 id="before">Before</h2>
+
+<figure>
+<img style="max-width: 100%;" src="./before.png" alt="Date flow before this change">
+<figcaption>Originally, local machine is required to perform any change</figcaption>
+</figure>
+
+<p>Before this infrastructure change has been made, I needed to</p>
+
+<p>In order to make any change blog content, I have to open
+the posts, written markdown, using text editor, save it, and push it to GitHub
+such that the CI can compile and deploy the updated pages.</p>
+
+<p>There is no need to change any of the existing flow. The issue that troubles
+me so far has only been the part where I cannot edit online. Being a lazy, I
+don’t want to migrate my blog to a headless CMS either — that’ll be an
+overkill and I don’t like my data being tied to one specific platform.</p>
+
+<p>Therefore, I cloned the existing setup and added online content editing,
+hopefully together they work as planned.</p>
+
+<h2 id="after">After</h2>
+
+<figure>
+<img style="max-width: 100%;" src="./after.png" alt="Date flow after this change">
+<figcaption>Cloned the whole setup with online file editing, less CI and deployment target</figcaption>
+</figure>
+
+<p>The Dev server I have been using came with Nanoc. Nanoc itself doesn’t listen
+to file change unless you couple it with Guard, which has been bundled into
+the release of Nanoc I am running on.</p>
+
+<p>Basically, I run <code>nanoc live</code> and it recompiles the diff every time I save a
+file. The site sits behind a Nginx reverse proxy with basic auth
+<a href="../hide-docker-containers-behind-nginx-proxy/">just like how I did for many things else</a>.</p>
+
+<p>I spent a hour searching online for something I can just easily hook onto a
+folder so that I can edit the folder content on a web page, ideally with Docker.
+So far, only <a href="https://filebrowser.xyz/">File Browser</a> fits the bill, and man it
+looks and works great.</p>
+
+<p>Isn’t this super obvious? I was surprised when I wrote this setup down on paper,
+wondering why haven’t I figured it out earlier, and even wasting an afternoon
+looking at some headless CMS offerings.</p>
+
+<p>The purpose of running my own server and a few web services is so that I can learn
+to be lazy. And with this zero-migration setup, lazy I am.</p>
+
+<figure>
+<img style="max-width: 100%;" src="./editing-online.png" alt="How editing online looks like on my laptop">
+<figcaption>How it looks like when I write on my laptop</figcaption>
+</figure>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../easy-access-to-docker-containers-inside-vpn/">Easy access to Docker containers inside VPN</a><p class="abstract">A follow-up to my previous post about hiding docker containers behind VPN, with an DNS for resolving internal hostnames</p></li><li><a href="../hide-docker-containers-behind-nginx-proxy/">Hide Docker containers behind Nginx proxy</a><p class="abstract">How I ditched VPN and embrace basica HTTP authentication when I am too lazy to implement user authentication into individual app</p></li><li><a href="../relocating-from-openshift-v2/">Relocating from OpenShift v2</a><p class="abstract">Documenting how I migrated my sites to other hosts at minimal cost as the free hosting platform OpenShift v2 I have been using will be closed down soon</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/editing-my-blog-online/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/editing-my-blog-online/" id="permalink">https://blog.tommyku.com/blog/editing-my-blog-online/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/editing-my-blog-online/";
+  this.page.identifier = "editing-my-blog-online";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/editing-my-blog-online/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="A self-hosting lifecycle - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="A self-hosting lifecycle - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>A self-hosting lifecycle - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">A self-hosting lifecycle</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2018-07-13T00:00:00+08:00">July 13, 2018</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>Nowadays, I self-host my own <a href="https://github.com/tommyku/progressive-work-la-7-head">todo list</a>
+, <a href="https://github.com/tommyku/tip3">pastebin</a>, <a href="https://github.com/tommyku/googledoc_link_bot">bookmarking chatbot</a>,
+and YouTube downloader chatbot.
+At some point I had also hosted a <a href="https://github.com/tommyku/ruby-server">note taking service</a>
+and an <a href="https://github.com/tommyku/expense-tracker-lite">expense tracker</a>.</p>
+
+<p>The takeaway I got from self-hosting web service is:</p>
+
+<blockquote>
+  <p>Self-hosting is like owning a pet,</p>
+
+  <p>you don’t have to unless you want to, but be prepared to pay and take care of it…</p>
+
+  <p>…except that you can abandon it anytime you want (kind of).</p>
+</blockquote>
+
+<p>This post goes through the process I used to decide whether to self-host something,
+how to keep the service up-to-date and how to tell when I don’t need it anymore.
+I will mention a couple pitfalls I encountered when self-hosting that made switching
+or shutting down a self-hosted service difficult.</p>
+
+<h2 id="before-you-decide-to-self-host">Before you decide to self-host…</h2>
+
+<p>First ask youself why. Same as buying a pet, you have to explain to the virtual parents
+inside you head why you need to self-host a service. Alternatives to the service you
+want to host is usually wildly available for free on the Internet, with perhaps more
+modern user interface, more fluent user experience and better customer support.</p>
+
+<p>The downside of using 3rd party web services is that they are generally proprietary
+software, and you don’t always have an idea what they are doing with your data. So if
+privacy is your primary concern, you <em>might</em> really need to self-hosting it.</p>
+
+<p>Yet let’s not omit the <a href="https://blog.tommyku.com/blog/the-hidden-cost-of-self-hosting/">hidden cost of self-hosting</a>.
+Think of the self-hosted service like a pet, it needs feeding (an VPS instance/server at home),
+grooming (software update/housekeeping), bigger bed as it grows (CPU/RAM upgrade), risk of being
+stolen (hacked) or used to serve other masters (hacked for botnet/cryptomining).</p>
+
+<p>That’s why I said you <em>might</em> need to self-host if privacy is your primary concern.
+It may be better letting a reputable web service provider, especially those who have
+no interest in selling your data (who?), to safeguard your data than to self-host
+your service with insufficient security and leaving your data and server compromised.</p>
+
+<p>There are more to think about in self-hosting something for the long term.</p>
+
+<p>Instead of buying a pet, you may co-own your pet with somebody else too. I used to host
+my own expense tracking and online bookmarking service until I figured out that I could
+have <a href="../doing-things-the-layman-way/">done it the layman way</a> using Google form. I
+use Google spreadsheet to process and analyse the data collected, without the need of writing
+and maintaining an app.</p>
+
+<blockquote>
+  <p>Perhaps there exists a simplier solution for the problem you intend
+to solve by self-hosting.</p>
+</blockquote>
+
+<p>All that being said, there may just be a new service you found online that you really
+want to try in which it’s alternatives may be inferior or paid, then by all mean, go
+ahead to the next step to get a taste of self-hosting without committing to it.</p>
+
+<h2 id="local-host-the-service">Local-‘host’ the service</h2>
+
+<p>In the long list of <a href="https://github.com/Kickball/awesome-selfhosted">awesome self-hosted free software</a>,
+there are many with demos or screenshots. You could get a taste of self-hosting conveniently
+and for free.</p>
+
+<p>Even if there is a demo server already running, you could spin up one of your own. To
+keep unwanted packages and residue packages/config files lying around after testing it,
+I recommend trying out self-hosted services using <a href="https://www.docker.com/">Docker</a>, especially
+for those with a <code>Dockerfile</code> in their repositories already. Or, you could look up
+<a href="https://hub.docker.com/">Docker Hub</a> for preconfigured <code>Dockerfile</code>-s.</p>
+
+<p>Setting up the service locally feels pretty similar to running it on an actual server,
+minus the security and housekeeping side of it. You will encounter hiccups that hinders
+the deployment, and at that point you’d have a pretty good idea if the software
+package lives up to its promise.</p>
+
+<p>To me, many self-hosted services didn’t make it past this point. For some that did please
+you and delivered what they promised, you’re left with one simple question to answer (for now).</p>
+
+<h2 id="after-all-a-really-simple-formula">After all, A really simple formula</h2>
+
+<pre><code class="language-javascript">const goAhead = (() =&gt; (
+  selfHostedService.hostingCost &lt;= thirdPartyAlternatives.bestOf.cost
+  || you.reallyLike(selfHostedService)
+))();
+
+console.log(goAhead);
+</code></pre>
+
+<p>Yes, forgot about all the hidden costs of self-hosting because you’re super excited about
+the prospect of self-hosting. Why stop here? Go ahead and spin up a server! Let’s deal
+with the potential issues one by one later.</p>
+
+<h2 id="self-hosting-in-5-easy-steps">Self-hosting in 5 easy steps</h2>
+
+<p>Here I summarize 5 steps that’s essential for self-hosting a web service. It is better that
+you have had knowledge or experience in deploying a web service, yet it isn’t necessary. A
+bit of Googling around or reading the repository’s documentation should get you started just
+fine.</p>
+
+<h3 id="step-1-domain-name--dns">Step 1: Domain name &amp; DNS</h3>
+
+<p>A domain name pointing to your web service isn’t necessary if you don’t mind typing
+in the IP address into the browser’s address bar, or that it runs without any user interactions
+(say, a web analytics service), then it’s fine without a domain name. However, with a domain name,
+you can safely redirect users to server at a new IP should you decide to scale up or migrate to
+another host later — just change the A record on your DNS setting.</p>
+
+<p>A domain name helps you remember where your pet self-hosted service resides. You can get them for
+a fairly cheap price nowadays on any domain registrar. My personal favorite is <a href="https://domains.google">https://domains.google</a>
+because it provides free <a href="https://support.google.com/domains/answer/3251242?hl=en">WHOIS information protection</a>
+in which your personal information won’t be shown when people look up the WHOIS record of your domain.
+Yet with the advent of European Union’s GDPR, there <a href="https://www.zdnet.com/article/icann-makes-last-minute-whois-changes-to-address-gdpr-requirements/">may no longer be a need to get a WHOIS record
+shielding</a>
+in a foreseeable future no matter which domain registrar you use.</p>
+
+<p>You don’t need one domain name for each of your self-hosted services. With a reverse proxy you can
+host multiple services on the same server and point multiple sub-domains A record to the same
+server’s IP. More on that in a later section.</p>
+
+<p>Usually, a domain registrar also provides DNS service so visitors to your self-hosted service can
+resolve the domain name into IP address of your service. For most of the time it’s good enough to
+stick to what your domain registrar provides unless it’s exceptionally old and crappy (like some .hk
+registrars unfortunately had to deal with before). Personally I use <a href="https://www.cloudflare.com/">CloudFlare</a>
+that just works almost all the time. It also provides DDoS protection by hiding the true IP of your
+service. You may have concerns over the security/privacy of a DNS service tinkering with your traffic.
+In such case, feel free to choose whatever DNS service you want.</p>
+
+<h3 id="step-2-hosting">Step 2: Hosting</h3>
+
+<p>The big cloud computing companies has been building more and more server farms in many locations in
+the world, and cloud hosting has never been cheaper and easier. You could spin up an VPS instance with
+free credits and a few clicks on the web dashboard of cloud hosting providers.</p>
+
+<p>Personally I used the $5/month virtual machines by Linode and Digital Ocean, depending on which
+provides free credit at the time. If you’re a student, you may find GitHub’s
+<a href="https://education.github.com/pack">Student Developer Pack</a> useful as it provides hosting credit
+(at the time of writing) and lots of other goodies. Non-students can easily look up for free credits
+as hosting platforms seem to be on promotion all the time.</p>
+
+<p>When choosing your cloud host, it is important to note the difference between PaaS (Platform as a
+service) and IaaS (Infrastructure as a service). An PaaS provides the runtime for which your
+application runs on. You have little control over the operating system and software preloaded
+, say you may be given a MySQL database with a database, username and password, but not the root
+access to that database. Heroku, Google App Engine and OpenShift are some examples of PaaS. An IaaS
+provides a lower level infrastructure, say you can choose which operating system to run your
+application on and use the software packages of your choice.</p>
+
+<h3 id="step-3-server-setup">Step 3: Server setup</h3>
+
+<p>Your server setup largely depends on the service you intend to host it on. Usually I use Ubuntu server
+coupled with Docker because there is an abundance of documentations and Q&amp;A online. Digital Ocean has
+a <a href="https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-18-04">guide</a>
+that covers the basics of getting your server up and running. After following the guide you should
+be able to SSH into the server and as a sudo-er. In addition, I would disable root logon via SSH and
+disallow logging in via password for better security.</p>
+
+<p>Running server software like Apache2, Nginx or whatever server that comes with your self-hosted
+server seems trivial, yet running them as Docker container has the advantage of less garbage files
+left behind after uninstallation. On my server, I am running multiple services in separate, isolated
+Docker containers behind a <a href="https://github.com/jwilder/nginx-proxy">reverse proxy</a>. Using this setup,
+I am able to run several self-hosted services on a single $5/month Digital Ocean droplet. In fact,
+most self-hosted services I host use less than 50MB of RAM, so given 1GB of RAM I can run a lot of
+them for cheap.</p>
+
+<h3 id="step-4-backup-strategies">Step 4: Backup strategies</h3>
+
+<p>Even in a managed cloud hosting environment, nobody can guarantee your data is always safe. Natural
+disaster may occur, cloud hosting may get hacked, or <a href="https://about.gitlab.com/2017/02/01/gitlab-dot-com-database-incident/">erase your data accidentally</a>
+. To prepare for that, you should backup your storage.</p>
+
+<p>What to backup for your self-hosted service differs from service to service. Most of them would run
+one or multiple databases, and perhaps static files generated if you’re running something like
+a flat-file wiki. One reliable and free service to storing backup is Dropbox. Dropbox provides free
+2GB storage and there is a command line tool <a href="https://github.com/andreafabrizi/Dropbox-Uploader">Dropbox-Uploader</a>
+useful for automatic backup to Dropbox.</p>
+
+<p>You could first create a development app on Dropbox developer
+<a href="https://www.dropbox.com/developers/apps">app console</a> and obtain an access token for your app. Use
+this access token when setting up <code>dropbox_uploader.sh</code> for the first time. Using an app folder
+helps to isolate the backup files of different self-hosted services to guarantee they won’t overwrite
+each other.</p>
+
+<p>Here is a cron job I set up for backing up my database on a <a href="https://github.com/tommyku/progressive-work-la-7-head-server">hoodie server</a>.</p>
+
+<pre><code class="language-bash">to access some data I missed or I changed my mind.
+# crontab -l
+# Run this every 6 hours
+0 */6 * * * /home/tommyku/backup_hoodie_dropbox
+</code></pre>
+
+<p>And this is the content of <code>/home/tommyku/backup_hoodie_dropbox</code>.</p>
+
+<pre><code class="language-bash">#!/bin/bash
+
+rm -f /home/tommyku/backups/hoodie_couchdb/backup.tgz
+docker run --rm --volumes-from progressiveworkla7headserver_couchdb_1 -v /home/tommyku/backups/hoodie_couchdb:/backup ubuntu tar zcvf /backup/backup.tgz /usr/local/var/lib/couchdb
+bash /home/tommyku/dropbox_uploader.sh -f /home/tommyku/dropbox_uploader.conf -s delete /hoodie_couchdb/backup.tgz
+bash /home/tommyku/dropbox_uploader.sh -f /home/tommyku/dropbox_uploader.conf -s upload /home/tommyku/backups/hoodie_couchdb /
+</code></pre>
+
+<p>This backup scheme has been running for well over a year, and I have never encountered any problem
+with it. Two things you could also consider are logging each backup attempt and figuring out how to
+restore the backups when shit <em>does</em> hit the fan.</p>
+
+<h3 id="step-5-up-and-running">Step 5: Up and running</h3>
+
+<p>Now that you have the service set up, you can hit up your browser or your device to start testing out
+your self-hosted service. Good, it works, for now.</p>
+
+<p>You may consider adding a service monitor that notifies you if your service goes down for some reason.
+I am using the free tier of <a href="https://uptimerobot.com/">UptimeRobot</a> to monitor my server. It sends out
+ping/HTTP requests in an interval to see if your server is alive and responding. You can even set up
+a status page like <a href="https://status.tommyku.com/">this</a> where your users can refer to when the server
+goes down for an extensive period of time.</p>
+
+<h2 id="not-just-my-own-service">Not just my own service</h2>
+
+<p>Good, you have a working self-hosted service. It may not be the best use of resource when it’s just
+you using it. The service is cool and you want everybody you know, even your dog to use it. Then you
+should consider non-anonymous access or authentication on your self-hosted service.</p>
+
+<p>Most self-hosted service come with user management. You might want to disable new user sign up
+by toggling config flags, or even removing the route to user sign up page from source code directly.
+There is no guarantee that a self-hosted service written by someone else would fit your use case
+perfectly, so tinker around, don’t be afraid to change their source code.</p>
+
+<h2 id="service-just-for-myself">Service just for myself</h2>
+
+<p>I have been adding restricted access through whitelist of Telegram user ID in my Telegram bots
+, or stupidly long username:password pair for my Nginx file server. Mind that security through
+obscurity is never a good idea though. Once a mischievous friend gets literate enough to figure out
+your secret URL, then you’re doomed.</p>
+
+<p>I have seen bots trying to get into <code>wp-admin</code> of my site even though it is not running WordPress.
+So be careful if you’re running someone eles’s software. You need to apply security patches and
+upgrade regularly to mitigate security risks.</p>
+
+<h2 id="housekeepingmigration">Housekeeping/migration</h2>
+
+<p>Like habit-forming, keeping a habit is harder than getting started. Once you have a self-hosted
+service up and running, you will face hacking attempts by bots and unending amount of security
+patches and upgrades to apply. You should follow the release page of your self-hosted service
+for any new version, especially critical security patches unless your service comes with automatic
+update check like WordPress.</p>
+
+<p>With each upgrade there comes a risk of breaking what was originally working. Data may get lost or
+become gibberish. Even if this upgrade go well, how about the next one? Backing up your data is thus
+essential to the integrity of your service (We have covered that part).</p>
+
+<p>In addition to keeping your service up to date, you should also keep the OS up to date as well.
+Ubuntu applies security patches automatically so I am fairly content with that, but I still need to
+logon to my server once in a while to upgrade the docker images for my reverse proxy and other
+infrastructures.</p>
+
+<h2 id="deprecation">Deprecation</h2>
+
+<p>Deprecating a service is a tough choice, especially once you have tons of data in proprietary format
+that only the code of your self-hosted service understands. Therefore, it’s important that your
+service provides an ‘exit option’, say exporting to JSON/XML, or that it stores data in flat-file
+format in the first place. A web scraper may come in handy should your service refuse to provide any
+exporting option.</p>
+
+<p>Powering down and destroying an instance is the easiest way to terminate a service. Generally, I would
+take a snapshot of the instance and keep it for at least a month so I can spin it back up should I need
+to access some data I missed or I changed my mind.</p>
+
+<p>If your service is used by multiple people and it isn’t your choice to shut it down, you should consider
+who to delegate the tasks of maintenance and paying bills. Or if they need to migrate to another host,
+how to ensure the migration is smooth and safe from data loss.</p>
+
+<hr>
+
+<p>In this post I have gone through the lifecycle of self-hosting a service using my personal experience
+and some thoughts I had when I was running my services. Self-hosting isn’t an easy task given
+so much to consider and to maintain in the long term. Perhaps we should expand the simple formula to</p>
+
+<pre><code class="language-javascript">const goAhead = (() =&gt; (
+  selfHostedService.hostingCost + selfHostedService.effort &lt; thirdPartyAlternatives.bestOf.cost
+  &amp;&amp; selfHostedService.lifeTimeValue &gt; thirdPartyAlternatives.bestOf.lifeTimeValue
+  &amp;&amp; you.canMaintain(selfHostedService)
+  || you.reallyLike(selfHostedService)
+))();
+
+console.log(goAhead);
+</code></pre>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../the-hidden-cost-of-self-hosting/">The hidden cost of self-hosting</a><p class="abstract">The hidden costs behind self-hosting a note-taking service and why you should consider twice before self-hosting anything</p></li><li><a href="../relocating-from-openshift-v2/">Relocating from OpenShift v2</a><p class="abstract">Documenting how I migrated my sites to other hosts at minimal cost as the free hosting platform OpenShift v2 I have been using will be closed down soon</p></li><li><a href="../hide-docker-containers-behind-nginx-proxy/">Hide Docker containers behind Nginx proxy</a><p class="abstract">How I ditched VPN and embrace basica HTTP authentication when I am too lazy to implement user authentication into individual app</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/a-self-hosting-lifecycle/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/a-self-hosting-lifecycle/" id="permalink">https://blog.tommyku.com/blog/a-self-hosting-lifecycle/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/a-self-hosting-lifecycle/";
+  this.page.identifier = "a-self-hosting-lifecycle";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/a-self-hosting-lifecycle/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

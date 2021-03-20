@@ -1,0 +1,233 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Hide Docker containers behind a Docker VPN - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Hide Docker containers behind a Docker VPN - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Hide Docker containers behind a Docker VPN - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Hide Docker containers behind a Docker VPN</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2018-12-27T00:00:00+08:00">December 27, 2018</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>People are lazy — I am lazy. Yet laziness doesn’t justify not
+safe-guarding my personal web services with authentication layer, even
+though my experimental abominations have the shittiest quality possible.
+Lazy as I am, I wouldn’t lift a finger to implement event the simplest
+humblest web server-based basic auth, not to mention the all troublesome
+OpenID Connect.</p>
+
+<p>For people like me, we have VPN that comes to rescue. VPN stands for
+virtual private network. Once your device is connected to a VPN, it is
+as if you magically have an additional LAN port on your devices (even if
+it doesn’t have one) plugged in and connected to a <em>virtual</em> (get it?)
+network over any network. Also, the network is <em>private</em> in a sense that
+no external hosts can access hosts within the network without first
+connecting to the network. As such, one can host totally insecure and
+authentication-less web services entirely inside an VPN, and have
+devices connect to the network when needed. All the web services will be
+hidden behind the wall of the VPN itself, only allow the selected few
+with the relevant credentials to access.</p>
+
+<p>When I researched for the topic, I was surprised not many have covered the
+topic, except like one <a href="https://security.stackexchange.com/questions/97542/hide-docker-containers-behind-vpn">question on
+StackExchange</a>
+that pretty much explained it all. The answer covers pretty much all I have
+to show you in this post, and it’s fairly obvious. Probably that’s why
+nobody goes one step further to actually show how it’s done.</p>
+
+<p>I am going to show you how to use Docker to set up such an environment.</p>
+
+<h2 id="server-setup">Server setup</h2>
+
+<ul>
+  <li>A Linode instance with 1GB RAM</li>
+  <li>Ubuntu 18.04</li>
+  <li>Docker 18.06.1-ce</li>
+  <li>Docker image
+    <ul>
+      <li>VPN: <a href="https://hub.docker.com/r/hwdsl2/ipsec-vpn-server/">hwdsl2/ipsec-vpn-server</a>
+</li>
+      <li>Web service: <a href="https://hub.docker.com/_/nginx">nginx:1.13.8-alpine</a>
+</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="how-it-works">How it works?</h2>
+
+<p>In Docker, you can create internal subnets (bridge network) where your
+containers sit on. By default, no port is open to public unless you
+specify which port to make open with <code>--publish</code> or it’s shortened form
+<code>-p</code> when spinning up a container.</p>
+
+<p>In addition, you can create a bridge network that’s only open to the
+outside world with ports your VPN service uses (e.g. 450 and 5000 UDP),
+while keeping everything else in isolation from the external network. As
+such, only hosts connected to the VPN network is able to access services
+within it’s own isolated bridge network. Once connected to your VPN, you
+can access all containers within the same network as your VPN with their
+internal IP addresses.</p>
+
+<p>This setup isn’t without disadvantages. One of which being services
+within the network are shielded such that services that requires
+incoming transmissions, for example webhooks, are unusable. For most of
+my use cases, this doesn’t pose an issue to me, but it may affect some
+people who listens to transmissions from external services and require
+a public facing interface. Also, forget about HTTPS and navigating to
+services using domain names. While you can specify an IP for a service,
+it is a bit tricky to get Let’s encrypt to issue you a free certificate.
+Not impossible, but tricky, troublesome, and fall out of scope of this
+post. I may write another post to follow up with these issues.</p>
+
+<h2 id="creating-a-user-defined-bridge-network">Creating a user-defined bridge network</h2>
+
+<p>We are going to create a user-defined bridge network with a specific
+network segment such that we can assign a static IP to each service.</p>
+
+<pre><code class="language-bash">docker network create vpn --subnet 172.20.0.0/16
+# 848f85b7a08f31ae26b57d9a1efa70099e6048461ca0d50a5b7c941647e34184
+docker inspect vpn
+</code></pre>
+
+<p>By inspecting the network we see that we have created a network with
+name <code>vpn</code> for the subnet <code>172.20.0.0/16</code>. The subnet mask has 16 bits,
+meaning the first 16 bits represents the network address, and we have 16
+bits of addressable space for network host, which translates to <code>2^16 -
+2 = 65534</code> available host addresses. With <code>172.20.0.0</code> reserved for
+network address and <code>172.20.255.255</code> for broadcast address. Discounting
+the one address we reserve for our VPN server, that’s a lot of hosts
+you can stuck behind an VPN.</p>
+
+<pre><code class="language-json">[
+    {
+        "Name": "vpn",
+        "Id": "848f85b7a08f31ae26b57d9a1efa70099e6048461ca0d50a5b7c941647e34184",
+        "Created": "2018-12-28T21:15:59.205797293+08:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.20.0.0/16"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "Containers": {},
+        "Options": {},
+        "Labels": {}
+    }
+]
+</code></pre>
+
+<h2 id="setting-up-vpn">Setting up VPN</h2>
+
+<p>For a detailed walkthrough and explanation, you should check out the
+excellently written documentation of <a href="https://hub.docker.com/r/hwdsl2/ipsec-vpn-server/">hwdsl2/ipsec-vpn-server</a>, I will not go into details for each step.</p>
+
+<p>On a Linode 1GB instance running Ubuntu 18.04, first I load the IPsec
+<code>af_key</code> kernel module. Documentation states that this is optional for
+Ubuntu but I found my Android client unable to connect unless I do this.</p>
+
+<pre><code class="language-bash">sudo modprobe af_key
+sudo reboot
+</code></pre>
+
+<p>After reboot, download the sample <code>vpn.env</code> file and edit accordingly.</p>
+
+<pre><code class="language-bash">wget https://raw.githubusercontent.com/hwdsl2/docker-ipsec-vpn-server/master/vpn.env.example -O vpn.env
+vim vpn.env
+</code></pre>
+
+<p>You should change the three lines regarding login credentials.</p>
+
+<pre><code class="language-bash">VPN_IPSEC_PSK=your_ipsec_pre_shared_key
+VPN_USER=your_vpn_username
+VPN_PASSWORD=your_vpn_password
+</code></pre>
+
+<p>On <code>vim</code>, press <code>i</code> to enter Insert mode, edit your config. <code>Esc</code> to return
+to Normal mode, then <code>:wq</code> to save and exit.</p>
+
+<p>Now spin up the VPN server.</p>
+
+<pre><code class="language-bash">docker run \
+    --name ipsec-vpn-server \
+    --env-file ./vpn.env \
+    --restart=always \
+    --network vpn \
+    --ip 172.20.0.2 \
+    -p 500:500/udp \
+    -p 4500:4500/udp \
+    -v /lib/modules:/lib/modules:ro \
+    -d --privileged \
+    hwdsl2/ipsec-vpn-server
+</code></pre>
+
+<p>To connect to the VPN, follow the guide
+<a href="https://github.com/hwdsl2/setup-ipsec-vpn/blob/master/docs/clients.md">here</a>.
+Note that even though in the <code>docker run</code> command the container’s IP is
+set to <code>172.20.0.2</code>, that’s is just it’s IP inside the subnet <code>vpn</code>. You
+need to use the host machine’s (your VPS’s) IP to connect to VPN from
+outside.</p>
+
+<h2 id="setting-up-an-insecure-web-service">Setting up an insecure web service</h2>
+
+<p>For the sake of demonstration, let’s create a web service that contains
+super secret content yet doesn’t come with any authentication.</p>
+
+<pre><code class="language-bash">mkdir test-web &amp;&amp; cd test-web
+echo 'be aware of the lizard people!' &gt; index.html
+</code></pre>
+
+<p>The content is served by a nginx server. Although it’s possible to
+configurate basic auth on nginx, we are not going to do that so keep
+this service insecure.</p>
+
+<pre><code class="language-bash">docker run \
+    --name test-web \
+    -v `pwd`:/usr/share/nginx/html:ro \
+    --network vpn \
+    --ip 172.20.0.3 \
+    --restart=always \
+    -d \
+    nginx:1.13.8-alpine
+</code></pre>
+
+<p>Notice that there is no <code>-p</code> or <code>--publish</code> argument because we don’t
+want to publish the container’s port to the external-facing interface of
+the host machine. Instead, we keep it inside the VPN’s network by
+specifying <code>--network vpn</code> and giving it a static IP <code>--ip 172.20.0.3</code>.</p>
+
+<p>At this stage, we haven’t had a way to resolve that IP by name. While it
+is possible to point a (sub)domain to <code>172.20.0.3</code> on a public-facing
+DNS, but then this IP actually points to two different hosts when you
+disconnect from the VPN. This introduces an obvious security loophole as
+you may send traffic to an totally unrelated service if you are unware
+that you’re not on the VPN at that moment.</p>
+
+<p>For now, let’s connect to the services using strictly IP address.</p>
+
+<h2 id="accessing-the-web-service-within-vpn">Accessing the web service within VPN</h2>
+
+<p>Assuming you have connected to the VPN, it is trivial to simply open a
+web browser and navigate to the IP <code>172.20.0.3</code>. After disconnecting
+from the network, you’ll find that the same IP is no longer accessible.</p>
+
+<h2 id="closing-notes">Closing notes</h2>
+
+<p>With that, we have created an VPN and hide an insecure web service
+within the same isolated subnet of that VPN. Only if you connect to the
+VPN can you access the insecure web service. VPN serves as an
+authentication layer without any sort of integration on our insecure web
+services.</p>
+
+<p>However, one issue remains. On this set up we have to navigate to our
+web services using IP address. In a next post we’ll explore how to
+conveniently use customized hostname to access web services within the
+VPN network, and potentially even enable HTTPS.</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../easy-access-to-docker-containers-inside-vpn/">Easy access to Docker containers inside VPN</a><p class="abstract">A follow-up to my previous post about hiding docker containers behind VPN, with an DNS for resolving internal hostnames</p></li><li><a href="../hide-docker-containers-behind-nginx-proxy/">Hide Docker containers behind Nginx proxy</a><p class="abstract">How I ditched VPN and embrace basica HTTP authentication when I am too lazy to implement user authentication into individual app</p></li><li><a href="../a-self-hosting-lifecycle/">A self-hosting lifecycle</a><p class="abstract">How is it like to self-host something? This post describes the process of self-hosting from the initial thought process, to patching and housekeeping, all the way to the end-of-life of a self-hosted service</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/hide-docker-containers-behind-a-docker-vpn/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/hide-docker-containers-behind-a-docker-vpn/" id="permalink">https://blog.tommyku.com/blog/hide-docker-containers-behind-a-docker-vpn/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/hide-docker-containers-behind-a-docker-vpn/";
+  this.page.identifier = "hide-docker-containers-behind-a-docker-vpn";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/hide-docker-containers-behind-a-docker-vpn/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

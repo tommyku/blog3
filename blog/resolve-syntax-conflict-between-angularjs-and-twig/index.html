@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Resolve syntax conflict between AngularJS and Twig - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Resolve syntax conflict between AngularJS and Twig - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Resolve syntax conflict between AngularJS and Twig - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Resolve syntax conflict between AngularJS and Twig</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2014-07-18T00:00:00+08:00">July 18, 2014</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>AngularJS uses double curly braces (e.g. {{var}}) to wrap the variables in its HTML view while Twig use precisely the same syntax to wrap the variables. Should you use Twig to render a AngularJS app, the HTML view template will simply be messed up.</p>
+
+<p>There are two solutions suggested by the online community:</p>
+
+<ol>
+  <li>
+    <p>Convert all double curly braces into literal strings</p>
+
+    <p>As suggested by the official documentation of Twig, when rendering literal {{ }} one can ‘escape’ it like the following.</p>
+
+    <p><code>{{ -&gt; {{ '{{' }}</code> or <code>{{var}} -&gt; {{ '{{var}}' }}</code></p>
+
+    <p>No doubt the AngularJS template will look terrible, but this solution resolves the conflict without tweaking the options of both AngularJS and Twig.</p>
+  </li>
+  <li>
+    <p>Configure AngularJS to use other braces such as <code>{[{var}]}</code> (or whatever you like) instead.</p>
+
+    <p>In your AngularJS app script, add the following config.</p>
+
+    <pre><code class="language-javascript">angular.module('app', []).config(function($interpolateProvider){
+  $interpolateProvider.startSymbol('{[{').endSymbol('}]}');
+});
+</code></pre>
+
+    <p>This method breaks less of the syntax in both Twig and AngularJS, so it is strongly suggested.</p>
+  </li>
+  <li>
+    <p>Twig also provide a tag for displaying raw content. Everything inside <code>vertatim</code> block is not parsed by Twig engine.</p>
+
+    <pre><code>{% verbatim %}
+// everything of your angularJS template
+{% endverbatim %}
+</code></pre>
+
+    <p>This one should be the least obstructive and the easiest to implement.</p>
+  </li>
+</ol>
+
+<p><em>edited 2014-07-26</em></p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../dead-tutorials/">Dead Tutorials</a><p class="abstract">In the frontier of web development, new frameworks rise and fall, upgrade to keep up with the trend and fade into obsolescence, yet there always have been those rusty old tutorials lurking around</p></li><li><a href="../create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1/">Create simple contact list application with Laravel and Openshift integration: Part 1</a><p class="abstract">Part 1 of a 2-part tutorial about jump-starting a Laravel project on OpenShift, this part is about making a "Hello World" page</p></li><li><a href="../using-laravel-resource-controller-with-angularjs-ngresource/">Using Laravel resource controller with AngularJS ngResource</a><p class="abstract">An example of a RESTful API-based web app using Laravel 4.2 resource controller and AngularJS 1.4 NgResource</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/resolve-syntax-conflict-between-angularjs-and-twig/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/resolve-syntax-conflict-between-angularjs-and-twig/" id="permalink">https://blog.tommyku.com/blog/resolve-syntax-conflict-between-angularjs-and-twig/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/resolve-syntax-conflict-between-angularjs-and-twig/";
+  this.page.identifier = "resolve-syntax-conflict-between-angularjs-and-twig";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/resolve-syntax-conflict-between-angularjs-and-twig/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

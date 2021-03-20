@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Create simple contact list application with Laravel and Openshift integration: Part 1 - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Create simple contact list application with Laravel and Openshift integration: Part 1 - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Create simple contact list application with Laravel and Openshift integration: Part 1 - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Create simple contact list application with Laravel and Openshift integration: Part 1</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2014-08-01T00:00:00+08:00">August 01, 2014</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p><strong>This is the part 1 of a 2-part tutorial about jump-starting a Laravel project on Openshift. <a href="../create-simple-contact-list-application-with-laravel-and-openshift-integration-part-2">go to part2</a></strong></p>
+
+<p>Laravel is a PHP web development framework providing nice and easy routing, convenient Blade templating, Artisan CLI for better project management and easy build powered by Composer.</p>
+
+<p>In part 1, I will go through the steps of setting up a running Laravel on Openshift, which takes some effort to figure it out if you have never used Laravel and Composer before. In part 2, we will go deeper into creating a contact list application running on Openshift.</p>
+
+<h4 id="show-me-the-steps">Show me the steps</h4>
+
+<ol>
+  <li>
+    <p>Deploying Laravel 4.1 with PHP 5.4 and MySQL 5.5</p>
+
+    <p><small>If you use RHC cli</small></p>
+
+    <pre><code class="language-php">rhc create app laravel php-5.4
+rhc cartridge add mysql-5.5 -a laravel
+</code></pre>
+
+    <p><small>If you use web console</small></p>
+
+    <p>Choose <code>Laravel 4.1 Quickstart</code> when creating new application.</p>
+  </li>
+  <li>
+    <p>Pull the repository into local environment by running <code>git clone {address to the repo}</code></p>
+  </li>
+  <li>
+    <p>Get <a href="https://getcomposer.org/">Composer</a> (if you have not had one), you can simply download the <code>composer.phar</code> if you do not want to install it.</p>
+  </li>
+  <li>
+    <p>In console locate the repo folder, if you had done the global install run <code>composer install</code>, otherwise <code>php composer.phar install</code>. You will see <code>/vendor</code> folder being created with the autoload script inside.</p>
+  </li>
+  <li>
+    <p>If you encounter an error like <code>Script php artisan clear-compiled handling the post-install-cmd event return an error</code>, try to ensure your PHP build has mcrypt installed.</p>
+  </li>
+</ol>
+
+<p>After having done the 4 steps above, Composer would have downloaded the necessary dependencies and you should already have had Laravel setup and able to run locally. Go to <code>http://localhost/{path-to-Laravel-app}/public/index.php</code></p>
+
+<figure>
+<img src="./screenshot.jpg">
+<figcaption>Finally!</figcaption>
+</figure>
+
+<p>However to run a production build we could do something more. These actions are perfectly optional but in part 2 you are assumpted to have done them.</p>
+
+<p>Switch off debug mode. In <code>app/config/app.php</code> set the <code>debug</code> attribute to false. You can view the error log in <code>app/storage/logs/laravel.log</code>.</p>
+
+<p>Set the URL to your app in <code>app/config/app.php</code>.</p>
+
+<p>Relocate the public path out of <code>/public</code>. Copy every inside <code>/public</code> to repo root, then move everything else inside a new folder <code>/Laravel</code>.</p>
+
+<p>You will have to modify <code>/Laravel/bootstrap/paths.php</code></p>
+
+<pre><code class="language-php">'public' =&gt; __DIR__.'/../..',
+</code></pre>
+
+<p>Also <code>/index.php</code></p>
+
+<pre><code class="language-php">require __DIR__.'/Laravel/bootstrap/autoload.php';
+$app = require_once __DIR__.'/Laravel/bootstrap/start.php';
+</code></pre>
+
+<p>Modify the build hook to run Composer while publishing the source to Openshift.</p>
+
+<p>In <code>/.openshift/action_hooks/build</code> remove the hash to uncomment the line</p>
+
+<pre><code class="language-bash">#( echo 'Installing/Updating Laravel'; unset GIT_DIR ; cd $OPENSHIFT_REPO_DIR/Laravel ; php $OPENSHIFT_DATA_DIR/composer.phar -q --no-ansi install )
+</code></pre>
+
+<p>Generate optimized class loader with <code>php artisan optimize</code></p>
+
+<h4 id="whats-next">What’s next?</h4>
+
+<p>For the basics of Laravel you should consult <a href="http://laravel.com/docs">the documentation</a>. Chinese version is also avaliable <a href="http://kejyun.github.io/Laravel-4-Documentation-Traditional-Chinese/docs/introduction/">here</a>.</p>
+
+<p>Briefly speaking, to show the “hello world” page you saw above, you need to set a route, and implement the controller handling the request.</p>
+
+<p>In <code>/Laravel/app/routes.php</code></p>
+
+<pre><code class="language-php">Route::get('/', function()
+{
+  return View::make('hello');
+});
+</code></pre>
+
+<p>The controller is the function passed into <code>Route::get</code>, which define a path and its request handler. It simply render the template located at <code>/Laravel/app/views/hello.php</code></p>
+
+<p>You may define more routes like:</p>
+
+<pre><code class="language-php">Route::get('/hello', "HomeController@hello");
+</code></pre>
+
+<p>Here HomeController@hello means the request handler is the <code>hello()</code> method defined in <code>/Laravel/app/controllers/HomeController.php</code> which is implemented as</p>
+
+<pre><code class="language-php">public function hello()
+{
+  return "hello";
+}
+</code></pre>
+
+<p>Go to <code>http://localhost/{path-to-Laravel-app}/hello</code> to see the effect.</p>
+
+<h4 id="part-2">Part 2</h4>
+
+<p>In part 1 we have a proper Laravel framework set up to start building the awesome contact list. In the forthcoming part 2 we will actually get into the details of building a frontend with HTML/CSS/AngularJS and the backend interacting with MySQL.</p>
+
+<p><a href="../create-simple-contact-list-application-with-laravel-and-openshift-integration-part-2">go to part 2</a></p>
+
+<p><br></p>
+
+<h4 id="reference">Reference</h4>
+
+<ol>
+  <li><a href="https://www.openshift.com/quickstarts/laravel-41-quickstart">Laravel 4.1 Quickstart | OpenShift by Red Hat</a></li>
+  <li><a href="http://laravel.com/docs">Laravel - The PHP Framework For Web Artisans.</a></li>
+  <li><a href="http://kejyun.github.io/Laravel-4-Documentation-Traditional-Chinese/docs/introduction/">Laravel 4 PHP Framework Documentation 繁體中文教學文件</a></li>
+</ol>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../create-simple-contact-list-application-with-laravel-and-openshift-integration-part-2/">Create simple contact list application with Laravel and Openshift integration: Part 2</a><p class="abstract">Part 2 of a 2-part tutorial about jump-starting a Laravel project on OpenShift, this part is about serving an API using Controller and talking to database using Model</p></li><li><a href="../setting-up-laravel-5-0-for-openshift/">Setting up Laravel 5.0 for Openshift</a><p class="abstract">A guide to setting up Laravel 5.0 on OpenShift v2.0 platform and using the environmental variables provided by OpenShift v2.0</p></li><li><a href="../persistent-env-configurations-across-deployments-on-openshift-for-laravel-5/">Persistent .env configurations across deployments on OpenShift for Laravel 5</a><p class="abstract">How I implemented persistent .env configuration on OpenShift v2 across deployments using OpenShift data directory and post-receive hook</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1/" id="permalink">https://blog.tommyku.com/blog/create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1/";
+  this.page.identifier = "create-simple-contact-list-application-with-laravel-and-openshift-integration-part-2";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

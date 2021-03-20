@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Feature ownership and motivation - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Feature ownership and motivation - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Feature ownership and motivation - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Feature ownership and motivation</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2016-10-05T00:00:00+08:00">October 05, 2016</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>With 3 of my friends I used to join the department-held hackathon at
+HKUST. One of us named Ivan, a talented programmer who were
+somewhat experienced in image editing and video processing.</p>
+
+<p>We brainstormed a lot before the hackathon and ended up with 1 idea the
+majority of us agreed on.
+Of course, we needed a design before beginning validation or
+development, that
+responsibility fell on Ivan’s shoulder despite he were the minority who
+opposed the idea.</p>
+
+<p>Ivan did a fine job rolling out a design the next day. Yet we came to
+discover that the idea we supported yesterday could hardly impress us
+anymore. Back to the drawing board, we brainstormed again.</p>
+
+<p>Of course the one who spent the night creating a design was
+dissatisfied. Ivan, losing trust on the other teammates, disagreed to
+create any design until the rest of the team have made a final decision, the
+one killer idea we would never diverge from.</p>
+
+<p>The team were demotivated, and it was nobody’s fault. Product feature
+idea and direction changes according to the circumtance. Everybody
+who builds product knows it, but not all can deal with it calmly.</p>
+
+<h3 id="impromptu-change-and-vague-requirement-demotivate-people">Impromptu change and vague requirement demotivate people</h3>
+
+<p>Recalling the experience with the product manager and another engineer in
+Taiwan, we have spent a big chunk of our time working on something and
+had it thrown away because 1) we didn’t validate it beforehand; or 2) the
+project manager has a better idea/something more valuable to do.</p>
+
+<p>We never gave him a good face whenever the PM wanted to change. Over
+time there developed a sentiment that if a feature is not well-designed
+and validated with the users, we shouldn’t work on it. We played with
+cat instead.</p>
+
+<p>The situation were made worse because our ‘PM’ were less of detail-focused
+person but more of big-picture driven and gave nothing more than a sentence
+rather. As an CEO that is fine, but as an PM, that is unacceptable.</p>
+
+<blockquote>
+  <p>Don’t ask me to do it until you’re absolutely sure.</p>
+</blockquote>
+
+<figure>
+<img src="./just-do-it.jpg" style="width: 600px">
+<figcaption>Really, no</figcaption>
+</figure>
+
+<p>We were demotivated. Task assignment became long discussion and took lots
+of persuasion. The unhealthy tension between the devs and the PM
+required much negotiations and trust building before the devs agreed to
+work and the PM promised to not change the schedule until the end of the
+sprint.</p>
+
+<p>It was that moment that I realized what Ivan felt when I piped his
+night-worth of work into <code>/dev/null</code>*. And the prospect of the project
+were gloomy.</p>
+
+<p><small>* nerdy way to say ‘void’, ‘nothingness’</small></p>
+
+<p>Vroom’s Expectancy theory states that individuals motivation comes from
+the belief that efforts are positively correlated to performance, and
+that performance results in an outcome that brings reward that satisfies
+an individual’s need.</p>
+
+<p>Now come to think about it, effort were paid yet there came no performance nor
+outcome because the work was trashed. While rewards (paycheck) were
+given every month, developers seek more than monetary rewards. They
+value the sense of achievement when they deploy a feature with nice code
+and novel approaches.</p>
+
+<p>Therefore impromptu change in plan negates developers’ paid efforts and
+brings nothing but demotivation.</p>
+
+<h3 id="feature-ownership-motivates-people">Feature ownership motivates people</h3>
+
+<blockquote>
+  <p>Tommy, I have something to ask you.</p>
+</blockquote>
+
+<p>Sometime my colleague John would call me to his seat and showed me the
+code I wrote. He could be modifying the code or didn’t understand it.
+Then he would made me feel shameful or feel proud of the piece of code I
+wrote.</p>
+
+<p>In EventXtra where I worked, every one of us is usually responsible for
+a chunk of feature. One would architech it, write up algorithms to <em>do
+something</em>. Later somebody else may manage that piece of code, by then
+the piece or code is either <code>git praise</code>-ed or <code>git blame</code>-ed.</p>
+
+<pre><code># ~/.gitconfig
+[alias]
+    praise = blame
+</code></pre>
+
+<blockquote>
+  <p>This’s my feature, and that is your feature. For that part of code,
+you’d better ask <em>Kenneth</em>.</p>
+</blockquote>
+
+<blockquote>
+  <p>Who the h*ll wrote this? Let me git blame it.</p>
+</blockquote>
+
+<figure>
+<img src="./git-blame.jpg">
+<figcaption>Go, <a href="https://github.com/jayphelps/git-blame-someone-else">blame someone else</a></figcaption>
+</figure>
+
+<p>When we evaluate a piece of work, we refer it by <em>somebody’s</em> feature
+not because that person is the sole person responsible for developing
+it, but that it’s consolidated a significant amount of effort from that
+person and thus that person feels a <em>psychological ownership</em> over it.</p>
+
+<p>The sense of psychological ownership also spawns from the fact that
+someone being a opinion leader over a feature, in which he possesses
+control over a major part of the design or implementation of the
+feature.</p>
+
+<p><a href="http://cqtesting.com/papers/JOB%202004%20Van%20Dyne%20Pierce%20Psychological%20Ownership.pdf">Research by Dyne and Pierce</a> demonstrates
+positively links between psychological ownership for the organization and employee
+attitudes, and work behavior.</p>
+
+<p>Of course, when a piece of code is <code>git praise</code>-ed the developer feels good
+about it due to a sense of ownership. Ownership positively influences
+the attitude and performance of a developer as a feature is being
+developed.</p>
+
+<h3 id="feedback-and-discussion-are-the-keys">Feedback and discussion are the keys</h3>
+
+<p>We have talked about what demotivates and what motivates. To those who
+are attempting to improve their own working motivation, these are what
+to fix and what to reinforce. For those who attempts to motivate, they
+should take note on and avoid the behaviors demotivating their colleagues.</p>
+
+<p>Open communication aiming at trust-building instead of blaming can help
+the managements to better understand the need of their colleagues.</p>
+
+<p>As a friend of mine always says: ‘When your trust bank has bankrupted,
+you’ve to work hard to build the trust back up.’ Should you see your
+colleagues demotivated on their jobs, trust-building is the first step.</p>
+
+<p>Have you encountered motivation issues in workplace, either on yourself
+or your colleagues? How did you deal with it? Tell us in the comment
+section!</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../../special/leaving-eventxtra-with-26-lessons-learned/">Leaving EventXtra with 26 lessons learned</a></li><li><a href="../working-in-taipei-for-a-month/">Working in Taipei for a month</a><p class="abstract">How it's like being prototyping and testing a new product for a month in Taiwan</p></li><li><a href="../../special/on-negotiation/">On negotiation</a></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/feature-ownership-and-motivation/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/feature-ownership-and-motivation/" id="permalink">https://blog.tommyku.com/blog/feature-ownership-and-motivation/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/feature-ownership-and-motivation/";
+  this.page.identifier = "feature-ownership-and-motivation";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/feature-ownership-and-motivation/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="The &quot;cat state&quot; of boolean variable - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="The &quot;cat state&quot; of boolean variable - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>The &quot;cat state&quot; of boolean variable - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">The &quot;cat state&quot; of boolean variable</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2017-11-15T00:00:00+08:00">November 15, 2017</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>One day when I was implementing a login UI of my app in React, I
+thought about a <code>let login = true</code> flag.</p>
+
+<p>For a boolean variable in an object-oriented language such as
+JavaScript, how many states could it possibly have? Let’s count, <code>true</code> and <code>false</code>,
+there gives you two states.</p>
+
+<blockquote>
+  <p>S ∈ { True, False }</p>
+</blockquote>
+
+<p>Nope, there is an extra state, <code>null</code>, the variable can point to an empty
+reference. Of course, in such case we aren’t talking about the
+variable itself, we are talking about a reference name.
+In JavaScript, such reference could also evaluate to <code>undefined</code>!</p>
+
+<blockquote>
+  <p>S ∈ { True, False, null, undefined }</p>
+</blockquote>
+
+<h2 id="why-does-it-matter">Why does it matter?</h2>
+
+<p>Consider the <code>login</code> flag we mentioned, the
+following table summarizes all possible values and component it should
+render as a result.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>login</th>
+      <th>Component</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>true</td>
+      <td>IndexPage</td>
+    </tr>
+    <tr>
+      <td>false</td>
+      <td>LoginPage</td>
+    </tr>
+    <tr>
+      <td>null</td>
+      <td>SplashPage</td>
+    </tr>
+    <tr>
+      <td>undefined</td>
+      <td>SplashPage</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Rendering <code>IndexPage</code> and <code>LoginPage</code> when <code>login</code> is true or false
+looks straightforward, but <code>null</code>? How about <code>undefined</code>? One trick I
+took is to make use of the non-determinism of the variable, to wit:</p>
+
+<blockquote>
+  <p>I don’t know whether it’s true or false, so it’s in a “<a href="https://en.wikipedia.org/wiki/Cat_state">cat state</a>”
+that’s neither true nor false.</p>
+</blockquote>
+
+<p>In other words,</p>
+
+<blockquote>
+  <p>S ∈ { True, False, Cat }</p>
+</blockquote>
+
+<h2 id="should-i-use-it">Should I use it?</h2>
+
+<p>Don’t do that. There exists better alternative without additional
+complexity, and by using the cat state you make your code harder to understand.</p>
+
+<p>Alternatives such as enum, like a set of constants
+encapsulate exactly what this non-deterministic boolean variable is trying
+to do. For example:</p>
+
+<pre><code class="language-javascript">// LoginState.js
+export DONNO = 1;
+export NOT_LOGGEDIN = 1;
+export LOGGEDIN = 2;
+
+// app.js
+import LoginState from 'LoginState'
+
+let login = LoginState.DONNO;
+let renderComponent;
+
+switch (login) {
+  case LoginState.NOT_LOGGEDIN:
+    renderComponent = LoginPage;
+    break;
+  case LoginState.LOGGEDIN:
+    renderComponent = IndexPage;
+    break;
+  default:
+    renderComponent = SplashPage;
+}
+</code></pre>
+
+<p>A quick-and-dirty implementation using non-determinism of boolean
+variable wouldn’t save you much more lines of code than that.</p>
+
+<p>As my professor used to say:</p>
+
+<blockquote>
+  <p>[insert programming language] gives you lots of ropes to hang
+yourself.</p>
+</blockquote>
+
+<p>In this case, the rope is to make use of a boolean variable’s cat state and
+relying on it to decide the next action. You can do that of
+course, but I have shown above there is a better way to do that.</p>
+
+<p>When we evaluate a boolean variable, string like
+<code>'123'</code>, or integer <code>3</code> could both be evaluated to true, while <code>null</code>,
+and <code>undefined</code> both are evaluated to false. However, you shouldn’t rely
+on it because it’s inconsistent.</p>
+
+<p>Consider the following if-statement:</p>
+
+<pre><code class="language-javascript">if (login === true) {
+  // ...logged in
+} else {
+  // ...cat state 🐱
+}
+</code></pre>
+
+<p>Our understanding on boolean variable is that it’s value could either be
+true or false, there is no cat state before OOP, and now with cat state
+we are just inviting troubles because to interpret the if-statement
+above, we must also consider what that boolean could be — an
+integer, a string, a <code>null</code>, or an <code>undefined</code>?</p>
+
+<p>If the codebase has never relied on <code>null</code> or <code>undefined</code> in the first
+place for it’s logic, then we could even forgo the <code>=== true</code> part
+(note <code>1 == true</code> evaluates to true).</p>
+
+<h2 id="verdict">Verdict</h2>
+
+<p>Using the “cat state” of a boolean variable might be a neat
+trick  on project where everyone working on the code is aware
+of the possible values of that variable might contain. It could be
+true, false, and anything else.</p>
+
+<p>A safer bet, would be to use boolean strictly with its true/false
+values by using <code>===</code> operator, or use TypeScript that comes with static
+type-checking.</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../controlling-my-home-server-with-syncthing/">Controlling my home server with Syncthing</a><p class="abstract">How I threw together a few files to come up with a solution controlling my laptop's sleep/shutdown state</p></li><li><a href="../debugging-by-testing-assumptions/">Debugging by testing assumptions</a><p class="abstract">Recently I have wasted half an hour of my life troubleshooting an issue related to Apache2 and systemd when upgrading from Ubuntu 16.04 to Ubuntu 18.04, here is what I learned</p></li><li><a href="../a-case-of-web-component-revising-wc-blink/">A case of Web Component: Revising wc-blink</a><p class="abstract">What I learned upgrading a web component I wrote in 2015 from Custom Element v0 to Custom Element v1 standard</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/the-cat-state-of-boolean-variable/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/the-cat-state-of-boolean-variable/" id="permalink">https://blog.tommyku.com/blog/the-cat-state-of-boolean-variable/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/the-cat-state-of-boolean-variable/";
+  this.page.identifier = "preview";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/the-cat-state-of-boolean-variable/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

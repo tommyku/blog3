@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Setup Gmail SMTP on Openshift hosted Laravel app - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Setup Gmail SMTP on Openshift hosted Laravel app - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Setup Gmail SMTP on Openshift hosted Laravel app - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Setup Gmail SMTP on Openshift hosted Laravel app</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2015-01-03T00:00:00+08:00">January 03, 2015</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p><strong>edit</strong>: This guide was written for Laravel 4.2. If you are using Laravel 5.0, similar settings are done separately in your environment configuration file <code>.env</code>, or in <code>config/mail.php</code> directly</p>
+
+<p>This guide simply talk about the setup to send email in Laravel on Openshift similar as <a href="http://blog.tommyku.com/blog/setup-gmail-smtp-on-openshift-hosted-app">a previous post</a>.</p>
+
+<p>It has been a while after my previous post because I have been struggling to get 2 projects online before the end of 2014. As a student I feel freelance projects overwhelming but extremely rewarding forcing myself to learn and create product valued by my clients.</p>
+
+<p>Talk less and do more, see the settings!</p>
+
+<h4 id="show-me-the-code">Show me the code</h4>
+
+<p>Laravel have the process streamlined, all you need to do to configure it, then you can send email using the <code>Mail</code> class. Below is the only configuration file you need to mess with.</p>
+
+<pre><code class="language-php">&lt;?php
+/* app/config/mail.php */
+return array(
+	'driver' =&gt; 'smtp',
+	'host' =&gt; 'smtp.gmail.com',
+	'port' =&gt; 587,
+	'from' =&gt; array('address' =&gt; "{your email address}", 'name' =&gt; "{your name}"),
+	'encryption' =&gt; 'tls',
+	'username' =&gt; "{your email address}",
+	'password' =&gt; "{your gmail password}",
+	'sendmail' =&gt; '/usr/sbin/sendmail -bs',
+	'pretend' =&gt; false,
+);
+</code></pre>
+
+<p><code>Mail</code> class provides an extensive interface for sending emails. To send an email you can do something like:</p>
+
+<pre><code class="language-php">/* freshly copied from laravel.com */
+Mail::send('emails.welcome', $data, function($message)
+{
+  $message-&gt;from('us@example.com', 'Laravel');
+
+  $message-&gt;to('foo@example.com')-&gt;cc('bar@example.com');
+
+  $message-&gt;attach($pathToFile);
+});
+</code></pre>
+
+<p>The same could be done for other SMTP services you currently use. You are done here if you are not using Gmail, and please continue to read the next section if you do use Gmail.</p>
+
+<h4 id="working-with-gmail-important">Working with Gmail (Important)</h4>
+
+<p>You may have noticed that even with the settings right, it is still not working. On this STMP matter Google has introduced a security policy “<a href="https://support.google.com/accounts/answer/6010255">Less Secure Apps</a>”.</p>
+
+<p>If the first email sent via Laravel is not reaching its destination, logon to <a href="gmail.com">Gmail</a> and you are probably seeing a email like this:</p>
+
+<div style="text-align: center;">
+<img src="./gmail.png" title="Email [Google Account: sign-in attempt blocked]">
+<br>
+<small><em>Img.</em> <strong>Good job, Google</strong></small>
+</div>
+
+<p>and inside it says</p>
+
+<div style="text-align: center;">
+<img src="./lesssecureapp.png" title="Email [Google Account: sign-in attempt blocked]">
+<br>
+<small><em>Img.</em> <strong>Google doesn’t trust your app</strong></small>
+</div>
+
+<p>Google is not confident in your Laravel app but clearly you are. What you need to do is to <a href="https://www.google.com/settings/security/lesssecureapps">follow that link</a> and allow for Google sign in with “less secure apps”.</p>
+
+<h4 id="references">References</h4>
+
+<p><small>
+1. <a href="http://laravel.com/docs/4.2/mail">Laravel - The PHP Framework For Web Artisans. (Mail)</a>
+2. <a href="http://email.about.com/od/accessinggmail/f/Gmail_SMTP_Settings.html">Accessing Gmail in Your Email Program or Mobile Device - About Email</a>
+</small></p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../setup-gmail-smtp-on-openshift-hosted-app/">Setup Gmail SMTP on Openshift hosted app</a><p class="abstract">Using Swift Mailer to send email through Gmail's SMTP server on OpenShift</p></li><li><a href="../persistent-env-configurations-across-deployments-on-openshift-for-laravel-5/">Persistent .env configurations across deployments on OpenShift for Laravel 5</a><p class="abstract">How I implemented persistent .env configuration on OpenShift v2 across deployments using OpenShift data directory and post-receive hook</p></li><li><a href="../create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1/">Create simple contact list application with Laravel and Openshift integration: Part 1</a><p class="abstract">Part 1 of a 2-part tutorial about jump-starting a Laravel project on OpenShift, this part is about making a "Hello World" page</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/setup-gmail-smtp-on-openshift-hosted-laravel-app/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/setup-gmail-smtp-on-openshift-hosted-laravel-app/" id="permalink">https://blog.tommyku.com/blog/setup-gmail-smtp-on-openshift-hosted-laravel-app/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/setup-gmail-smtp-on-openshift-hosted-laravel-app/";
+  this.page.identifier = "setup-gmail-smtp-on-openshift-hosted-laravel-app";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/setup-gmail-smtp-on-openshift-hosted-laravel-app/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

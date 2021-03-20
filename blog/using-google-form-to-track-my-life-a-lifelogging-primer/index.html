@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Using Google Form to track my life: a lifelogging primer - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Using Google Form to track my life: a lifelogging primer - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Using Google Form to track my life: a lifelogging primer - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Using Google Form to track my life: a lifelogging primer</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2018-11-13T00:00:00+08:00">November 13, 2018</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>Lifelogging is the activity of collecting records of one’s life over an
+extended period. Most of them are quantified data such as weight, sleep
+time and expenses. Although technology isn’t a precondition for
+lifelogging, many opted for gadgets and smartphone apps that made
+tracking less intrusive and more convenient. There has never been a
+short of lifelogging apps and devices in the market that represents a
+barrier to beginners of lifelogging - isn’t it annoying to use an ads
+infested app, or buy an expensive gadget? In this post I am going to
+show you lifelogging for free <a href="../doing-things-the-layman-way/">in the layman’s way</a>.</p>
+
+<p>I have been lifelogging since the beginning of 2018. My dataset expanded
+from just daily measure of body weights to my sleep duration, expenses,
+steps walked, moods, drinks drank and more. Lifelogging may seem
+troublesome in a glance, with expensive gadgets and intrusive/shady
+mobile apps as prerequisites, but it doesn’t have to be like that.
+Lifelogging can be done cheap and easy. I am going to show you how to
+lifelog with just Google Form.</p>
+
+<h2 id="google-form--google-sheet--lifelogging">Google Form + Google Sheet = lifelogging</h2>
+<p>First you’ll need a Google account. The thing is you have you store your
+data on Google, otherwise, there’s no point to continue reading. Go to
+Google Drive, click “Create” and select “Form”.</p>
+
+<p>You are creating a form. Like a web survey page, you can define
+questions of different kinds, some useful fields are text, date, time,
+number and multiple choices. I am sparing you the details of how to
+create a Google Form because there are much better tutorials already on
+the Internet, and that the point of this post is to show you how I use
+Google Form as a mean of lifelogging.</p>
+
+<p>For example, the picture below shows a form tracking what I drink. This
+form uses standard single-line text, radio buttons for multiple choice,
+datepicker and timepicker for recording time on top of the automatically
+appended response time (more on that later).</p>
+
+<figure>
+<img style="width: 100%; max-width: 640px;" src="./drink-form.jpg" alt="A google form, tracking the kind of drink I consume with date and time">
+<figcaption>I actually use a Chinese version of this form to track my daily coffee/tea intake</figcaption>
+</figure>
+
+<p>You can then create a sheet to store all form responses. A good thing
+about this is, you can add many worksheets in the same workbook to
+generate reports based off form responses. One note: you may want to
+hide the rows on top regularly to avoid scrolling 1,000+ rows to the
+latest records every time you visit the sheet.</p>
+
+<figure>
+<img style="max-width: 100%" src="./report.jpg" alt="A line chart
+showing variations of body weight over time">
+<figcaption>Graduation from university happened, then my weight rebounced</figcaption>
+</figure>
+
+<h2 id="google-form--progressive-web-app">Google Form + Progressive Web App</h2>
+
+<p>Everything thus far has been obvious and simple. You can get one of
+those set up and run just fine for most use cases, unless you are
+interested in alternative form management. To those who are interested
+in dig deeper into how Google Form works, I am presenting—</p>
+
+<figure>
+<img style="width: 100%; max-width: 320px;" src="./startpage.png" alt="Mobile webapp, with links to each of the forms">
+<figcaption>Make a progressive web app to collect all forms</figcaption>
+</figure>
+
+<p>Bleh.</p>
+
+<p>You may say, this isn’t anything surprising because browser bookmark can
+well serve the same end. True. Clicking any of the rectangle basically
+opens the form page on a webview. However, one interesting thing you may
+discover if you check the HTTP request the page makes when submitting a
+Google Form, there is one surprising thing.</p>
+
+<figure>
+<img style="max-width: 100%;" src="./post-request.png" alt="Form data of POST request when submitting a Google Form response">
+<figcaption>Surprisingly simple internal working of Google Form</figcaption>
+</figure>
+
+<p>In the age of single-page app, service worker and AJAX calls, Google
+Form still do things the old-school way. It’s how things worked 10
+years ago, when I first learned HTML. As long as your page submits a
+POST request with form body that resembles what Google Form is
+submitting.</p>
+
+<p>In fact, in one of my work back in 2013, a graduation photo registration
+website for my University was made to recreate the form Google Form is
+using under the hood, yet it looks entirely diffent than Google Form.</p>
+
+<figure>
+<img style="max-width: 100%;" src="./grad.png" alt="HKUST graduation
+photo taking form, made using Google Form under the hood">
+<figcaption>Everything were exactly the same as they were except I modified the form URL</figcaption>
+</figure>
+
+<p>This presents an interesting opportunity for us because now we can make
+a form however we like that can look arbitrarily different from the
+original Google Form, leading us to the last section of this
+post—, your very own lifelogging app with the backend taken care
+of.</p>
+
+<h2 id="progressive-web-app">Progressive Web App</h2>
+
+<figure>
+<img style="width: 100%; max-width: 320px;" src="./expense.png" alt="Mobile webapp, with a form looking different from Google Form">
+<figcaption>Yes, it is Google Form under the hood, but better</figcaption>
+</figure>
+
+<p>As everything down the pipeline is handled by Google Form, and there’s
+nothing stopping you from doing whatever you want to the user interface
+before form submission. In my progressive web app shown above, I added a
+list of historic responses. Tapping them will automatically populate the
+form and then submit the form. Of course, it still requires Internet
+connection in order to submit the form, so it isn’t exactly optimal.
+Also, submitting the form inevitably redirects you to Google Form’s
+default response page, breaking the illusion that you host your own form
+instead of using Google’s.</p>
+
+<p>However, this behavior can be worked around by simply proxying form
+responses. This way, you delegates the form submission to an application
+serving as a proxy on a web server, instead of submitting the form by
+yourself on a web page. With that, you can even cache your requests
+using service worker, or do all sorts of preprocessing before eventually
+submitting it to Google. I do have a Telegram bot doing that job for me,
+as a sort of personal bookmark. Sharing links to Telegram on the mobile
+is faster than opening up a form and pasting it. Plus Telegram does a
+good job caching the request when my phone is offline.</p>
+
+<figure>
+<img style="width: 100%; max-width: 640px;" src="./telegram.png" alt="A Telegram bot
+receiving links, and submitting it to Google Form">
+<figcaption>I use a Telegram bot to receive links and submit them to
+Google Form. It works offline.</figcaption>
+</figure>
+
+<p>You may say, at this point things have evolved so much it has reached
+escape velocity from the layman planet to the domain of web developers.
+In fact, you are probably right. Stopping at any point of this post can
+still well serve you in a lifelogging perspective. At the end, we just
+want to log stuff, and perform post-processing.</p>
+
+<p>One caveat is that, it only works if Google Form continues to work this
+way. There is nothing we can do about it when Google decided to kill
+Google Form, as they did for many old Google products. Even so, it is
+not difficult to roll out a Google Form replacement. A alternative to
+downstream integration with Google Sheet could be difficult though.</p>
+
+<p>I wish this post gives you some useful insights into how to use Google
+Form for your lifelogging purpose. Note that I don’t mean Google Form is
+the only way of lifelogging. Bullet journal, mobile apps, fitness
+trackers all serve their own niches, yet if you don’t feel like
+investing heavily into lifeloggin, Google Form can be an easily accesible
+alternative.</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../relocating-from-openshift-v2/">Relocating from OpenShift v2</a><p class="abstract">Documenting how I migrated my sites to other hosts at minimal cost as the free hosting platform OpenShift v2 I have been using will be closed down soon</p></li><li><a href="../a-self-hosting-lifecycle/">A self-hosting lifecycle</a><p class="abstract">How is it like to self-host something? This post describes the process of self-hosting from the initial thought process, to patching and housekeeping, all the way to the end-of-life of a self-hosted service</p></li><li><a href="../website-analytics-for-lazy-people/">Website analytics for lazy people</a><p class="abstract">Being lazy and against self-hosting public-facing services, I made others do it for me</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/using-google-form-to-track-my-life-a-lifelogging-primer/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/using-google-form-to-track-my-life-a-lifelogging-primer/" id="permalink">https://blog.tommyku.com/blog/using-google-form-to-track-my-life-a-lifelogging-primer/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/using-google-form-to-track-my-life-a-lifelogging-primer/";
+  this.page.identifier = "using-google-form-to-track-my-life-a-lifelogging-primer";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/using-google-form-to-track-my-life-a-lifelogging-primer/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

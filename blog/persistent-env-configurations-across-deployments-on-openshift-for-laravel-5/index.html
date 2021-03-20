@@ -1,0 +1,136 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Persistent .env configurations across deployments on OpenShift for Laravel 5 - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Persistent .env configurations across deployments on OpenShift for Laravel 5 - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Persistent .env configurations across deployments on OpenShift for Laravel 5 - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Persistent .env configurations across deployments on OpenShift for Laravel 5</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2015-09-28T00:00:00+08:00">September 28, 2015</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>People get hacked easily <a href="http://blog.nortal.com/mining-passwords-github-repositories/">when they include the environmental files or passwords</a> in version control. Yet keeping it all local makes each and every deployment to OpenShift troublesome as you will need to <code>scp</code> the environmental file <code>.env</code> onto server every time you deploy.</p>
+
+<p>You can set up an action hook to create a symbolic link inside the deployment directory to <code>$OPENSHIFT_DATA_DIR</code> which keeps the <code>.env</code> persistently. I know this has been covered in <a href="http://blog.tommyku.com/blog/using-laravel-5-0-with-angularjs-part-2-of-5-migrations-controllers-validations-in-laravel-5-0#deploying-the-back-end">a previous tutorial</a> but it doesn’t hurt repeating myself as a reminder of this security trick.</p>
+
+<div style="text-align: center;">
+<img src="./Screenshot%20from%202015-09-28%2017_34_43.png" title="Screenshot of .env file with passwords">
+<br>
+<small><em>Img.</em> <strong>Tried my luck with some keywords, obviously people still do that nowadays</strong></small>
+</div>
+
+<p>Moreover, a team of students from a class I am mentoring got themselves a $10,000 AWS bill because they published the <code>.pem</code> files on GitHub and somehow got hacked.</p>
+
+<div style="text-align: center;">
+<img src="./12006125_10153687770762112_5465783357743922822_n.jpg" title="Screenshot of $10,503.75 AWS bill">
+<br>
+<small><em>Img.</em> <strong>I told them to use OpenShift instead of AWS for educational purpose</strong></small>
+</div>
+
+<p>Now you see how important and trouble-free it is if your server and your local environments keep their configurations to themselves. Let’s see how you can do it.</p>
+
+<h4 id="preparation">Preparation</h4>
+
+<p>First you should prepare an OpenShift instanace and a Laravel build on your local machine. <a href="http://blog.tommyku.com/blog/using-laravel-5-0-with-angularjs-part-1-of-5-setting-up-laravel-5-0">My previous tutorial</a> should get this part well covered.</p>
+
+<h4 id="managing-multiple-env-locally">Managing multiple .env locally</h4>
+
+<p>To cover the basics, you should first try to have multiple <code>.env</code> locally. You may use <a href="http://blog.tommyku.com/blog/an-artisan-command-for-using-multiple-environment-configurations-in-laravel-5">an artisan command I made before</a> or archieve the same effect <a href="http://blog.tommyku.com/blog/multiple-env-configurations-in-laravel-5-using-symbolic-link">with symbolic link</a>.</p>
+
+<p>In command line, create a couple of environmental configuration files from your Laravel directory by copying the default <code>.env.example</code>.</p>
+
+<pre><code class="language-bash">$ cp .env.example .local.env
+$ cp .env.example .testing.env
+</code></pre>
+
+<p>Then make sure this line is inside your <code>.gitignore</code> file.</p>
+
+<pre><code class="language-bash">.env
+</code></pre>
+
+<p>By default Laravel does not come with <code>.env</code> file, so there is nothing to ignore yet. Then create a symbolic link to <code>.local.env</code> named <code>.env</code>.</p>
+
+<pre><code class="language-bash">$ ln -s .local.env .env
+$ ls -lah
+lrwxrwxrwx  1 user user   10 Sep 28 18:21 .env -&gt; .local.env
+-rw-rw-r--  1 user user  306 Jul  2 02:30 .local.env
+</code></pre>
+
+<p>So <code>.env</code> is now a symbolic link to <code>.local.env</code>, modifying either of them changes both. How do you switch to testing environment locally?</p>
+
+<pre><code class="language-bash">$ rm .env
+$ ln -s .testing.env .env
+</code></pre>
+
+<p>That’s it. Don’t worry, removing symbolic link doesn’t remove the actual file.</p>
+
+<h4 id="uploading-env-to-server">Uploading <code>.env</code> to server</h4>
+
+<p>Provided that yout have SSH access to the server (you do so by submitting your public key to OpenShift web panel), first SSH into the server to locate <code>$OPENSHIFT_DATA_DIR</code>.</p>
+
+<pre><code class="language-bash"># figure out the user name and hostname of your OpenShift instance
+$ git remote -v
+origin  ssh://xxxxxxxxxxxxxxxxxxxxxxxx@test-test.rhcloud.com/~/git/blog.git/ (fetch)
+origin  ssh://xxxxxxxxxxxxxxxxxxxxxxxx@test-test.rhcloud.com/~/git/blog.git/ (push)
+# ssh into the instance to find where the data dir is
+$ ssh xxxxxxxxxxxxxxxxxxxxxxxx@test-test.rhcloud.com
+# on remote server
+[test-test.rhcloud.com xxxxxxxxxxxxxxxxxxxxxxxx]\&gt; echo $OPENSHIFT_DATA_DIR
+# this is the path to data dir where you should store the .env
+/var/lib/openshift/xxxxxxxxxxxxxxxxxxxxxxxx/app-root/data/
+</code></pre>
+
+<p>Now <code>scp</code> the current <code>.env</code> you use locally to server. Note that <code>.local.env</code> is renamed to <code>.production.env</code> when it is uploaded. You could make <code>.production.env</code> locally, edit the configuration then upload instead.</p>
+
+<pre><code class="language-bash">$ scp .local.env xxxxxxxxxxxxxxxxxxxxxxxx@test-test.rhcloud.com:/var/lib/openshift/xxxxxxxxxxxxxxxxxxxxxxxx/app-root/data/.production.env
+</code></pre>
+
+<p>Now <code>.production.env</code> is on the server, next you should create a symbolic link to it whenever you deploy a new version of your software.</p>
+
+<h4 id="creating-a-build-hook">Creating a build hook</h4>
+
+<p>Git runs a post-receive hook if you write it in <code>.git/hooks/</code>. OpenShift plays a different rule, it runs the scripts located in <code>.openshift/action_hooks/</code> as well. From your project root folder, create folders <code>.openshift/action_hooks/</code> if they weren’t there already, then make a <code>build</code> file and flip the execute bit.</p>
+
+<pre><code class="language-bash">$ mkdir -p .openshift/action_hooks
+$ touch .openshift/action_hooks
+$ chmod +x .openshift/action_hooks
+</code></pre>
+
+<p>Then, make sure your <code>build</code> file has these content.</p>
+
+<pre><code class="language-bash">#!/bin/bash
+
+export COMPOSER_HOME="$OPENSHIFT_DATA_DIR/.composer"
+
+if [ ! -f "$OPENSHIFT_DATA_DIR/composer.phar" ]; then
+    echo 'Installing Composer'
+        curl -s https://getcomposer.org/installer | php -- --quiet --install-dir=$OPENSHIFT_DATA_DIR
+else
+    echo 'Updating Composer'
+    php $OPENSHIFT_DATA_DIR/composer.phar -q --no-ansi self-update
+fi
+
+if [ -d "$OPENSHIFT_REPO_DIR/vendor" ]; then
+    echo 'Laravel dependencies already installed, Moving on...'
+else
+    echo 'Hang in there, we are getting ready to Install/Update Laravel dependencies'
+    # Activate composer install for Laravel on Git Push
+    ( echo 'Installing/Updating Laravel'; unset GIT_DIR ; cd $OPENSHIFT_REPO_DIR ; php $OPENSHIFT_DATA_DIR/composer.phar -q --no-ansi install ; )   
+fi
+
+( echo 'Loading environmental configurations'; ln -s "$OPENSHIFT_DATA_DIR/.production.env" "$OPENSHIFT_REPO_DIR/.env"; cd $OPENSHIFT_REPO_DIR; )
+</code></pre>
+
+<p>The first couple lines will fetch the dependencies automatically, and the last line with words <em>Loading environmental configurations</em> makes sure a symbolic link <code>.env</code> pointing to <code>.production.env</code> is created each time you push to server.</p>
+
+<h4 id="why-it-has-to-be-so-cryptic">Why it has to be so cryptic?</h4>
+
+<p>Albeit a little bit off-topic, this question keeps popping up in my mind as I wrote this article. From my experience with Ruby on Rails, you can deploy and do the symbolic link thing all inside the confines of your project; i.e. no need for a sneaky hook in <code>.openshift</code> or <code>.git</code>.</p>
+
+<p>Then when I looked it up, <a href="https://www.airpair.com/laravel/posts/automating-laravel-deployments-using-capistrano">someone did use a Ruby gem <code>Capistrano</code> to deploy his Laravel application</a>.</p>
+
+<p>Deploying a PHP project, using a Ruby gem. That’s ingenius.</p>
+
+<p>And it goes no further than that, no automatic push-from-local ways of deploying a Laravel application except for bunch of hacks and cryptic scripts.</p>
+
+<p>Yeah, next time, let’s talk about a simplier Laravel deployment.</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../setting-up-laravel-5-0-for-openshift/">Setting up Laravel 5.0 for Openshift</a><p class="abstract">A guide to setting up Laravel 5.0 on OpenShift v2.0 platform and using the environmental variables provided by OpenShift v2.0</p></li><li><a href="../multiple-env-configurations-in-laravel-5-using-symbolic-link/">Multiple .env configurations in Laravel 5 using symbolic link</a><p class="abstract">Use symbolic link to switch between multiple Laravel 5 environmental configurations without additional console command</p></li><li><a href="../create-simple-contact-list-application-with-laravel-and-openshift-integration-part-1/">Create simple contact list application with Laravel and Openshift integration: Part 1</a><p class="abstract">Part 1 of a 2-part tutorial about jump-starting a Laravel project on OpenShift, this part is about making a "Hello World" page</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/persistent-env-configurations-across-deployments-on-openshift-for-laravel-5/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/persistent-env-configurations-across-deployments-on-openshift-for-laravel-5/" id="permalink">https://blog.tommyku.com/blog/persistent-env-configurations-across-deployments-on-openshift-for-laravel-5/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/persistent-env-configurations-across-deployments-on-openshift-for-laravel-5/";
+  this.page.identifier = "persistent-env-configurations-across-deployments-on-openshift-for-laravel-5";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/persistent-env-configurations-across-deployments-on-openshift-for-laravel-5/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

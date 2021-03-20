@@ -1,0 +1,112 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Send Telegram notification on SSH login via PAM - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Send Telegram notification on SSH login via PAM - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Send Telegram notification on SSH login via PAM - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Send Telegram notification on SSH login via PAM</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2019-07-07T00:00:00+08:00">July 07, 2019</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i></section><section class="e-content" id="content"><!-- 
+This line is 80 characters long
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+-->
+
+<p>Every time I logon to my bank’s website, there’s a helpful and annoying
+notification sent to my email and phone via SMS. I want my VPS to behave the
+same when I logon via SSH because I have never had an idea if somebody else is
+using my key to logon (it shouldn’t be…) when I wasn’t looking. Having my
+phone with me most of the time, I can receive push notification via a Telegram
+bot.</p>
+
+<p>The following steps have been experimented on an Ubuntu 18.04 VPS hosted on
+Digital Ocean.</p>
+
+<h2 id="step-1-create-a-bot">Step 1: Create a bot</h2>
+
+<p>You need to talk to @BotFather of Telegram about it.</p>
+
+<p>For a detailed walkthrough, refer to the documentation of my <a href="https://github.com/tommyku/telegram-bot-starter#step-1-register-your-bot">Telegram starter
+bot repo</a>.</p>
+
+<p>At the end of it, you should receive a bot token like the following:</p>
+
+<pre><code>987654321:ABCDEFGHIJKLMNopqrstUVWXYZ123456789
+</code></pre>
+
+<h2 id="step-2-add-a-script-to-etcssh">Step 2: Add a script to /etc/ssh</h2>
+
+<p>Create a script to be ran by PAM when user logs in. While it’s fine to place
+it anywhere, I chose to put it inside /etc/ssh.</p>
+
+<pre><code class="language-bash">sudo touch /etc/ssh/login_notify.sh
+sudo chmod +x /etc/ssh/login_notify.sh
+sudo editor /etc/ssh/login_notify.sh
+</code></pre>
+
+<p>Content of the script looks like:</p>
+
+<pre><code class="language-bash">#!/usr/bin/env bash
+# Content of /etc/ssh/login_notify.sh
+TELEGRAM_TOKEN="987654321:ABCDEFGHIJKLMNopqrstUVWXYZ123456789"
+CHAT_ID=""
+
+if [ ${PAM_TYPE} = "open_session" ]; then
+  MESSAGE="$PAM_USER@$PAM_RHOST: knock knock via $PAM_SERVICE"
+  curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage" -d chat_id="$CHAT_ID" -d text="$MESSAGE" &gt; /dev/null 2&gt;&amp;1
+fi
+</code></pre>
+
+<p>If you run <code>login_notify.sh</code> now, you are likely to not receive anything
+because inside the script <code>$CHAT_ID</code> hasn’t been set, and Telegram does not
+know who to send this message to.</p>
+
+<p>To obtain your chat ID, first text your bot with a <code>/start</code> message.
+Then from terminal:</p>
+
+<pre><code class="language-bash">curl https://api.telegram.org/bot&lt;BOT TOKEN&gt;/getUpdates
+# { ..."chat": { "id": 12345, ... }... }
+</code></pre>
+
+<p>Let’s fill in the chat ID we found into <code>login_notify.sh</code>.</p>
+
+<pre><code class="language-diff">--- a/etc/ssh/login_notify.sh
++++ b/etc/ssh/login_notify.sh
+- CHAT_ID=""
++ CHAT_ID="12345"
+</code></pre>
+
+<p>Let’s try this our by running the script with the least amount of
+environmental variables set.</p>
+
+<pre><code class="language-bash">PAM_TYPE="open_session" /etc/ssh/login_notify.sh
+# Telegram &gt; "@: knock knock via"
+</code></pre>
+
+<p>The script works. Now we need it to be triggered.</p>
+
+<h2 id="step-3-modify-pam-configuration-to-trigger-the-script">Step 3: Modify PAM configuration to trigger the script</h2>
+
+<p>PAM configurations for each service are located in <code>/etc/pam.d</code>. In
+particular, we are interested in <code>/etc/pam.d/sshd</code>.</p>
+
+<pre><code class="language-bash">sudo editor /etc/pam.d/sshd
+</code></pre>
+
+<p>Add to the end:</p>
+
+<pre><code class="language-bash"># Login Telegram Notification
+session optional pam_exec.so /etc/ssh/login_notify.sh
+</code></pre>
+
+<h2 id="step-4-test-it">Step 4: Test it</h2>
+
+<pre><code class="language-bash">ssh -l username hostname -P port
+</code></pre>
+
+<figure>
+<img src="./it-works.png">
+<figcaption>Good. It works.</figcaption>
+</figure>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../controlling-my-home-server-with-syncthing/">Controlling my home server with Syncthing</a><p class="abstract">How I threw together a few files to come up with a solution controlling my laptop's sleep/shutdown state</p></li><li><a href="../a-self-hosting-lifecycle/">A self-hosting lifecycle</a><p class="abstract">How is it like to self-host something? This post describes the process of self-hosting from the initial thought process, to patching and housekeeping, all the way to the end-of-life of a self-hosted service</p></li><li><a href="../persistent-env-configurations-across-deployments-on-openshift-for-laravel-5/">Persistent .env configurations across deployments on OpenShift for Laravel 5</a><p class="abstract">How I implemented persistent .env configuration on OpenShift v2 across deployments using OpenShift data directory and post-receive hook</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/send-telegram-notification-on-ssh-login/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/send-telegram-notification-on-ssh-login/" id="permalink">https://blog.tommyku.com/blog/send-telegram-notification-on-ssh-login/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/send-telegram-notification-on-ssh-login/";
+  this.page.identifier = "send-telegram-notification-on-ssh-login";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/send-telegram-notification-on-ssh-login/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

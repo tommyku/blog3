@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0" name="viewport" /><meta content="Prototyping with gulp-web-starter - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" name="title" /><meta content="Web developer Tommy Ku talks about his experience in work, learning and life." name="description" /><meta content="Tommy Ku" name="author" /><meta content="Prototyping with gulp-web-starter - Tommy Ku&#39;s Blog - Random thoughts, stories and tutorials of a web dev" property="og:title" /><meta content="article" property="og:type" /><meta content="/assets/images/banner.jpg" property="og:image" /><link href="/assets/images/author.jpg" rel="icon" type="image/png" /><link href="/atom.xml" rel="alternate" title="Tommy Ku&#39;s Method Stub" type="application/atom+xml" /><link href="https://webmention.tkcom.workers.dev/" rel="webmention" /><title>Prototyping with gulp-web-starter - Tommy Ku&#39;s Blog</title><link href="/style/gutenberg.css" rel="stylesheet" /><link href="/style/prism.css" rel="stylesheet" /><meta content="Nanoc 4.11.15" name="generator" /></head><body><header><h2 class="h-card"><img alt="Profile pic of Tommy Ku" class="author u-photo" src="/assets/images/author.jpg" /><span class="p-name">Tommy Ku</span>'s Blog</h2><p><i>Reading and thinking</i></p></header><nav><a href="/">Index</a><a href="https://tommyku.com">About Me</a><a href="https://angel.co/tommyku">AngelList</a><a href="https://www.linkedin.com/in/tommy-chun-kit-ku-65aba999">LinkedIn</a><a rel="me" href="https://github.com/tommyku">GitHub</a><a href="/atom.xml">Feed</a></nav><main class="h-entry" id="main"><section id="meta"><h1 class="p-name">Prototyping with gulp-web-starter</h1><i>Posted on&nbsp;<time class="dt-published" datetime="2015-08-08T00:00:00+08:00">August 08, 2015</time>&nbsp;by&nbsp;<span class="p-author">Tommy Ku</span></i><section id="old"><span class="icon">&#9888;</span><p>This post is more than 2 years old, it may contain outdated information</p></section></section><section class="e-content" id="content"><p>Let’s pretend that in one random evening when you leave office early and formed a brilliant idea on your way home. Your blood is boiling and you want it dive into a coding sprint as soon as possible. Roll out a barely functional or even completely hard-coded version, then send it to friends and coworkers to make sure the idea holds up to the expectations.</p>
+
+<p>This is called prototyping — a way to creating an incomplete version of a software because most complete software project takes more than a few hours.</p>
+
+<h4 id="prototying-for-the-web">Prototying for the web</h4>
+
+<p>No one wants to learn that an idea doesn’t work only after days or even weeks of developement.</p>
+
+<p>Luckily, the web is very flexible. Pulling in this framework, that library, hold them together with duct tape, here comes a prototype, quick and dirty.</p>
+
+<p>I mean, you can use <code>bower</code> to grab a release of some frameworks/libraries then group them together into a single <code>index.html</code> to form a minimally viable prototype.</p>
+
+<p>Backend? No you don’t need to write one yourself, try <a href="https://www.firebase.com/">Firebase</a> or <a href="https://www.parse.com/">Parse</a> for data and <a href="http://cloudinary.com/">Cloudinary</a>.</p>
+
+<h4 id="introducing-gulp-web-starter">Introducing gulp-web-starter</h4>
+
+<div class="github-card" data-github="tommyku/gulp-web-starter" data-width="400" data-height="155" data-theme="default"></div>
+<script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+
+<p>GitHub should make some official embeded cards.</p>
+
+<h5 id="installation-takes-a-couple-lines-and-just-that">Installation takes a couple lines and just that.</h5>
+
+<pre><code class="language-bash">$ git clone https://github.com/tommyku/gulp-web-starter.git new-project
+$ cd new-project
+$ npm install
+$ gulp --live #--live flag enables liverelaod
+</code></pre>
+
+<p><em>gulp-web-starter</em> is not really any big deal. It focuses on saving your time setting up the environment because it you can pull in whatever framework/library. Any preset or preconfigured framework that not everyone needs would void the point. You can pull in whatever you want quickly with <code>bower</code>.</p>
+
+<pre><code class="language-bash">$ bower install --save 'library-name'
+</code></pre>
+
+<h5 id="functions">Functions</h5>
+
+<p>The point of this starter is to pack in the barely minimum setup that usually you would need so you don’t have to do it each time kickstarting a prototype.</p>
+
+<p>It can
+- compile Jade into HTML
+- compile Sass into CSS
+- compile CoffeeScript into JavaScript
+- publish compiled content (no, a prototype doesn’t need to be uglified)
+- livereload on browser tabs when <code>--live</code> flag is applied</p>
+
+<p>You might say if any preset not fitting the reality of prototyping should not exist in the starter, why put in the <em>Jade</em>, <em>Sass</em> and <em>CoffeeScript</em> compilers in? No, they speed things up. These language proprocessors as mostly as syntactic sugers reducing the amount of code you need to type so you spend less time adding mundane paraentheses and braces.</p>
+
+<p>That’s pretty much I have to talk about gulp-web-start, or maybe too much already. Feel free to customize it or start your own such that you can spend more time with your family and friends instead of punching the keyboard to set things up.</p>
+
+<h4 id="on-a-side-note">On a side note</h4>
+
+<p>When your app need to work with a separate local backend, remember to allow for <a href="http://www.html5rocks.com/en/tu%0Atorials/cors/">CORS</a> on the backend.</p>
+
+<p><a href="http://localtunnel.me/">localtunnel</a> is a nice tool to expose a port to external clients should you want to share an adhoc gulp server serving your prototype locally. Or try <code>ssh -L</code>.</p>
+</section><section id="suggestions"><h2>You could also look at...</h2><ul id="article-list"><li><a href="../have-fun-building-browser-start-page/">Have fun building browser start page</a><p class="abstract">Owning your browser's start page is a good way to keep your mood up from the work, even though most of the start pages share similar designs</p></li><li><a href="../a-self-hosting-lifecycle/">A self-hosting lifecycle</a><p class="abstract">How is it like to self-host something? This post describes the process of self-hosting from the initial thought process, to patching and housekeeping, all the way to the end-of-life of a self-hosted service</p></li><li><a href="../relocating-from-openshift-v2/">Relocating from OpenShift v2</a><p class="abstract">Documenting how I migrated my sites to other hosts at minimal cost as the free hosting platform OpenShift v2 I have been using will be closed down soon</p></li></ul></section><p>This post first appeared on&nbsp;<a class="u-url" href="https://blog.tommyku.com/blog/prototyping-with-gulp-web-starter/" id="permalink">Tommy Ku&#39;s blog</a>. Permalink: <a class="u-url" href="https://blog.tommyku.com/blog/prototyping-with-gulp-web-starter/" id="permalink">https://blog.tommyku.com/blog/prototyping-with-gulp-web-starter/</a></p><h2>About the author</h2><section class="h-card" id="bio"><img alt="Profile pic of Tommy Ku" class="u-photo" src="/assets/images/author.jpg" /><section class="p-note"><p><i><span class="p-author">Tommy Ku</span>, a&nbsp;<span class="p-country-name">Hong Kong</span>-based&nbsp;<span class="p-job-title">Software Engineer</span>&nbsp;experienced developing PHP and Java-based web solutions and passionate in Web technology.</i></p><p><i>Also a hobbyist digital and film photographer.</i></p></section></section></main><script src="/js/prism.js" type="text/javascript"></script><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "https://blog.tommyku.com/blog/prototyping-with-gulp-web-starter/";
+  this.page.identifier = "prototyping-with-gulp-web-starter";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+  var d = document, s = d.createElement('script');
+  s.src = '//methodstub.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a ,="" href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><hr /><footer></footer><a class="unloaded" href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" title="I know you viewed this page"></a><img onload="javascript: document.querySelector(&#39;#tracking-status&#39;).classList.replace(&#39;unloaded&#39;, &#39;loaded&#39;)" src="https://blog-view.tkcom.workers.dev/?https://blog.tommyku.com/blog/prototyping-with-gulp-web-starter/" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" /></body></html>

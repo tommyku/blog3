@@ -8,8 +8,8 @@ abstract: Every now and then I rant about my ThinkPad X230 from 2012 being old a
 ---
 
 <figure>
-  <a href="./5fe9e6c747276thinkpadx230.jpeg" target="_blank">
-    <img src="./5fe9e6c747276thinkpadx230.jpeg" style="max-width: 100%; max-height: 600px;" alt="">
+  <a href="./5fe9e6c747276thinkpadx230.jpg" target="_blank">
+    <img src="./5fe9e6c747276thinkpadx230.jpg" style="max-width: 100%; max-height: 600px;" alt="">
   </a>
 <figcaption>This is my ThinkPad X230. There are many like it, but this one is mine</figcaption>
 </figure>

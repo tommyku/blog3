@@ -75,8 +75,9 @@ banner: banner.jpg
     }
     
     @media screen and (max-width: 30em) {
-        #photogrid {
-            grid-template-columns: 100%;
+        #photogrid img {
+            grid-column-start: 1;
+            grid-column-end: 3;
         }
     }
 </style>

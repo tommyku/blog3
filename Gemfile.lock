@@ -1,4 +1,7 @@
 GEM
+  specs:
+
+GEM
   remote: https://rubygems.org/
   specs:
     addressable (2.7.0)
@@ -166,4 +169,4 @@ DEPENDENCIES
   yuicompressor!
 
 BUNDLED WITH
-   2.1.4
+   2.2.31

@@ -40,6 +40,8 @@ Some recurring themes this year are self-empowerment, assertiveness and letting 
 
 > Fuck-ups happen. Some people make it their mission in life to make sure that whenever a fuck-up happens, somebody will suffer. Don't be that person, and don't let that person get to you. They're an ass. &mdash; Probably Reddit
 
+> Spend time avoiding mistakes, not fixing them. &mdash; Probably Me
+
 > You don't have to be young to feel young. &mdash; Probably Me
 
 > 擅自期待，又因期望落空而擅自嬲怒，實在難看。 &mdash; Probably Me

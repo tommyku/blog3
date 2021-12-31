@@ -30,7 +30,7 @@ Some recurring themes this year are self-empowerment, assertiveness and letting 
 
 > Time spent in fixing mistakes is time wasted. When you could have spent less time avoiding the mistake in the first place. Take controlled risk. &mdash; Somewhere online
 
-> I have the tendency to hoard for backup so I have the option when the primary one fails (buy the same camera/headphones) but that means I'm foregoing a better future for a comfortable present. &mdash; Probably Me
+> I have the tendency to hoard for backup so I have the option when the primary one fails (buy the same camera/headphones) but that means I'm forgoing a better future for a comfortable present. &mdash; Probably Me
 
 > Life never runs out of waves to shake you. But while it isn't easy, you do learn to surf better. &mdash; [charlie_wonka on Reddit](https://www.reddit.com/user/charlie_wonka/), probably
 

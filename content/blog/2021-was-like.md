@@ -63,6 +63,7 @@ By the way, I should get better in recording sources of these tips.
 * Don't just buy cameras, use them
 * Don't just buy books, read them
 * Don't just buy games, play them
+* When [12ft ladder](https://12ft.io/) doesn't work, try [archive.today](https://archive.is/)
 
 ## In photos
 

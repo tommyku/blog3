@@ -329,9 +329,11 @@ a#tracking-status {
 
   &.unloaded::before {
     content: "\1F648";
+    margin-left: -0.25em;
   }
 
   &.loaded::before {
     content: "\1F649";
+    margin-left: -0.25em;
   }
 }

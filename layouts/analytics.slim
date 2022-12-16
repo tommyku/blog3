@@ -1,4 +1,4 @@
-- if @config[:enable_analytics] || true
+- if @config[:enable_analytics]
   a href="https://blog.tommyku.com/blog/website-analytics-for-lazy-people" id="tracking-status" class="unloaded" title="I know you viewed this page"
   img src="https://blog-view.tkcom.workers.dev/?#{url_for(@item)}" style="width: 0px; height: 0px; margin: 0; padding: 0; visibility: hidden;" onload="javascript: document.querySelector('#tracking-status').classList.replace('unloaded', 'loaded')"
   / javascript:

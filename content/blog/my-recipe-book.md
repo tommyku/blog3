@@ -6,6 +6,7 @@ slug: my-recipe-book
 abstract: 'I survived 3 months in San Francisco by cooking myself, these
 are the recipes of what I made for the 2-3 dudes I lived with'
 preview: false
+unprofessional: true
 ---
 
 During my 3-month internship in San Francisco, choices of meals was a big concern everyday.

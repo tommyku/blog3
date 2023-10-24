@@ -4,6 +4,7 @@ kind: article
 created_at: 2020-12-23 23:33:40 +0800
 slug: how-the-agat-18k-turns-out
 preview: false
+unprofessional: true
 abstract: I bought a AGAT 18K on eBay, and it turns out to be a pretty nice camera despite a number of flaws
 ---
 

@@ -4,6 +4,7 @@ kind: article
 created_at: '2020-07-05 00:00:00 +0800'
 slug: 7-additional-tips-on-using-disposable-camera
 preview: false
+unprofessional: true
 abstract: 'A follow up to my previous post on disposable cameras, with tips I gathered after months of usage'
 ---
 

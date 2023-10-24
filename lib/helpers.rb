@@ -25,6 +25,10 @@ def timeless?(item)
   flag_true?(item, :timeless) && !flag_true?(item, :deprecated)
 end
 
+def unprofessional?(item)
+  flag_true?(item, :unprofessional)
+end
+
 def flag_true?(item, flag)
   item[flag] && item[flag] == true
 end

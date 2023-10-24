@@ -5,6 +5,7 @@ created_at: 2023-09-10 16:03:40 +0800
 slug: before-i-change-my-mind
 preview: false
 timeless: false
+unprofessional: true
 abstract: Not home right now, out in my hideout
 banner: trashcan.jpg
 ---

@@ -14,9 +14,9 @@ section.h-feed
     h3 Featured
     section#special-article-list
       - specials.each do |article|
-        a.special.h-entry.u-url href="/#{url_for(article)}"
+        a.special.h-entry.u-url href=url_for(article)
           figure.side-figure
-            img src="/#{url_for(article)}#{article[:preview_banner]}" alt="Preview image for #{article[:title]}"
+            img src="#{url_for(article)}#{article[:preview_banner]}" alt="Preview image for #{article[:title]}"
           h4.p-name = article[:title]
   ul#article-list
     - sorted_articles.each do |article|
@@ -29,8 +29,8 @@ section.h-feed
       li.h-entry
         - if unprofessional?(article)
           i
-            == link_to article[:title], "/#{url_for(article)}", class: "u-url p-name"
+            == link_to article[:title], url_for(article), class: "u-url p-name"
         - else
-          == link_to article[:title], "/#{url_for(article)}", class: "u-url p-name"
+          == link_to article[:title], url_for(article), class: "u-url p-name"
         - if abstract?(article)
           p.abstract.p-summary == abstract(article)

@@ -15,7 +15,7 @@ section.h-feed
           h4.p-name = article[:title]
   ul#article-list
     - sorted_articles.each do |article|
-      - next if preview?(article) || special?(article) || unprofessional?(article)
+      - next if preview?(article) || special?(article)
       - if current_date != attribute_to_time(article[:created_at]).strftime('%Y.%m')
         li.header
           h4
